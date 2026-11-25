@@ -134,3 +134,13 @@
 .stage .tt-msgr {
   padding-top: 0;
 }
+
+/* The Chat on a stage: its lines on the page, and under them where one writes. */
+.tt-on-chat {
+  position: absolute;
+  inset: var(--space-16) var(--space-16) 84px;
+}
+
+.stage .tt-composer {
+  bottom: 14px;
+}

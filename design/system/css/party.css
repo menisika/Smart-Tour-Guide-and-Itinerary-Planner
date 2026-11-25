@@ -1,0 +1,526 @@
+/*
+ * The Party and the Catalog: the people of an Outing, what a Route offers to
+ * each, their votes, their Chat — and a published Route with its Reviews.
+ */
+
+/* ── A member of a Party ───────────────────────────────────────────────── */
+
+.tt-face {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--surface);
+  font: var(--type-label-strong);
+  font-style: normal;
+}
+
+.tt-face.is-me {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.tt-faces {
+  display: inline-flex;
+}
+
+.tt-faces .tt-face {
+  margin-right: -6px;
+  box-shadow: 0 0 0 2px var(--surface);
+}
+
+.tt-member {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  min-height: var(--size-action);
+  padding: var(--space-6) 0;
+}
+
+.tt-member + .tt-member {
+  box-shadow: inset 0 0.5px 0 var(--rule);
+}
+
+.tt-member-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.tt-member-body b {
+  display: block;
+  font: var(--type-row);
+  letter-spacing: var(--type-row-tracking);
+}
+
+.tt-member-body small {
+  display: block;
+  font: var(--type-caption);
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.tt-member-mark {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-10);
+  border-radius: var(--radius-full);
+  background: var(--surface-2);
+  font: var(--type-caption);
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.tt-member-mark .icon {
+  width: 14px;
+  height: 14px;
+}
+
+.tt-member.is-ok .tt-member-mark {
+  background: var(--ok-tint);
+  color: var(--accent-ink);
+}
+
+.tt-member.is-off .tt-member-body b {
+  color: var(--ink-2);
+}
+
+/* ── A Route offered to a Party ────────────────────────────────────────── */
+
+.tt-party-option {
+  position: relative;
+  padding: var(--space-10) var(--space-12) var(--space-12);
+  border-radius: var(--radius-m);
+  background: var(--surface-2);
+}
+
+.tt-party-option + .tt-party-option {
+  margin-top: var(--space-8);
+}
+
+.tt-party-option.is-chosen {
+  box-shadow: inset 0 0 0 2px var(--accent-ink);
+}
+
+.screen[data-theme='sun'] .tt-party-option:not(.is-chosen) {
+  box-shadow: inset 0 0 0 1.5px var(--ink);
+}
+
+.tt-party-option > header {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-8);
+}
+
+.tt-party-option.is-chosen > header {
+  padding-right: var(--space-32);
+}
+
+.tt-party-option > header b {
+  flex: 1;
+  min-width: 0;
+  font: var(--type-body-strong);
+  letter-spacing: var(--type-body-strong-tracking);
+}
+
+/* What is in it for whom: the guide's italic. */
+.tt-party-line {
+  margin-top: var(--space-2);
+  font: var(--type-guide-aside);
+  letter-spacing: var(--type-guide-aside-tracking);
+  color: var(--ink-2);
+}
+
+.tt-party-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4) var(--space-12);
+  margin-top: var(--space-8);
+}
+
+.tt-party-tags li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  font: var(--type-caption);
+  color: var(--ink-2);
+}
+
+.tt-party-tags b {
+  color: var(--ink);
+}
+
+.tt-party-tags .tt-face {
+  width: 20px;
+  height: 20px;
+  font: var(--type-micro);
+  font-weight: 700;
+}
+
+.tt-party-option .tt-option-mark {
+  position: absolute;
+  right: var(--space-10);
+  top: var(--space-8);
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.tt-party-option .tt-option-mark .icon {
+  width: 14px;
+  height: 14px;
+  stroke-width: 3;
+}
+
+/* For, against: two keys with words and a count. */
+.tt-vote {
+  display: flex;
+  gap: var(--space-8);
+  margin-top: var(--space-10);
+}
+
+.screen .tt-vote button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-6);
+  min-height: var(--target);
+  padding: var(--space-4) var(--space-10);
+  border-radius: var(--radius-action);
+  background: var(--surface);
+  font: var(--type-label-strong);
+}
+
+.tt-vote .icon {
+  width: 18px;
+  height: 18px;
+}
+
+.tt-vote button b {
+  font: var(--type-numeral);
+  color: var(--ink-2);
+}
+
+.tt-vote button[aria-pressed='true'] {
+  background: var(--ink);
+  color: var(--surface);
+}
+
+.tt-vote button[aria-pressed='true'] b {
+  color: inherit;
+}
+
+/* ── The Chat ──────────────────────────────────────────────────────────── */
+
+.tt-chat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
+}
+
+.tt-chat-event {
+  align-self: center;
+  padding: var(--space-2) var(--space-12);
+  border-radius: var(--radius-full);
+  background: var(--surface-2);
+  font: var(--type-caption);
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.tt-chat-line {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-8);
+  max-width: 86%;
+}
+
+.tt-chat-line.is-mine {
+  align-self: flex-end;
+}
+
+.tt-chat-line > div {
+  position: relative;
+  padding: var(--space-8) var(--space-12) var(--space-6);
+  border-radius: var(--radius-m);
+  background: var(--surface-2);
+}
+
+.tt-chat-line.is-mine > div {
+  background: var(--ok-tint);
+}
+
+.tt-chat-line small {
+  display: block;
+  font: var(--type-caption);
+  font-weight: 700;
+  color: var(--accent-ink);
+}
+
+.tt-chat-line p {
+  font: var(--type-body);
+}
+
+.tt-chat-line time {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--space-4);
+  font: var(--type-micro);
+  color: var(--ink-2);
+}
+
+.tt-chat-line time .icon {
+  width: 12px;
+  height: 12px;
+}
+
+.tt-chat-reaction {
+  position: absolute;
+  right: var(--space-8);
+  bottom: -12px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-6);
+  border-radius: var(--radius-full);
+  background: var(--surface);
+  box-shadow: var(--lift-thumb);
+  font: var(--type-micro);
+  font-weight: 700;
+}
+
+.tt-chat-reaction .icon {
+  width: 12px;
+  height: 12px;
+  color: var(--accent-ink);
+}
+
+.tt-composer {
+  position: absolute;
+  left: var(--space-12);
+  right: var(--space-12);
+  bottom: 30px;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  padding: var(--space-4) var(--space-4) var(--space-4) var(--space-16);
+  border-radius: var(--radius-full);
+}
+
+.screen[data-os='android'] .tt-composer {
+  bottom: var(--space-24);
+}
+
+.tt-composer-well {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  min-height: var(--target);
+  font: var(--type-body);
+  color: var(--ink-2);
+}
+
+.tt-composer-well .icon {
+  width: 18px;
+  height: 18px;
+}
+
+.screen .tt-composer button {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: var(--size-control);
+  height: var(--size-control);
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.tt-composer button .icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* ── A rating shown, a Review ──────────────────────────────────────────── */
+
+.tt-stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  color: var(--ink-3);
+}
+
+.tt-stars b {
+  margin-right: var(--space-4);
+  font: var(--type-label-strong);
+  color: var(--ink);
+}
+
+.tt-stars .icon {
+  width: 14px;
+  height: 14px;
+}
+
+.tt-stars .icon.is-on {
+  fill: currentColor;
+  color: var(--accent-ink);
+}
+
+.tt-review {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-10);
+  padding: var(--space-12) 0;
+}
+
+.tt-review + .tt-review {
+  box-shadow: inset 0 0.5px 0 var(--rule);
+}
+
+.tt-review > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.tt-review header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-8);
+}
+
+.tt-review header b {
+  font: var(--type-label-strong);
+}
+
+.tt-review header small {
+  flex: 1;
+  font: var(--type-caption);
+  color: var(--ink-2);
+}
+
+/* What a person wrote: read, so it is set as the page is. */
+.tt-review p {
+  margin-top: var(--space-4);
+  font: var(--type-guide-note);
+  font-size: calc(15px * var(--ts-full));
+  line-height: 1.45;
+  letter-spacing: var(--type-guide-note-tracking);
+}
+
+.screen .tt-review > button {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: var(--target);
+  height: var(--target);
+  margin: calc(-1 * var(--space-8)) calc(-1 * var(--space-8)) 0 0;
+  color: var(--ink-2);
+}
+
+/* ── The Recap ─────────────────────────────────────────────────────────── */
+
+.tt-recap {
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  background: var(--surface-2);
+  box-shadow: var(--lift-page);
+}
+
+.tt-recap-map {
+  height: 300px;
+}
+
+.tt-recap figcaption {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-16) var(--space-20) var(--space-20);
+}
+
+.tt-recap .tt-og-brand {
+  margin-bottom: var(--space-8);
+}
+
+.tt-recap figcaption > small {
+  font: var(--type-label);
+  color: var(--ink-2);
+}
+
+.tt-recap figcaption > b {
+  margin-bottom: var(--space-12);
+  font: var(--type-title);
+  letter-spacing: var(--type-title-tracking);
+  text-wrap: balance;
+}
+
+/* ── How these stand on a screen ───────────────────────────────────────── */
+
+/* A message with a reaction keeps room for it. */
+.tt-chat-line:has(.tt-chat-reaction) {
+  margin-bottom: var(--space-10);
+}
+
+/* The Chat is a page whose foot is where one writes. */
+.tt-page.has-composer .tt-page-body {
+  bottom: 96px;
+}
+
+.tt-bar-faces {
+  flex: none;
+  display: flex;
+  align-items: center;
+  min-height: var(--size-control);
+  padding-right: var(--space-8);
+}
+
+/* In a panel of the web the composer is the panel's foot. */
+.tt-panel-foot .tt-composer {
+  position: static;
+  flex: 1;
+}
+
+/* A sheet under which the actions float keeps room for them. */
+.tt-later .tt-sheet.has-foot {
+  padding-bottom: 100px;
+}
+
+/* The measures of a published Route, in one line under its name. */
+.tt-published {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4) var(--space-10);
+  margin-top: var(--space-6);
+  font: var(--type-caption);
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.tt-saved-note .tt-stars {
+  vertical-align: -2px;
+}
+
+/* Two actions of the same weight, side by side. */
+.tt-pair {
+  display: flex;
+  gap: var(--space-10);
+}
+
+.screen .tt-pair .tt-action {
+  flex: 1;
+  background: var(--surface-2);
+}
