@@ -60,6 +60,12 @@ serve.mjs            the static server behind `pnpm design`
 
 A screen is a function that arranges components of the system for a system, a theme and a language; it draws nothing of its own. The words exist once per language in `system/strings.js`; the numbers come from `data/`. Nothing is bundled; what is generated from the tokens is written by `pnpm design:build` and committed.
 
+## The owner's acceptance of the screens
+
+Recorded in full in the [screens' README](screens/README.md#the-owners-acceptance).
+
+- **`D-03` — accepted on 25 November 2026.** The owner accepted the screens of the solo Outing on iOS and Android as they were shown, without asking for another round.
+
 ## Rules of the folder
 
 - **A mockup shows real content.** Names, times and distances come from `data/outing.json`. Story text is a cited passage of an open source or is marked as sample text; no history is written for a mockup.
