@@ -1,12 +1,13 @@
 /**
- * Direction "Timetable", second round.
+ * The chosen direction: Timetable, with the guide of Guidebook.
  *
- * The idea is the first round's: the promise of the product is time, so the
- * Route is a line drawn to time and colour says whether one is on time. The
- * owner asked for depth, effects, icons and Liquid Glass after Apple. So the
- * map now fills the screen and is the content; everything else is a layer of
- * glass over it; and while one walks, the map is seen at an angle with the way
- * ahead up.
+ * The owner's decision after the second round: Timetable is the base, and
+ * the way the guide speaks comes from Guidebook. So two voices share a screen
+ * and are told apart by type. What the timetable says — times, the verdict,
+ * the line, the controls — is set in a sans and in numerals, on glass over a
+ * map that fills the screen. What the guide says — why a Place is here, the
+ * Story, its source — is set in a serif, on a solid page under a photograph
+ * of the Place.
  */
 import { format } from '../shared/data.js';
 import { SIZES, icons } from '../shared/frames.js';
@@ -48,6 +49,9 @@ const T = {
     webNote:
       'В браузере рассказ включают вручную. По прибытии сам и без сети он звучит в приложении.',
     revision: (/** @type {string} */ date) => `версия от ${date}`,
+    photo: 'Фото',
+    source: (/** @type {any} */ s, /** @type {string} */ date) =>
+      `${s.work}, статья «${s.article}», версия от ${date}. ${s.licence}.`,
     theLine: 'Линия прогулки',
   },
   en: {
@@ -75,6 +79,9 @@ const T = {
     webNote:
       'In a browser you start a story yourself. In the app it begins as you arrive, and plays without a network.',
     revision: (/** @type {string} */ date) => `revision of ${date}`,
+    photo: 'Photo',
+    source: (/** @type {any} */ s, /** @type {string} */ date) =>
+      `${s.work}, “${s.article}”, revision of ${date}. ${s.licence}.`,
     theLine: 'The line of the outing',
   },
 };
@@ -153,7 +160,11 @@ function overlay(data, lang, { u }, state = {}) {
     `<rect class="tt-terminus-mark" x="-8" y="-8" width="16" height="16" rx="4"/><text x="15" y="4.5">${T[lang].station}</text>`,
     'tt-terminus',
   );
-  return `${line(data, 0)}${ticks}${start}${stations}`;
+  // From Guidebook: the map shows the very walls a Story is about.
+  const feet = data.stops
+    .map((/** @type {any} */ s) => `<use href="#m-foot-${s.order}" class="tt-foot"/>`)
+    .join('');
+  return `${feet}${line(data, 0)}${ticks}${start}${stations}`;
 }
 
 /**
@@ -279,22 +290,26 @@ function route({ os, lang, data }) {
   };
 }
 
-/** The sentence being spoken, word by word, with the ones before and after it. @param {any} story */
-function said(story) {
-  const at = (/** @type {number} */ i) => story.sentences[i];
-  const now = at(story.current);
-  const next = at(story.current + 1);
-  const end = next ? next.startsAt : story.total;
-  const share = (story.elapsed - now.startsAt) / (end - now.startsAt);
-  const words = now.text.split(' ');
-  const spoken = Math.round(words.length * Math.min(1, Math.max(0, share)));
-  const marked = words
-    .map((/** @type {string} */ w, /** @type {number} */ i) => (i < spoken ? `<b>${w}</b>` : w))
+/**
+ * The text of a Story as the guide's page has it: continuous prose, the
+ * sentence being spoken marked, and inside it the words already said.
+ * @param {any} story
+ * @param {number} from the first sentence shown: what was spoken before it has scrolled away
+ */
+function storyText(story, from = 0) {
+  return story.sentences
+    .map((/** @type {any} */ s, /** @type {number} */ i) => {
+      if (i < from) return '';
+      if (i !== story.current) return `<span class="tt-sentence">${s.text}</span>`;
+      const next = story.sentences[i + 1];
+      const end = next ? next.startsAt : story.total;
+      const share = Math.min(1, Math.max(0, (story.elapsed - s.startsAt) / (end - s.startsAt)));
+      const words = s.text.split(' ');
+      const spoken = Math.round(words.length * share);
+      const rest = spoken < words.length ? ` ${words.slice(spoken).join(' ')}` : '';
+      return `<span class="tt-sentence is-current"><b>${words.slice(0, spoken).join(' ')}</b>${rest}<sup>1</sup></span>`;
+    })
     .join(' ');
-  const before = at(story.current - 1);
-  return `${before ? `<p class="tt-said-dim tt-said-before">${before.text}</p>` : ''}
-    <p class="tt-said-now">${marked}<sup>1</sup></p>
-    ${next ? `<p class="tt-said-dim">${next.text}</p>` : ''}`;
 }
 
 /** The voice as bars: the played part in the accent, one bar alive. @param {any} story */
@@ -310,25 +325,41 @@ function voice(story) {
   return `<div class="tt-voice"><span>${format.playback(story.elapsed)}</span><div class="tt-bars">${html}</div><span>${format.playback(story.total)}</span></div>`;
 }
 
-/** @param {any} data @param {'ru' | 'en'} lang */
-function nowCard(data, lang) {
+/**
+ * The page of the guide: the photograph of the Place with its author, the
+ * name, the Story as prose, its source in a footnote. A solid page: it is read.
+ * @param {any} data @param {'ru' | 'en'} lang @param {number} from
+ */
+function guide(data, lang, from) {
   const t = T[lang];
   const now = data.outingNow;
   const story = now.story[lang];
-  const quote = lang === 'ru' ? ['«', '»'] : ['“', '”'];
-  return `<section class="tt-now lg">
-    <div class="tt-now-head">
+  const date = format.date(story.source.revision_date, lang);
+  return `<article class="tt-guide">
+    <figure class="tt-guide-photo">
       <img src="${now.stop.photo.src}" alt="" />
-      <div>
-        <p class="tt-now-meta"><i>${now.stop.order}</i><b>${now.stop.arrive}</b><span>${t.stay(now.stop.leave)}</span></p>
-        <h1>${now.stop.name[lang]}</h1>
-        <p class="tt-now-kind">${kindIcon(now.stop.kind)}${now.stop.built[lang]} · ${t.seenOutside}</p>
+      <span class="tt-guide-chip lg lg-clear"><i>${now.stop.order}</i><b>${now.stop.arrive}</b>${t.stay(now.stop.leave)}</span>
+      <figcaption>${t.photo}: ${now.stop.photo.author} · ${now.stop.photo.licence}</figcaption>
+    </figure>
+    <div class="tt-guide-body">
+      <p class="tt-guide-kind">${kindIcon(now.stop.kind)}${now.stop.built[lang]} · ${t.seenOutside}</p>
+      <h1>${now.stop.name[lang]}</h1>
+      <div class="tt-reading">
+        <p class="tt-text">${storyText(story, from)}</p>
+        <i class="tt-rule" aria-hidden="true"></i>
       </div>
+      <p class="tt-footnote"><sup>1</sup> ${t.source(story.source, date)}</p>
+      <p class="tt-made">${icons.shield}${t.made}</p>
     </div>
-    <div class="tt-said">${said(story)}</div>
-    <p class="tt-cite">${icons.book}<span><b>1</b> ${story.source.work}, ${quote[0]}${story.source.article}${quote[1]}, ${t.revision(format.date(story.source.revision_date, lang))}, ${story.source.licence}</span></p>
-    <p class="tt-cite tt-made">${icons.shield}<span>${t.made}</span></p>
-    ${voice(story)}
+  </article>`;
+}
+
+/** The controls, in a capsule of glass over the page. @param {any} data @param {'ru' | 'en'} lang */
+function player(data, lang) {
+  const t = T[lang];
+  const now = data.outingNow;
+  return `<section class="tt-player lg">
+    ${voice(now.story[lang])}
     <div class="tt-keys">
       <button aria-label="Speed">1×</button>
       <button aria-label="Back 10 seconds">${icons.back10}</button>
@@ -340,31 +371,28 @@ function nowCard(data, lang) {
   </section>`;
 }
 
-/** @param {any} data @param {'ru' | 'en'} lang */
-const statusPill = (data, lang) =>
-  `<p class="tt-status lg"><i class="tt-lamp"></i><b>${T[lang].onTime}</b><span>${T[lang].backAt(data.route.finish)}</span></p>`;
-
 /**
- * The whole Outing as a rail of glass: stations as dots, "now" as a light.
- * @param {any} data @param {number} minute @param {number} height
+ * Whether one is on time, and under it the whole Outing as a strip to scale:
+ * stations as dots, "now" as a light.
+ * @param {any} data @param {'ru' | 'en'} lang @param {number} minute
  */
-function rail(data, minute, height) {
-  const inner = height - 48;
-  const y = (/** @type {number} */ m) => 24 + (m / data.route.totalMinutes) * inner;
+function board(data, lang, minute) {
+  const t = T[lang];
+  const x = (/** @type {number} */ m) => `${((m / data.route.totalMinutes) * 100).toFixed(2)}%`;
   const dots = data.stops
     .map((/** @type {any} */ s) => {
       const state = s.leaveMin <= minute ? 'is-done' : s.arriveMin <= minute ? 'is-current' : '';
-      return `<i class="tt-rail-dot ${state}" style="top:${y(s.arriveMin + 4)}px"></i>`;
+      return `<i class="tt-strip-dot ${state}" style="left:${x(s.arriveMin + 4)}"></i>`;
     })
     .join('');
-  return `<aside class="tt-rail lg lg-clear" style="height:${height}px" aria-label="${data.route.start} – ${data.route.finish}">
-    <span class="tt-rail-end" style="top:6px">${data.route.start}</span>
-    <i class="tt-rail-line" style="top:24px;height:${inner}px"></i>
-    <i class="tt-rail-line is-done" style="top:24px;height:${y(minute) - 24}px"></i>
-    ${dots}
-    <i class="tt-rail-now" style="top:${y(minute)}px"></i>
-    <span class="tt-rail-end" style="bottom:6px">${data.route.finish}</span>
-  </aside>`;
+  return `<div class="tt-board lg">
+    <p class="tt-status"><i class="tt-lamp"></i><b>${t.onTime}</b><span>${t.backAt(data.route.finish)}</span></p>
+    <div class="tt-strip" aria-label="${data.route.start} – ${data.route.finish}">
+      <span>${data.route.start}</span>
+      <div class="tt-strip-line"><i class="tt-strip-done" style="width:${x(minute)}"></i>${dots}<i class="tt-strip-now" style="left:${x(minute)}"></i></div>
+      <span>${data.route.finish}</span>
+    </div>
+  </div>`;
 }
 
 /** @param {{ os: import('../shared/frames.js').Os, lang: 'ru' | 'en', data: any }} ctx */
@@ -373,10 +401,11 @@ function outing({ os, lang, data }) {
   const { width } = SIZES[os];
   const android = os === 'android';
   const now = data.outingNow;
+  const story = now.story[lang];
   // A few steps before the Place: the Story has begun on the approach.
   const minute = now.stop.arriveMin - 0.6;
   const here = positionAt(data, minute);
-  const mapHeight = android ? 452 : 436;
+  const mapHeight = 304;
   const pin = (/** @type {any} */ s, extra = '') => ({
     x: s.x,
     y: s.y,
@@ -391,7 +420,7 @@ function outing({ os, lang, data }) {
     at: here,
     bearing: bearingAt(data, minute),
     u: 1.25,
-    near: 285,
+    near: 150,
     pitch: 52,
     walls: [3, 6, 9, 12, 15],
     over: () =>
@@ -414,12 +443,12 @@ function outing({ os, lang, data }) {
       <div class="tt-under">${map}</div>
       <header class="tt-top">
         <button class="tt-round lg lg-clear" aria-label="Back">${android ? icons.backAndroid : icons.backIos}</button>
-        ${statusPill(data, lang)}
+        ${board(data, lang, now.stop.arriveMin + 1)}
         <button class="tt-round lg lg-clear" aria-label="More">${android ? icons.moreAndroid : icons.moreIos}</button>
       </header>
-      ${rail(data, now.stop.arriveMin + 1, 196)}
       <span class="tt-osm tt-osm-outing">© OpenStreetMap</span>
-      ${nowCard(data, lang)}
+      ${guide(data, lang, story.current - 1)}
+      ${player(data, lang)}
     </div>`,
   };
 }
@@ -480,15 +509,14 @@ function webOuting({ lang, data }) {
     around.map((/** @type {any} */ s) => ({ x: s.streetX, y: s.streetY })),
     size.width,
     size.height - 44,
-    { top: 130, right: 330, bottom: 120, left: 520 },
+    { top: 110, right: 340, bottom: 250, left: 550 },
   );
   const map = mapSvg(data, {
     view,
     lang,
     layers: FLAT,
-    labels: { max: 8, size: 11, clearOf: routeSamples(data) },
-    over: (ctx) =>
-      `<use href="#m-foot-${now.stop.order}" class="tt-foot"/>${overlay(data, lang, ctx, { current: now.stop.order })}`,
+    labels: { max: 6, size: 11, clearOf: routeSamples(data) },
+    over: (ctx) => overlay(data, lang, ctx, { current: now.stop.order }),
     label: now.stop.name[lang],
   });
   return {
@@ -497,7 +525,8 @@ function webOuting({ lang, data }) {
     inner: `<div class="tt tt-web tt-web-outing">
       <div class="tt-under">${map}<span class="tt-osm">© OpenStreetMap</span></div>
       ${webNav(lang)}
-      ${nowCard(data, lang)}
+      ${guide(data, lang, 0)}
+      ${player(data, lang)}
       <section class="tt-webchart lg">${chart(data, lang, { scale: 3.5, compact: true, selected: now.stop.order })}</section>
       <p class="tt-webnote lg">${t.webNote}</p>
     </div>`,
@@ -530,12 +559,42 @@ function sample(
 }
 
 /**
- * Moves the spoken sentence on, as it follows the voice.
+ * Puts the rule beside the sentence being spoken, and keeps the reading
+ * window to whole lines.
+ * @param {Element} root
+ */
+function settle(root) {
+  for (const reading of root.querySelectorAll('.tt-reading')) {
+    const text = reading.querySelector('.tt-text');
+    const current = reading.querySelector('.is-current');
+    const rule = reading.querySelector('.tt-rule');
+    if (
+      !(reading instanceof HTMLElement) ||
+      !(text instanceof HTMLElement) ||
+      !(current instanceof HTMLElement) ||
+      !(rule instanceof HTMLElement)
+    ) {
+      continue;
+    }
+    const lineHeight = parseFloat(getComputedStyle(text).lineHeight);
+    text.style.maxHeight = '';
+    text.style.maxHeight = `${Math.floor(reading.clientHeight / lineHeight) * lineHeight}px`;
+    const rects = current.getClientRects();
+    if (rects.length === 0) continue;
+    const zoom = text.getBoundingClientRect().width / text.offsetWidth || 1;
+    const textTop = text.getBoundingClientRect().top;
+    rule.style.top = `${(rects[0].top - textTop) / zoom + 4}px`;
+    rule.style.height = `${(rects[rects.length - 1].bottom - rects[0].top) / zoom - 8}px`;
+  }
+}
+
+/**
+ * Moves the reading to another sentence, as the text does when it follows the voice.
  * @param {Element} root @param {any} story @param {number} index
  */
 function follow(root, story, index) {
-  const block = root.querySelector('.tt-said');
-  if (!block) return;
+  const text = root.querySelector('.tt-text');
+  if (!text) return;
   const next = story.sentences[index + 1];
   const startsAt = story.sentences[index].startsAt;
   const moved = {
@@ -543,83 +602,98 @@ function follow(root, story, index) {
     current: index,
     elapsed: startsAt + ((next ? next.startsAt : story.total) - startsAt) * 0.5,
   };
-  block.innerHTML = said(moved);
+  text.innerHTML = storyText(moved, Math.max(0, index - 1));
   const old = root.querySelector('.tt-voice');
   if (old) old.outerHTML = voice(moved);
+  settle(root);
 }
 
 const sheet = {
   reason: [
-    'The first thing a person asks of this product is a question about time: will I be back for my train, will the place still be open. The product’s first promise is that the answer has been checked (PRODUCT-SPEC §1.3, RTE-6). Railways built the visual language of time one can trust — the timetable, and the line with its stations — and this direction speaks it.',
-    'So the Route is a chart drawn to time: every minute takes the same height. The long leg looks long, the short stops crowd together, and during the Outing “now” is a light on a rail of glass at the edge of the screen.',
-    'Round two, at the owner’s request, gives the idea a body. The map is no longer a panel: it fills the screen and is the content. Controls and sheets are Liquid Glass floating over it, as Apple’s guidance has it. While one walks the map is seen at an angle with the way ahead up and the buildings standing; the line glows and moves in the direction of travel; the voice is drawn as bars; every Place has its photograph and the icon of its kind. Green is still the verdict “on time” — and now also the colour of the line itself.',
+    'The first thing a person asks of this product is a question about time: will I be back for my train, will the place still be open. The product’s first promise is that the answer has been checked (PRODUCT-SPEC §1.3, RTE-6). Railways built the visual language of time one can trust — the timetable, and the line with its stations — and the base of this direction speaks it: the Route is a chart drawn to time, and green means “on time”.',
+    'The second promise is a guide whose facts have sources (KNW-16). Guidebook, the other direction of round two, said that best: a photograph of the Place, the Story as a page of prose, the source at its foot. After round two the owner asked for the two together — Timetable as the base, the guide from Guidebook.',
+    'So two voices share the screen and are told apart by type. What the timetable says — times, the verdict, the line, the controls — is set in a sans and in numerals, on Liquid Glass over a map that fills the screen. What the guide says — why a Place is on the Route, the Story, where it comes from — is set in a serif, on a solid page under the photograph. A person learns the rule in one screen: glass and sans are the way; paper and serif are the city.',
   ],
   roots: [
     {
       what: 'The timetable chart.',
       lesson:
-        'In the 1840s the railway engineer Charles Ibry drew a chart of time against stations to plan the trains of the Paris–Le Havre line. This direction puts one walk on the same kind of paper.',
+        'In the 1840s the railway engineer Charles Ibry drew a chart of time against stations to plan the trains of the Paris–Le Havre line. The chart of the Route puts one walk on the same kind of paper.',
       source: 'Wikipedia, “Charles Ibry”',
       url: 'https://en.wikipedia.org/w/index.php?oldid=1384277910',
     },
     {
+      what: 'The printed guide.',
+      lesson:
+        'Baedeker’s guides carried maps, routes and descriptions of noteworthy buildings written by specialists. Taken from there, by way of Guidebook: the Story is a page to read, and it names its source at the foot.',
+      source: 'Wikipedia, “Baedeker”',
+      url: 'https://en.wikipedia.org/w/index.php?oldid=1386387435',
+    },
+    {
       what: 'Glass where Apple puts it.',
       lesson:
-        'Apple describes Liquid Glass as the layer of controls and navigation that floats above content, to be used sparingly on custom controls and not for content itself. Here the content is the map; the sheet, the bars and the keys are the glass.',
+        'Apple describes Liquid Glass as the layer of controls and navigation that floats above content, and says not to use it for content itself. That is exactly the line between the two voices: the timetable is on glass, the guide’s page is solid.',
       source: 'Apple, Human Interface Guidelines: Materials',
       url: 'https://developer.apple.com/design/human-interface-guidelines/materials',
     },
     {
-      what: 'A sheet over a map.',
+      what: 'Text that follows the voice.',
       lesson:
-        'Apple’s guidance keeps the map usable behind a sheet that rests at detents and carries a grabber. The sheet of the Route rests at half height and opens to the whole chart.',
-      source: 'Apple, Human Interface Guidelines: Sheets',
-      url: 'https://developer.apple.com/design/human-interface-guidelines/sheets',
+        'Apple’s transcripts of podcasts are synchronised with the audio, and a tap on the text plays from there. Here a rule stands beside the sentence being spoken and its words are lit as they are said.',
+      source: 'Apple Support, transcripts in Apple Podcasts',
+      url: 'https://support.apple.com/en-us/127831',
     },
     {
       what: 'The material exists in the chosen stack.',
       lesson:
-        'In Expo SDK 58 the package expo-glass-effect draws the system’s glass on iOS 26 and later and falls back to a plain view everywhere else — which is the decision taken for Android in this round.',
+        'In Expo SDK 58 the package expo-glass-effect draws the system’s glass on iOS 26 and later and falls back to a plain view everywhere else — which is the decision taken for Android.',
       source: 'Expo, expo-glass-effect',
       url: 'https://github.com/expo/expo/blob/main/packages/expo-glass-effect/README.md',
     },
   ],
   typeNote:
-    'Two faces. Unbounded, wide and round, sets what is a number: the two times that frame the Outing, the number of a Place. Onest sets everything that is read — names, sentences, labels — and carries Cyrillic and the Belarusian Latin letters alike. On an iPhone the system’s own face may take the place of Onest; the mockups keep Onest so that they look the same in every browser. Both are under the SIL Open Font License 1.1.',
+    'Three faces, one for each kind of saying. Unbounded, wide and round, sets what is a number: the two times that frame the Outing, the number of a Place. Onest sets what the timetable says in words: names in the chart, the verdict, labels, controls. Source Serif 4 sets what the guide says: the name of the Place on its page, the Story, the “why” of a Place in italic, the footnote. All three carry Cyrillic and the Belarusian Latin letters, and all are under the SIL Open Font License 1.1.',
   type: [
     {
-      role: 'Times and numbers',
+      role: 'The timetable: numbers',
       face: 'Unbounded 600–700',
       css: "font: 700 54px/1.05 'Unbounded'; font-variant-numeric: tabular-nums; letter-spacing: -0.02em",
       ru: '14:00 — 16:45',
       en: '14:00 — 16:45',
     },
     {
-      role: 'Names',
-      face: 'Onest 650–700',
-      css: "font: 700 28px/1.12 'Onest'; letter-spacing: -0.015em",
-      ru: 'Национальный академический театр имени Янки Купалы',
-      en: 'Yanka Kupala National Academic Theatre',
+      role: 'The timetable: words',
+      face: 'Onest 500–700',
+      css: "font: 650 22px/1.2 'Onest'; letter-spacing: -0.012em",
+      ru: 'Укладывается в 3 ч · запас 15 мин · по графику · Poliakaŭ',
+      en: 'Fits your 3 h · 15 min to spare · on time · Poliakaŭ',
     },
     {
-      role: 'The sentence being spoken',
-      face: 'Onest 600, lit word by word',
-      css: "font: 600 22px/1.25 'Onest'; letter-spacing: -0.01em",
+      role: 'The guide: a name',
+      face: 'Source Serif 4, 600, drawn for its size',
+      css: "font: 600 34px/1.1 'Source Serif 4'; letter-spacing: -0.012em",
+      ru: 'Костёл Святого Симеона и Святой Елены',
+      en: 'Church of Saints Simon and Helena',
+    },
+    {
+      role: 'The guide: the Story',
+      face: 'Source Serif 4, 400, 17.5 on 25',
+      css: "font: 400 18px/1.42 'Source Serif 4'",
       ru: 'Храм был целиком построен из красного кирпича, что принесло ему народное прозвище «Красный костёл».',
       en: 'The bricks for its walls were sourced from Częstochowa, while the roof tiles came from Włocławek.',
     },
     {
-      role: 'Text and labels',
-      face: 'Onest 400–600',
-      css: "font: 500 15px/1.4 'Onest'",
-      ru: 'Укладывается в 3 ч · запас 15 мин · проверено в 13:51 · Poliakaŭ',
-      en: 'Fits your 3 h · 15 min to spare · checked at 13:51 · Poliakaŭ',
+      role: 'The guide: in passing',
+      face: 'Source Serif 4 Italic',
+      css: "font: italic 400 15px/1.4 'Source Serif 4'",
+      ru: '1910 год — эпоха из вашего пожелания · охраняется как наследие',
+      en: '1910 — the period you asked for · heritage-listed',
     },
   ],
   colourNote:
-    'Glass has no colour of its own: it takes it from the map beneath, so the map carries the palette — cool ground, white streets, soft green and blue. One colour is ours: green, the verdict “on time”, which is therefore the colour of the line, of the person, of “now” and of the one prominent action. Amber will say a warning and red a broken constraint. The contrast of text on glass is measured here against the glass as a solid; over a busy map it is the blur that keeps it, and with “reduce transparency” the glass turns solid.',
+    'Glass has no colour of its own: it takes it from the map beneath, so the map carries the palette — cool ground, white streets, soft green and blue — and the photographs carry the rest. One colour is ours: green, the verdict “on time”, which is therefore the colour of the line, of the person, of “now”, of the mark beside the sentence being spoken, and of the one prominent action. Amber will say a warning and red a broken constraint. The guide’s page is a solid surface, so its contrast is plain arithmetic; the contrast of text on glass is measured against the glass as a solid, and with “reduce transparency” the glass turns solid.',
   colours: [
-    { token: '--surface', role: 'Glass, as a solid' },
+    { token: '--surface', role: 'Page, and glass as a solid' },
     { token: '--ink', role: 'Ink' },
     { token: '--ink-2', role: 'Second ink' },
     { token: '--accent', role: 'On time' },
@@ -632,8 +706,8 @@ const sheet = {
     { token: '--m-water', role: 'Map: water' },
   ],
   pairs: [
-    { text: '--ink', on: '--surface', what: 'Ink on glass' },
-    { text: '--ink-2', on: '--surface', what: 'Second ink on glass' },
+    { text: '--ink', on: '--surface', what: 'Ink on the page' },
+    { text: '--ink-2', on: '--surface', what: 'Second ink on the page' },
     { text: '--accent-ink', on: '--surface', what: '“On time” as text' },
     { text: '--on-accent', on: '--accent', what: 'Label on the green action' },
     { text: '--warn', on: '--surface', what: 'A warning' },
@@ -641,21 +715,21 @@ const sheet = {
     { text: '--line', on: '--m-ground', what: 'The line on the map', large: true },
   ],
   mapNote:
-    'The map is the content, and it fills the screen. On the Route it is seen from above: cool ground, white streets of their true width, buildings as a quiet tone, and over them the line — green, with a white casing and a soft glow — its stations as discs and the clock written on it at the half-hours. During the Outing it is seen at an angle, with the direction of travel up: buildings stand, the Place one walks to carries the icon of its kind, the line ahead moves. Pitch, bearing and extruded buildings are things a MapLibre style does (ADR-0008).',
+    'The map is the content, and it fills the screen. On the Route it is seen from above: cool ground, white streets of their true width, buildings as a quiet tone, and over them the line — green, with a white casing and a soft glow — its stations as discs and the clock written on it at the half-hours. From Guidebook it takes one thing: the footprint of every Place of the Route is tinted, so the map shows the very walls a Story is about. During the Outing the map is seen at an angle, with the direction of travel up: buildings stand, the Place one walks to carries the icon of its kind, the line ahead moves. Pitch, bearing and extruded buildings are things a MapLibre style does (ADR-0008).',
   storyNote:
-    'A card of glass over the tilted map. At its head, the photograph of the Place, its number and time; then the sentence being spoken, large, lit word by word as the voice says it, with the sentence before and the one after dimmed; the source and the “written automatically” note as two quiet lines with icons; the voice drawn as bars; five keys, the middle one green. At the left edge a rail of glass holds the whole Outing to scale, with “now” as a light on it.',
+    'The timetable above, the guide below. At the top, on glass: whether one is on time, and the whole Outing as a strip to scale with “now” as a light on it; under it the tilted map. Then the guide’s page, solid: the photograph of the Place with the name of its author, the name of the Place in a serif, and the Story as continuous prose — a green rule beside the sentence being spoken, its words lit as they are said, the rest in the second ink and still readable, because the text is also for those who cannot hear it (NFR-27). A numeral leads to the source at the foot of the page. The controls float over the page in a capsule of glass: the voice as bars, five keys, the next Place.',
   motion: [
     {
       moment: 'The text follows the voice.',
-      how: 'Words light one by one at the pace of speech; when a sentence ends the next rises into its place in 300 ms, as lines do in a music player’s lyrics.',
+      how: 'The rule glides to the next sentence in 420 ms; inside the sentence, words light one by one at the pace of speech; the page moves by whole lines.',
     },
     {
       moment: 'Now.',
-      how: 'The mark of the person breathes — a ring grows and fades every two seconds; the line ahead moves towards the next Place; the bar of the voice under the playhead beats.',
+      how: 'The mark of the person breathes — a ring grows and fades every two seconds; the line ahead moves towards the next Place; the light on the strip creeps to the right; the bar of the voice under the playhead beats.',
     },
     {
       moment: 'Arriving.',
-      how: 'The map tilts from above to its walking angle in 600 ms while the card of glass rises from the bottom edge; the station on the rail lights green.',
+      how: 'The map tilts from above to its walking angle in 600 ms while the guide’s page rises from the bottom edge with the photograph of the Place; the station on the strip lights green.',
     },
     {
       moment: 'The Route recalculated.',
@@ -665,31 +739,33 @@ const sheet = {
   platforms: [
     {
       system: 'iOS.',
-      how: 'Liquid Glass, the system’s own: the sheet, the card, the round controls and the grouped toolbar float over the map; the sheet has a grabber and detents; controls are 44 points and more.',
+      how: 'Liquid Glass, the system’s own, for what the timetable says: the sheet of the Route, the board at the top, the round controls, the capsule of the player. The guide’s page is a solid sheet. Controls are 44 points and more.',
     },
     {
       system: 'Android.',
-      how: 'The same layout on solid Material 3 surfaces with their own elevation; no blur is imitated. The sheet is attached to the edges, corners are 28 dp, controls are 48 dp and more.',
+      how: 'The same layout on solid Material 3 surfaces with their own elevation; no blur is imitated. Sheets are attached to the edges, corners are 28 dp, controls are 48 dp and more.',
     },
     {
       system: 'Web.',
-      how: 'The map fills the window; a panel of glass at the left holds the Route, a capsule at the top right the name, the language and the way into the application. Listening shows the card and the compact chart.',
+      how: 'The map fills the window. The Route is a panel of glass at the left; while listening, the guide’s page takes that place as a solid sheet, the player floats beside it and the chart of the whole Outing stands at the right.',
     },
   ],
   risks: [
     'Glass over a busy map costs legibility in direct sun. The sheets use the regular, more opaque glass; a “bright sunlight” setting that makes them solid belongs in the design system (D-02) and has to be tried outdoors (D-05).',
     'A tilted map with standing buildings under a backdrop blur is the heaviest thing the application will draw. It has to be measured against the battery budget of NFR-7 on a mid-range Android phone before it is promised.',
-    'On Android the look is deliberately plainer: solid surfaces. Side by side, the iPhone will look richer.',
-    'A chart drawn to time is long on a phone; the sheet shows its beginning and opens to the rest.',
+    'The Story screen carries a great deal: a board, a map, a photograph, a page and a player. On a small phone the page shows five lines of text at a time; the sheet has to open to full height for reading, which D-03 draws.',
+    'The guide’s page leans on a photograph. A Place without a free one will exist, and D-02 has to draw that state.',
+    'On Android the look is deliberately plainer: solid surfaces.',
   ],
 };
 
 export const timetable = {
   id: 'timetable',
-  name: { en: 'Timetable', ru: 'Расписание' },
-  idea: 'The walk as a line drawn to time, over a map that fills the screen: glass sheets and keys float above it, the line glows green while you are on time, and on the way the city is seen at an angle with the road ahead up.',
+  name: { en: 'Timetable with a guide', ru: 'Расписание с гидом' },
+  idea: 'Two voices on one screen. The timetable — times, the verdict, the line — speaks in a sans and in numerals, on glass over a map that fills the screen. The guide — why a Place is here, the Story, its source — speaks in a serif, on a solid page under a photograph of the Place.',
   screens: { route, outing },
   web: { route: webRoute, outing: webOuting },
+  settle,
   sample,
   follow,
   sheet,

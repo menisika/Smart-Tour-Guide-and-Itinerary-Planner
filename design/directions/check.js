@@ -9,10 +9,10 @@ import { ready, renderScreen, settle } from './viewer.js';
 
 /** What has to lie wholly inside its screen. */
 const WHOLE =
-  'button, h1, h2, [class$="-next"], [class$="-actions"], [class$="-controls"], [class$="-timeline"], [class$="-progress"], [class$="-facts"], [class$="-verdict"], [class$="-times"], [class$="-numbers"], [class$="-tags"], [class$="-footnote"], [class$="-source"], [class$="-credit"], [class$="-status"], [class$="-runhead"], [class$="-top"], .pb-line';
+  'button, h1, .tt-sheet, .tt-guide, .tt-player, .tt-board, .tt-dock, .tt-top, .tt-keys, .tt-frame, .tt-verdict, .tt-facts, .tt-voice, .tt-next, .tt-footnote, .tt-made, .tt-status, .tt-title, .tt-strip, .tt-guide-chip, .tt-webnav, .tt-webnote, .tt-webchart';
 /** What is set on one line and may not be cut. */
 const ONE_LINE =
-  '.pb-go span, .tt-go, .gb-primary, .gb-fab, .tt-status, .tt-verdict, .tt-pack small, .gb-pack small, .pb-tags span, .tt-bar > p, .tt-times b, .pb-numbers b, .gb-facts dd, .tt-key-main, .tt-row-end .tt-row-name, .pb-item-time small, .tt-span';
+  '.tt-go span, .tt-title b, .tt-status b, .tt-verdict, .tt-facts, .tt-frame b, .tt-pack small, .tt-row-end .tt-row-name, .tt-open, .tt-guide-chip, .tt-guide-photo figcaption';
 
 const report = /** @type {HTMLElement} */ (document.getElementById('report'));
 const host = document.createElement('div');

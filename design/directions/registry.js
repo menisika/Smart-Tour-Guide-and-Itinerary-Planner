@@ -1,5 +1,4 @@
-/** The directions, in the order they are shown. */
-import { guidebook } from './guidebook/guidebook.js';
+/** The directions that are shown. After three rounds there is one. */
 import { timetable } from './timetable/timetable.js';
 
-export const directions = [timetable, guidebook];
+export const directions = [timetable];

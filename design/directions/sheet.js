@@ -14,7 +14,7 @@ const main = /** @type {HTMLElement} */ (document.getElementById('sheet'));
 const nav = /** @type {HTMLElement} */ (document.getElementById('nav'));
 
 nav.innerHTML =
-  `<a href="./">Both, side by side</a>` +
+  `<a href="./">The two screens, side by side</a>` +
   directions
     .map(
       (d) =>
@@ -121,7 +121,7 @@ async function draw() {
 
   main.innerHTML = `
     <section class="sheet-lead">
-      <p class="sheet-kicker">Direction ${directions.indexOf(direction) + 1} of ${directions.length}</p>
+      <p class="sheet-kicker">The chosen direction</p>
       <h2>${direction.name.en} <small>${direction.name.ru}</small></h2>
       <p class="sheet-idea">${direction.idea}</p>
     </section>
