@@ -66,6 +66,7 @@ A screen is a function that arranges components of the system for a system, a th
 Recorded in full in the [screens' README](screens/README.md#the-owners-acceptance).
 
 - **`D-03` — accepted on 25 November 2026.** The owner accepted the screens of the solo Outing on iOS and Android as they were shown, without asking for another round.
+- **`D-04` — accepted on 25 November 2026.** The owner accepted the pages of the public web and the screens of the console as they were shown, without asking for another round.
 
 ## Rules of the folder
 
