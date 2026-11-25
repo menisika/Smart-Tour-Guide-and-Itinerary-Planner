@@ -1,0 +1,41 @@
+{
+  "note": "SYNTHETIC SAMPLE. Written by hand for the skeleton; no provider produced it. It shows the format and lets the replay adapters be tested.",
+  "recordedAt": null,
+  "request": {
+    "task": "skeleton-sample",
+    "messages": [
+      {
+        "role": "system",
+        "content": "Answer with the JSON object that the schema describes."
+      },
+      {
+        "role": "user",
+        "content": "Say that the replay adapter works."
+      }
+    ],
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "message"
+      ],
+      "additionalProperties": false
+    },
+    "maxOutputTokens": 64
+  },
+  "response": {
+    "output": {
+      "message": "The replay adapter works."
+    },
+    "model": "synthetic-sample",
+    "modelVersion": "0",
+    "usage": {
+      "inputTokens": 0,
+      "outputTokens": 0
+    }
+  }
+}

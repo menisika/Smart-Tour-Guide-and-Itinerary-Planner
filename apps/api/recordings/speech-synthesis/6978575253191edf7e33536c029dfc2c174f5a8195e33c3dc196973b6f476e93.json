@@ -1,0 +1,16 @@
+{
+  "note": "SYNTHETIC SAMPLE. Written by hand for the skeleton; no provider produced it. It shows the format and lets the replay adapters be tested. The audio is 0.3 s of silence.",
+  "recordedAt": null,
+  "request": {
+    "text": "Sample.",
+    "language": "en",
+    "voice": "synthetic-sample",
+    "pronunciationHints": []
+  },
+  "response": {
+    "audioFile": "6978575253191edf7e33536c029dfc2c174f5a8195e33c3dc196973b6f476e93.m4a",
+    "mediaType": "audio/mp4",
+    "voice": "synthetic-sample",
+    "billedCharacters": 7
+  }
+}

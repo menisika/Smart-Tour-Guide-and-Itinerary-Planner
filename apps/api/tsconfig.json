@@ -1,0 +1,12 @@
+{
+  // Type-checks sources and tests together; emits nothing.
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "types": ["node"],
+    // NestJS reads constructor parameter types at run time.
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  },
+  "include": ["src"]
+}

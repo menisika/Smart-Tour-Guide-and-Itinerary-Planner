@@ -1,0 +1,15 @@
+{
+  "note": "SYNTHETIC SAMPLE. Written by hand for the skeleton; no provider produced it. It shows the format and lets the replay adapters be tested. The request is the silent audio of the speech-synthesis sample.",
+  "recordedAt": null,
+  "request": {
+    "audioSha256": "cb3aae35834c12f1756a0080a3c1a72700df64792ebba35255c02d0dea9be59d",
+    "mediaType": "audio/mp4",
+    "language": "en"
+  },
+  "response": {
+    "text": "",
+    "words": [],
+    "model": "synthetic-sample",
+    "billedAudioMs": 300
+  }
+}

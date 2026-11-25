@@ -1,0 +1,45 @@
+{
+  "name": "@promenade/api",
+  "version": "0.0.0",
+  "private": true,
+  "description": "The modular monolith (ADR-0003): API, worker, batch jobs and migrations as entry points of one image.",
+  "type": "module",
+  "files": [
+    "dist",
+    "migrations",
+    "recordings"
+  ],
+  "scripts": {
+    "build": "tsc -b tsconfig.build.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "dev": "node --env-file-if-exists=.env --watch --watch-preserve-output dist/entrypoint.js api",
+    "start": "node dist/entrypoint.js api",
+    "migrate": "node dist/entrypoint.js migrate",
+    "worker": "node dist/entrypoint.js worker",
+    "job": "node dist/entrypoint.js job"
+  },
+  "dependencies": {
+    "@nestjs/common": "^12.6.0",
+    "@nestjs/core": "^12.6.0",
+    "@nestjs/platform-express": "^12.6.0",
+    "@promenade/contracts": "workspace:*",
+    "@promenade/planner": "workspace:*",
+    "@promenade/verifier": "workspace:*",
+    "expo-server": "~58.1.0",
+    "node-pg-migrate": "^9.0.0",
+    "pg": "^8.23.1",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@nestjs/testing": "^12.6.0",
+    "@swc/core": "^1.16.22",
+    "@types/express": "^5.0.6",
+    "@types/node": "catalog:",
+    "@types/pg": "^8.23.1",
+    "typescript": "catalog:",
+    "unplugin-swc": "^2.0.0",
+    "vitest": "catalog:"
+  }
+}
