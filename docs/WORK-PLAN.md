@@ -5888,6 +5888,7 @@ What was made better than a package asked for. One line each; the pull request h
 | D-01    | The sheet of each direction computes the contrast of its colour pairs from its own style sheet and plays the text following the voice                                                                 | the pull request of D-01 |
 | D-01    | The brief lists the screens of scenarios SC-8 and SC-9 beside SC-1…SC-7, and the letters a typeface must carry                                                                                        | the pull request of D-01 |
 | D-01    | A second round at the owner's request: Liquid Glass on iOS and the web, a map seen at an angle on the way, a photograph of every Place with its author and licence, icons of the kinds of Place       | the pull request of D-01 |
+| D-01    | A third round at the owner's request joins the two remaining directions into one: Timetable as the base, the guide's page from Guidebook                                                              | the pull request of D-01 |
 
 ## Plan change log
 
