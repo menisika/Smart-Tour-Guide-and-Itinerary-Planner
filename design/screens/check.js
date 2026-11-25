@@ -145,7 +145,16 @@ async function check(screen, state, os, theme, lang) {
     const top = document.elementFromPoint(x, y);
     host.style.pointerEvents = 'none';
     if (!top || top === element || element.contains(top) || top.contains(element)) continue;
-    if (top.closest(MODAL) && !element.closest(MODAL)) continue;
+    // A pane that waits covers what is behind it on purpose — the screen, and
+    // an earlier pane that waited before it.
+    const waiting = top.closest(MODAL);
+    const own = element.closest(MODAL);
+    if (
+      waiting &&
+      waiting !== own &&
+      (!own || own.compareDocumentPosition(waiting) & Node.DOCUMENT_POSITION_FOLLOWING)
+    )
+      continue;
     const cover = top.closest('[class]');
     note(`${id} is covered by “${cover?.className ?? top.tagName.toLowerCase()}”`, where);
   }

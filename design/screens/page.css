@@ -331,3 +331,19 @@ body {
     monospace;
   color: var(--ink-2);
 }
+
+/* The screen and nothing else, at its exact size: for the export. */
+.pg-bare .pg-one {
+  display: block;
+  min-height: 0;
+  padding: 0;
+}
+
+.pg-bare .pg-one-bar {
+  display: none;
+}
+
+.pg-bare .pg-one .screen {
+  border-radius: 0;
+  box-shadow: none;
+}

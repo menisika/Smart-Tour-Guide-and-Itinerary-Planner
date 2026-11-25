@@ -15,14 +15,16 @@ import {
   chips,
   code,
   field,
+  liked,
   segments,
   stepper,
   toggle,
 } from '../../system/parts/controls.js';
 import { flow, heading, label, scroll, sheetHead } from '../../system/parts/layout.js';
-import { item, points } from '../../system/parts/lists.js';
+import { item, points, reading } from '../../system/parts/lists.js';
 import { groundMap, lineMap, planMap } from '../../system/parts/map.js';
-import { chart, head, verdict } from '../../system/parts/route.js';
+import { chart, head, variant, variants, verdict } from '../../system/parts/route.js';
+import { ask } from '../../system/parts/sheets.js';
 import { banner, skeleton, state } from '../../system/parts/states.js';
 import { guide, player } from '../../system/parts/story.js';
 import {
@@ -34,7 +36,8 @@ import {
   webNav,
   webNote,
 } from '../../system/parts/web.js';
-import { editing } from '../phone/before.js';
+import { after } from '../phone/after.js';
+import { editing, offered } from '../phone/before.js';
 import { asset, words } from '../phone/kit.js';
 import { WB } from './words.js';
 
@@ -75,10 +78,9 @@ export function shell(
   { map, body, foot = '', note = '', over = '', top = 250, is = '', nav, extra = '' },
 ) {
   const { wide } = pageSize(ctx);
-  const { t } = say(ctx.lang);
   return `<div class="tt tt-web${wide ? '' : ' tt-webphone'}"${wide ? '' : ` style="--panel-top:${top}px"`}>
     <div class="tt-under">${map}<span class="tt-osm">© OpenStreetMap</span></div>
-    ${webNav(ctx.lang, { mark: mark(), action: nav ?? (wide ? t.open : WB[ctx.lang].openShort) })}
+    ${webNav(ctx.lang, { mark: mark(), action: nav ?? WB[ctx.lang].openShort })}
     ${panel(body, { foot, is })}
     ${note && wide ? webNote(note) : ''}
     ${extra}${over}
@@ -302,8 +304,10 @@ function edit(ctx) {
 
 /** @param {Ctx} ctx */
 function story(ctx) {
-  const { theme, lang, data } = ctx;
-  const { t } = say(lang);
+  const { theme, lang, data, state: is } = ctx;
+  const { t, w } = say(lang);
+  const ended = is === 'ended';
+  const told = data.outingNow.story[lang];
   const { width, height, wide } = pageSize(ctx);
   const now = data.outingNow;
   const around = data.stops.filter((/** @type {any} */ s) => s.order <= 6);
@@ -323,9 +327,10 @@ function story(ctx) {
     address: `${HOST}/r/early-20th-century/${now.stop.order}`,
     inner: `<div class="tt tt-web tt-web-outing${wide ? '' : ' tt-webphone'}">
       <div class="tt-under">${map}<span class="tt-osm">© OpenStreetMap</span></div>
-      ${webNav(lang, { mark: mark(), action: wide ? t.open : WB[lang].openShort })}
-      ${guide(data, lang, { from: wide ? 0 : undefined, theme, width: wide ? 490 : width })}
-      ${player(data, lang)}
+      ${webNav(lang, { mark: mark(), action: WB[lang].openShort })}
+      ${guide(data, lang, { from: wide ? 0 : undefined, theme, width: wide ? 490 : width, ...(ended ? { story: { ...told, current: -1, elapsed: told.total } } : {}) })}
+      ${player(data, lang, ended ? { state: 'ended' } : {})}
+      ${ended ? ask(w.storyOver, liked(w.storyOver, '', w.likeLabels)) : ''}
       ${wide ? `<section class="tt-webchart lg">${chart(data, lang, { scale: 3.5, compact: true, selected: now.stop.order })}</section>${webNote(t.webNote)}` : ''}
     </div>`,
   };
@@ -333,13 +338,13 @@ function story(ctx) {
 
 // ── Signing in, deleting the account ────────────────────────────────────────
 
-/** A page of the web behind a card. @param {Ctx} ctx @param {string} card @param {string} name */
-const behindCard = (ctx, card, name) => {
+/** A page of the web behind a card. @param {Ctx} ctx @param {string} card @param {string} name @param {string} [nav] what the bar offers: the account, for someone signed in */
+const behindCard = (ctx, card, name, nav) => {
   const { t, wb } = say(ctx.lang);
   return shell(ctx, {
     map: routeMap(ctx),
     body: `${head(ctx.data, ctx.lang)}${chart(ctx.data, ctx.lang, { scale: 6, until: 40 })}`,
-    nav: wb.signIn,
+    nav: nav ?? wb.signIn,
     note: t.webNote,
     over: webCard(card, { name }),
   });
@@ -373,7 +378,10 @@ function deleteAccount(ctx) {
     <p class="tt-aside tt-aside-under">${w.deleteKeeps}</p>
     <div class="tt-space"></div>
     ${flow([action(w.deleteAction, { kind: 'danger', icon: icons.trash }), action(w.cancel, { kind: 'plain' })], 'tight')}`;
-  return { address: `${HOST}/account`, inner: behindCard(ctx, card, w.deleteTitle) };
+  return {
+    address: `${HOST}/account`,
+    inner: behindCard(ctx, card, w.deleteTitle, WB[lang].account),
+  };
 }
 
 // ── What a messenger shows of a link ────────────────────────────────────────
@@ -428,6 +436,80 @@ function preview({ theme, lang, data }, what) {
   };
 }
 
+// ── What the packages of stage S1 name "on the app and the web" ────────────
+
+/** How the request was understood, and the Routes offered, in a panel. @param {Ctx} ctx */
+function optionsPage(ctx) {
+  const { lang, data, state: is } = ctx;
+  const { t, w, wb } = say(lang);
+  const understood = is === 'understood';
+  return {
+    address: `${HOST}/plan/${understood ? 'understood' : 'options'}`,
+    inner: shell(ctx, {
+      map: understood ? startMap(ctx, 150) : routeMap(ctx, 150),
+      top: 150,
+      is: 'is-wide',
+      body: understood
+        ? `${sheetHead(w.readingTitle, { note: w.readingNote })}${field({ name: t.wishName, value: data.route.wish[lang], icon: icons.edit })}${reading(
+            lang,
+            [
+              { icon: icons.clock, label: w.readPeriod, from: w.readPeriodFrom },
+              { icon: icons.building, label: w.readTheme, from: w.readThemeFrom },
+              { icon: icons.museum, label: w.readNoMuseums, from: w.readNoMuseumsFrom, is: 'hard' },
+              { icon: icons.person, label: w.readProfile, from: w.readProfileFrom, fixed: true },
+            ],
+          )}`
+        : `<p class="tt-kicker">${w.optionsKicker(3, data.route.checkedAt)}</p>${scroll(
+            variants(
+              w.optionsName,
+              offered(data).map((o, i) =>
+                variant(lang, { ...o, name: w.options[i], why: w.optionsWhy[i], chosen: i === 0 }),
+              ),
+            ),
+          )}`,
+      foot: understood
+        ? action(w.build, { icon: icons.route })
+        : `${action(w.another, { kind: 'second', icon: icons.reload })}${action(w.openRoute)}`,
+      nav: wb.signIn,
+    }),
+  };
+}
+
+/**
+ * A page of the application in a browser, as it is: the public web is the
+ * web target of the application (ADR-0007). In a phone's browser the page
+ * fills the window; at a desk it stands at the side of the map.
+ * @param {(ctx: any) => { inner: string }} page a screen of the phone @param {string} path
+ */
+const asWeb = (page, path) => (/** @type {Ctx} */ ctx) => {
+  const inner = page({ ...ctx, os: 'ios' }).inner;
+  return {
+    address: `${HOST}/${path}`,
+    inner:
+      ctx.os === 'webphone'
+        ? inner
+        : `<div class="tt tt-web"><div class="tt-under">${startMap(ctx)}<span class="tt-osm">© OpenStreetMap</span></div>${webNav(ctx.lang, { mark: mark(), action: WB[ctx.lang].account })}<section class="tt-webpage">${inner}</section></div>`,
+  };
+};
+
+/** "This page is out of date": the update message of the web (ADR-0025). @param {Ctx} ctx */
+function update(ctx) {
+  const { wb } = say(ctx.lang);
+  return {
+    address: `${HOST}/plan`,
+    inner: shell(ctx, {
+      map: startMap(ctx, 380),
+      top: 380,
+      body: state({
+        icon: icons.reload,
+        title: wb.reloadTitle,
+        text: wb.reloadNote,
+        actions: action(wb.reload, { icon: icons.reload }),
+      }),
+    }),
+  };
+}
+
 export const web = {
   routePage,
   invitation,
@@ -436,6 +518,11 @@ export const web = {
   story,
   signIn,
   deleteAccount,
+  optionsPage,
+  update,
+  routes: asWeb(after.routes, 'routes'),
+  profile: asWeb(after.profile, 'profile'),
+  notifications: asWeb(after.notifications, 'notifications'),
   previewRoute: (/** @type {any} */ ctx) => preview(ctx, 'route'),
   previewInvitation: (/** @type {any} */ ctx) => preview(ctx, 'invitation'),
 };

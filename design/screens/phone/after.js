@@ -83,19 +83,20 @@ function signIn({ os, lang, data, state: is }) {
   const { w } = words(lang);
   const email = data.samples.account.email;
   const offline = is === 'offline';
-  const entering = is === 'code' || is === 'error';
+  const entering = ['code', 'error', 'expired', 'locked'].includes(is);
+  const refused = { error: w.codeWrong, expired: w.codeExpired, locked: w.codeLocked }[is];
   const body = entering
     ? `${heading(w.codeTitle, w.codeNote(email))}
-      ${code(w.codeName, is === 'error' ? data.samples.code.wrong : data.samples.code.digits)}
-      ${is === 'error' ? `<div class="tt-space"></div>${banner({ icon: icons.alert, lead: w.codeWrong, rest: '', is: 'stop' })}` : ''}
+      ${code(w.codeName, refused ? data.samples.code.wrong : data.samples.code.digits)}
+      ${refused ? `<div class="tt-space"></div>${banner({ icon: icons.alert, lead: refused, rest: '', is: 'stop' })}` : ''}
       <div class="tt-space"></div>
       ${action(w.codeAgain, { kind: 'plain', icon: icons.reload })}`
     : `<p class="tt-aside">${w.signInNote}</p><div class="tt-space"></div>
-      ${offline ? `${banner({ icon: icons.noNetwork, lead: w.signInOffline, rest: w.signInOfflineNote, is: 'warn' })}<div class="tt-space"></div>` : ''}
+      ${offline ? `${banner({ icon: icons.noNetwork, lead: w.queuedCode, rest: w.queuedCodeNote, is: 'warn' })}<div class="tt-space"></div>` : ''}
       ${flow([
         field({ name: w.email, value: email, icon: icons.mail }),
         action(is === 'loading' ? w.sending : w.getCode, {
-          state: is === 'loading' ? 'busy' : offline ? 'disabled' : undefined,
+          state: is === 'loading' ? 'busy' : undefined,
         }),
         `<p class="tt-or">${w.or}</p>`,
         action(w.withApple, {
@@ -315,6 +316,7 @@ function profile({ os, lang, data }) {
           item({ icon: icons.sync, label: t.journal }),
           item({ icon: icons.flag, label: w.myCorrections }),
           item({ icon: icons.bell, label: w.notifications }),
+          item({ icon: icons.trash, label: w.deleteData }),
         ])}`,
       )}`,
       tabs: tabs(lang, 2),

@@ -159,7 +159,7 @@ export const laterScreens = [
   },
 ];
 
-/** @type {{ id: string, title: string, steps: [string, string, string, string?][] }[]} */
+/** @type {{ id: string, title: string, steps: import('../registry.js').Step[] }[]} */
 export const laterScenarios = [
   {
     id: 'SC-2',
@@ -167,20 +167,26 @@ export const laterScenarios = [
     steps: [
       ['party-create', 'usual', 'Dima creates an Outing for Saturday at 14:00, about three hours.'],
       ['party-create', 'link', 'He receives the Invitation link.'],
-      ['preview-invitation', 'usual', 'He drops it into the messenger group.'],
+      [
+        'preview-invitation',
+        'usual',
+        'He drops it into the messenger group.',
+        undefined,
+        '.tt-link',
+      ],
       [
         'web-invitation',
         'usual',
         'Each friend opens it in the browser and answers within a minute.',
         'webphone',
       ],
-      ['web-invitation', 'answered', 'Olya’s Dealbreaker is “no bars”.', 'webphone'],
+      ['web-invitation', 'answered', 'Olya’s Dealbreaker is “no bars”.', 'webphone', 'auto'],
       ['party-answer', 'usual', 'A friend with the application answers there.'],
       ['party-options', 'usual', 'Three Routes, a line each; nobody’s Dealbreaker is broken.'],
-      ['party-vote', 'usual', 'The friends vote.'],
-      ['party-chat', 'usual', 'They talk it over in the Chat.'],
+      ['party-vote', 'usual', 'The friends vote.', undefined, '.tt-top > .tt-round:last-child'],
+      ['party-chat', 'usual', 'They talk it over in the Chat.', undefined, '.tt-bar > .tt-round'],
       ['party-vote', 'organizer', 'Dima confirms.'],
-      ['party-vote', 'chosen', 'Everyone sees the choice.'],
+      ['party-vote', 'chosen', 'Everyone sees the choice.', undefined, 'auto'],
       ['party-meeting', 'usual', 'On Saturday everyone sees the Meeting Point.'],
       ['party-outing', 'usual', 'Visited Places tick off on everyone’s phone.'],
     ],
@@ -189,12 +195,20 @@ export const laterScenarios = [
     id: 'SC-7',
     title: 'Publishing a Route (its main steps)',
     steps: [
-      ['recap', 'usual', 'Olya liked the Route: its Recap, and the way to publish it.'],
-      ['catalog', 'usual', 'Other people find it in the Catalog.'],
+      [
+        'recap',
+        'usual',
+        'Olya liked the Route: its Recap, and the way to publish it.',
+        undefined,
+        '.tt-list .tt-item',
+      ],
+      ['catalog', 'usual', 'Other people find it in the Catalog.', undefined, ['.tt-saved', 0]],
       [
         'catalog-route',
         'usual',
         'They take it or start an Outing on it, rate it and write Reviews.',
+        undefined,
+        ['.tt-review > button', 0],
       ],
       ['catalog-route', 'complaint', 'Someone files a Complaint about a Review.'],
       ['visits', 'usual', 'Each Outing marks its Places on a personal map.'],
