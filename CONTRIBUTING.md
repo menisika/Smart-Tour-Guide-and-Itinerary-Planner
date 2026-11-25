@@ -43,7 +43,7 @@ Refs: S1-RTE-03
   | `chore`    | upkeep that fits none of the above     |
   | `revert`   | undoing an earlier commit              |
 
-- **Scope** — required; the part of the repository that changed: `api`, `mobile`, `console`, `contracts`, `planner`, `verifier`, `routing`, `triggers`, `i18n`, `tools`, `infra`, `docker`, `ci`, `docs`, `spikes`, `deps`, or `repo` for what belongs to no single part.
+- **Scope** — required; the part of the repository that changed: `api`, `mobile`, `console`, `contracts`, `planner`, `verifier`, `routing`, `triggers`, `i18n`, `tools`, `infra`, `docker`, `ci`, `docs`, `design`, `spikes`, `deps`, or `repo` for what belongs to no single part.
 - **Body** — optional. It says _why_, never what the diff already shows. At most 600 characters, lines of at most 100.
 - **Trailers** — `Refs:` with the work package or requirement the commit serves. A `Co-Authored-By:` line is accepted.
 
