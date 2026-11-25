@@ -1,0 +1,8 @@
+# Downloads and derived data are reproducible from README.md; never commit them.
+node_modules/
+data/
+out/*.bin
+out/*.parquet
+out/*.duckdb*
+out/21-focus-objects.json
+out/23-state-*.json

@@ -1,0 +1,50 @@
+{
+  "name": "minsk-city-data-spike",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Throw-away spike: first real city data for Minsk and the measurements the ADRs list as unmeasured.",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "fetch": "bash src/00-fetch.sh",
+    "extract": "node src/01-extract.ts",
+    "places": "node src/02-places.ts",
+    "hours": "TZ=Europe/Minsk node src/03-hours.ts",
+    "knowledge": "node src/04-knowledge.ts",
+    "graph": "node src/05-graph.ts",
+    "matrix": "node src/06-matrix.ts",
+    "map": "bash src/07-map.sh",
+    "material": "node src/08-material.ts",
+    "typecheck": "tsc --noEmit",
+    "memory": "node src/09-memory.ts",
+    "all": "npm run extract && npm run places && npm run hours && npm run knowledge && npm run graph && npm run matrix && npm run material && npm run map && npm run memory && npm run country",
+    "sql": "node src/sql.ts",
+    "country": "node src/10-country.ts",
+    "wikidata-match": "node src/11-wikidata-match.ts",
+    "heritage": "node src/12-heritage.ts",
+    "bewiki-lists": "node src/13-bewiki-lists.ts",
+    "wikivoyage": "node src/14-wikivoyage.ts",
+    "overture": "node src/15-overture.ts",
+    "names": "node src/16-names.ts",
+    "pageviews": "node src/17-pageviews.ts",
+    "country-base": "node src/18-country.ts",
+    "more": "npm run wikidata-match && npm run heritage && npm run bewiki-lists && npm run wikivoyage && npm run overture && npm run names && npm run pageviews && npm run country-base",
+    "fetch-history": "bash src/20-fetch-history.sh",
+    "focus-counts": "node src/21-focus-counts.ts",
+    "freshness": "node src/22-freshness.ts",
+    "diffs": "node src/23-diffs.ts",
+    "websites": "node src/24-websites.ts",
+    "size": "node src/25-size.ts",
+    "belarus": "npm run focus-counts && npm run freshness && npm run diffs && npm run websites && npm run size"
+  },
+  "dependencies": {
+    "@duckdb/node-api": "2.0.1-r.1",
+    "opening_hours": "3.16.0"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.6",
+    "typescript": "7.0.2"
+  }
+}
