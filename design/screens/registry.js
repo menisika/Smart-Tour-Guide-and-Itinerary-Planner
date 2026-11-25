@@ -8,6 +8,7 @@
  * measures all of them.
  */
 import { consoleScenarios, consoleScreens } from './console/index.js';
+import { laterScenarios, laterScreens } from './later/index.js';
 import { after } from './phone/after.js';
 import { before } from './phone/before.js';
 import { during } from './phone/outing.js';
@@ -742,6 +743,7 @@ export const screens = [
     render: web.previewInvitation,
   },
   ...consoleScreens,
+  ...laterScreens,
 ];
 
 /**
@@ -846,6 +848,7 @@ export const scenarios = [
     ],
   },
   ...consoleScenarios,
+  ...laterScenarios,
 ];
 
 /** @param {string} id */
