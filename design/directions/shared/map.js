@@ -298,3 +298,112 @@ export function routeSamples(data, everyUnits = 30) {
   }
   return samples;
 }
+
+/**
+ * The map seen at an angle with the direction of travel up, as navigation
+ * shows it. The ground is the same drawing, turned and tilted by the browser;
+ * what stands on it is placed by the same arithmetic, so that it stays upright
+ * and shrinks with distance. A MapLibre style does this with `pitch`,
+ * `bearing` and extruded buildings (ADR-0008).
+ *
+ * @param {any} data
+ * @param {object} options
+ * @param {number} options.width of the place for the map, in pixels
+ * @param {number} options.height of it
+ * @param {'ru' | 'en'} options.lang
+ * @param {string[]} options.layers the flat layers, bottom first
+ * @param {{ x: number, y: number }} options.at where the person stands, in map units
+ * @param {number} options.bearing direction of travel, degrees clockwise from north
+ * @param {number} [options.u] map units per pixel at the person
+ * @param {number} [options.near] how far above the bottom edge the person stands, in pixels
+ * @param {number} [options.pitch] degrees
+ * @param {number[]} [options.walls] heights at which buildings are drawn again, in pixels; the last is the roof
+ * @param {(ctx: { u: number }) => string} [options.over] drawn on the ground, above the buildings
+ * @param {{ x: number, y: number, html: string, className?: string }[]} [options.standing] what stands upright
+ * @param {string} [options.label]
+ */
+export function pitchedMap(data, options) {
+  if (!installed) throw new Error('installMap has not been called');
+  const {
+    width,
+    height,
+    layers,
+    at,
+    bearing,
+    u = 1.7,
+    near = 150,
+    pitch = 50,
+    walls = [],
+    standing = [],
+  } = options;
+  const perspective = 1000;
+  const sin = Math.sin((pitch * Math.PI) / 180);
+  const cos = Math.cos((pitch * Math.PI) / 180);
+  // The size the drawing needs so that, once tilted, it fills the place given to it.
+  const boxHeight = Math.round((height * perspective) / (cos * perspective - height * sin));
+  const farScale = perspective / (perspective + sin * boxHeight);
+  const boxWidth = Math.round((width / farScale) * 1.06);
+  const view = {
+    x: at.x - (boxWidth * u) / 2,
+    y: at.y - (boxHeight - near) * u,
+    w: boxWidth * u,
+    h: boxHeight * u,
+    u,
+  };
+  const turn = `rotate(${-bearing} ${at.x} ${at.y})`;
+  const flat = layers
+    .map((layer) => {
+      const [name, pass] = layer.split(':');
+      return `<use href="#m-${name}" class="m-${name}${pass ? `-${pass}` : ''}"/>`;
+    })
+    .join('');
+  const built = walls
+    .map(
+      (lift, i) =>
+        `<g transform="translate(0 ${-lift * u}) ${turn}"><use href="#m-buildings" class="${i === walls.length - 1 ? 'm-roof' : 'm-wall'}"/></g>`,
+    )
+    .join('');
+
+  /** From the ground to the screen. @param {number} gx @param {number} gy */
+  const project = (gx, gy) => {
+    const angle = (-bearing * Math.PI) / 180;
+    const rx = at.x + (gx - at.x) * Math.cos(angle) - (gy - at.y) * Math.sin(angle);
+    const ry = at.y + (gx - at.x) * Math.sin(angle) + (gy - at.y) * Math.cos(angle);
+    const dx = (rx - view.x) / u - boxWidth / 2;
+    const dy = (ry - view.y) / u - boxHeight;
+    const scale = perspective / (perspective - dy * sin);
+    return { x: width / 2 + dx * scale, y: height + dy * cos * scale, scale };
+  };
+
+  const upright = standing
+    .map((item) => {
+      const p = project(item.x, item.y);
+      if (p.x < -20 || p.x > width + 20 || p.y < 0 || p.y > height + 10) return '';
+      return `<div class="map3d-pin ${item.className ?? ''}" style="left:${p.x.toFixed(1)}px;top:${p.y.toFixed(1)}px;--far:${p.scale.toFixed(3)}">${item.html}</div>`;
+    })
+    .join('');
+
+  return `<div class="map3d" style="height:${height}px" role="img" aria-label="${options.label ?? ''}">
+    <svg class="map map3d-ground" viewBox="${view.x} ${view.y} ${view.w} ${view.h}" preserveAspectRatio="none"
+      style="--u:${u};left:${(width - boxWidth) / 2}px;top:${height - boxHeight}px;width:${boxWidth}px;height:${boxHeight}px;transform:perspective(${perspective}px) rotateX(${pitch}deg)">
+      <rect class="m-ground" x="${view.x - view.w}" y="${view.y - view.h}" width="${view.w * 3}" height="${view.h * 3}"/>
+      <g transform="${turn}">${flat}</g>
+      ${built}
+      <g transform="${turn}">${options.over?.({ u }) ?? ''}</g>
+    </svg>
+    <div class="map3d-haze"></div>
+    ${upright}
+  </div>`;
+}
+
+/**
+ * The direction of travel at a minute of the plan: towards a point a little
+ * further along the walked line. Degrees clockwise from north.
+ * @param {any} data @param {number} minute
+ */
+export function bearingAt(data, minute) {
+  const here = positionAt(data, minute);
+  const ahead = positionAt(data, Math.min(data.route.totalMinutes, minute + 1.2));
+  if (Math.hypot(ahead.x - here.x, ahead.y - here.y) < 1) return 0;
+  return (Math.atan2(ahead.x - here.x, -(ahead.y - here.y)) * 180) / Math.PI;
+}

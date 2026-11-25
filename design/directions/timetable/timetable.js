@@ -1,16 +1,21 @@
 /**
- * Direction 2 — Timetable.
+ * Direction "Timetable", second round.
  *
- * The promise of the product is time: "you will be back for your train".
- * Railways solved trust in time with a timetable and a line; so does this.
- * The Route is a chart drawn to time, and colour is kept for the verdict.
+ * The idea is the first round's: the promise of the product is time, so the
+ * Route is a line drawn to time and colour says whether one is on time. The
+ * owner asked for depth, effects, icons and Liquid Glass after Apple. So the
+ * map now fills the screen and is the content; everything else is a layer of
+ * glass over it; and while one walks, the map is seen at an angle with the way
+ * ahead up.
  */
 import { format } from '../shared/data.js';
-import { INSETS, SIZES, icons } from '../shared/frames.js';
+import { SIZES, icons } from '../shared/frames.js';
 import {
+  bearingAt,
   fitView,
   mapSvg,
   pinned,
+  pitchedMap,
   positionAt,
   routePath,
   routeSamples,
@@ -19,44 +24,34 @@ import {
 
 const T = {
   ru: {
-    route: 'Маршрут',
-    option: 'вариант 1 из 3',
+    kicker: 'Вариант 1 из 3',
     title: 'Архитектура начала XX века, без музеев',
     out: 'Выход',
     back: 'У вокзала',
     fits: (/** @type {any} */ r) => `Укладывается в ${format.duration(r.budgetMinutes, 'ru')}`,
     reserve: (/** @type {any} */ r) => `запас ${format.duration(r.reserveMinutes, 'ru')}`,
-    checked: (/** @type {string} */ at) => `проверено в ${at}`,
+    checked: (/** @type {string} */ at) => `проверен в ${at}`,
     places: (/** @type {number} */ n) => `${n} мест`,
     outside: 'все снаружи',
-    colTime: 'Время',
-    colPlace: 'Место',
     station: 'Вокзал',
     departure: 'выход',
     arrival: 'возвращение',
     start: 'Начать прогулку',
     pack: 'Пакет',
-    packNote: (/** @type {number} */ mb) => `${mb} МБ · без сети`,
     onTime: 'По графику',
     backAt: (/** @type {string} */ at) => `у вокзала в ${at}`,
-    stay: (/** @type {string} */ until) => `стоянка до ${until}`,
+    stay: (/** @type {string} */ until) => `здесь до ${until}`,
     seenOutside: 'снаружи',
-    source: 'Источник',
     made: 'Создано автоматически · проверено куратором',
     next: 'Далее',
-    pause: 'Пауза',
-    map: 'Карта',
-    more: 'Ещё',
     open: 'Открыть в приложении',
     webNote:
       'В браузере рассказ включают вручную. По прибытии сам и без сети он звучит в приложении.',
-    now: 'сейчас',
     revision: (/** @type {string} */ date) => `версия от ${date}`,
     theLine: 'Линия прогулки',
   },
   en: {
-    route: 'Route',
-    option: 'option 1 of 3',
+    kicker: 'Option 1 of 3',
     title: 'Early <span class="tt-nowrap">20th-century</span> architecture, no museums',
     out: 'Leave',
     back: 'At the station',
@@ -64,35 +59,37 @@ const T = {
     reserve: (/** @type {any} */ r) => `${format.duration(r.reserveMinutes, 'en')} to spare`,
     checked: (/** @type {string} */ at) => `checked at ${at}`,
     places: (/** @type {number} */ n) => `${n} places`,
-    outside: 'all seen from outside',
-    colTime: 'Time',
-    colPlace: 'Place',
+    outside: 'all from outside',
     station: 'Station',
     departure: 'leave',
     arrival: 'back',
     start: 'Start the outing',
     pack: 'Pack',
-    packNote: (/** @type {number} */ mb) => `${mb} MB · offline`,
     onTime: 'On time',
-    backAt: (/** @type {string} */ at) => `at the station by ${at}`,
+    backAt: (/** @type {string} */ at) => `station by ${at}`,
     stay: (/** @type {string} */ until) => `here until ${until}`,
     seenOutside: 'outside',
-    source: 'Source',
     made: 'Written automatically · verified by a curator',
     next: 'Next',
-    pause: 'Pause',
-    map: 'Map',
-    more: 'More',
     open: 'Open in the app',
     webNote:
       'In a browser you start a story yourself. In the app it begins as you arrive, and plays without a network.',
-    now: 'now',
     revision: (/** @type {string} */ date) => `revision of ${date}`,
     theLine: 'The line of the outing',
   },
 };
 
-const LAYERS = ['green', 'water', 'roads_minor', 'roads_mid', 'roads_major', 'rail', 'rail:ties'];
+const FLAT = [
+  'green',
+  'water',
+  'roads_minor',
+  'roads_mid',
+  'roads_major',
+  'buildings',
+  'rail',
+  'rail:ties',
+];
+const GROUND = ['green', 'water', 'roads_minor', 'roads_mid', 'roads_major', 'rail', 'rail:ties'];
 
 /** @param {string} clock @param {number} minutes */
 const clockPlus = (clock, minutes) => {
@@ -101,35 +98,40 @@ const clockPlus = (clock, minutes) => {
   return `${String(Math.floor(total / 60)).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`;
 };
 
-/**
- * The line on the map: the walked part thin, the part ahead heavy, stations as
- * rings, and a mark on the line for every ten minutes of the plan.
- * @param {any} data @param {'ru' | 'en'} lang @param {{ u: number }} ctx
- * @param {{ current?: number, walkedLegs?: number, minute?: number, marks?: boolean }} state
- */
-function overlay(data, lang, { u }, state = {}) {
-  const { current = 0, walkedLegs = 0, minute, marks = true } = state;
+/** The icon of a kind of Place. @param {string} kind */
+const kindIcon = (kind) => icons[/** @type {keyof typeof icons} */ (kind)] ?? icons.building;
+
+/** The line as it lies on the ground: a glow, a casing, the line, and the part ahead in motion. */
+const line = (/** @type {any} */ data, /** @type {number} */ walkedLegs) => {
+  const ahead = routePath(data, walkedLegs);
   const walked =
     walkedLegs > 0 ? `<path class="tt-line-walked" d="${routePath(data, 0, walkedLegs)}"/>` : '';
-  const ahead = `<path class="tt-line-case" d="${routePath(data, walkedLegs)}"/><path class="tt-line" d="${routePath(data, walkedLegs)}"/>`;
+  return `${walked}<path class="tt-line-glow" d="${ahead}"/><path class="tt-line-case" d="${ahead}"/><path class="tt-line" d="${ahead}"/><path class="tt-line-march" d="${ahead}"/>`;
+};
+
+/**
+ * @param {any} data @param {'ru' | 'en'} lang @param {{ u: number }} ctx
+ * @param {{ current?: number, marks?: boolean }} state
+ */
+function overlay(data, lang, { u }, state = {}) {
+  const { current = 0, marks = true } = state;
   const at = spread(
     data.stops.map((/** @type {any} */ s) => ({ x: s.streetX, y: s.streetY })),
-    21 * u,
+    25 * u,
   );
   let ticks = '';
   if (marks) {
-    for (let m = 10; m < data.route.totalMinutes; m += 10) {
+    for (let m = 30; m < data.route.totalMinutes; m += 30) {
       const p = positionAt(data, m);
       if ('atStop' in p) continue;
-      // A mark that would sit under a station is left out.
-      if (at.some((s) => Math.hypot(s.x - p.x, s.y - p.y) < 20 * u)) continue;
-      const half = m % 30 === 0;
+      if (at.some((s) => Math.hypot(s.x - p.x, s.y - p.y) < 30 * u)) continue;
+      const label = clockPlus(data.route.start, m);
       ticks += pinned(
         p.x,
         p.y,
         u,
-        `<path d="M0 -${half ? 7 : 5}V${half ? 7 : 5}" transform="rotate(${p.angle})"/>${half ? `<text x="9" y="-7">${clockPlus(data.route.start, m)}</text>` : ''}`,
-        `tt-mark${half ? ' is-half' : ''}`,
+        `<rect x="-19" y="-10" width="38" height="20" rx="10"/><text y="4" text-anchor="middle">${label}</text>`,
+        'tt-mark',
       );
     }
   }
@@ -139,8 +141,8 @@ function overlay(data, lang, { u }, state = {}) {
         at[i].x,
         at[i].y,
         u,
-        `<circle r="9.5"/><text y="4.2" text-anchor="middle">${s.order}</text>`,
-        `tt-station${s.order === current ? ' is-current' : ''}${s.order < current ? ' is-done' : ''}`,
+        `<circle class="tt-station-shade" r="12" cy="1.5"/><circle r="11.5"/><text y="4" text-anchor="middle">${s.order}</text>`,
+        `tt-station${s.order === current ? ' is-current' : ''}`,
       ),
     )
     .join('');
@@ -148,29 +150,16 @@ function overlay(data, lang, { u }, state = {}) {
     data.map.start.street_x,
     data.map.start.street_y,
     u,
-    `<rect x="-6.5" y="-6.5" width="13" height="13"/><text x="12" y="4.5">${T[lang].station.toUpperCase()}</text>`,
+    `<rect class="tt-terminus-mark" x="-8" y="-8" width="16" height="16" rx="4"/><text x="15" y="4.5">${T[lang].station}</text>`,
     'tt-terminus',
   );
-  let me = '';
-  if (minute !== undefined) {
-    const p = positionAt(data, minute);
-    me = pinned(
-      p.x,
-      p.y,
-      u,
-      '<circle class="tt-me-ring" r="12"/><circle class="tt-me" r="6.5"/>',
-      'tt-position',
-    );
-  }
-  return `${walked}${ahead}${ticks}${start}${stations}${me}`;
+  return `${line(data, 0)}${ticks}${start}${stations}`;
 }
 
 /**
- * The chart: every minute of the Outing takes the same height, so a long leg
- * looks long and "now" is a place on the page.
+ * The chart: every minute of the Outing takes the same height.
  * @param {any} data @param {'ru' | 'en'} lang
  * @param {{ scale: number, minute?: number, compact?: boolean, until?: number, selected?: number }} options
- *   `minute` puts "now" on the chart; `selected` marks a Place without saying where anyone is
  */
 function chart(
   data,
@@ -180,26 +169,20 @@ function chart(
   const t = T[lang];
   const y = (/** @type {number} */ m) => Math.round(m * scale);
   const total = data.route.totalMinutes;
-  const head = 20;
+  const head = 22;
   let html = '';
-  // Quarter-hours, as faint rules across the chart.
-  for (let m = 15; m < Math.min(until, total); m += 15) {
-    const busy = data.stops.some((/** @type {any} */ s) => Math.abs(s.arriveMin - m) * scale < 15);
-    html += `<i class="tt-grid" style="top:${y(m) + head}px">${busy ? '' : `<span>${clockPlus(data.route.start, m)}</span>`}</i>`;
-  }
-  const done = minute === undefined ? 0 : y(Math.min(minute, total));
   html += `<i class="tt-spine" style="top:${head}px;height:${y(Math.min(until, total))}px"></i>`;
-  if (minute !== undefined)
-    html += `<i class="tt-spine is-done" style="top:${head}px;height:${done}px"></i>`;
-  // The two ends sit outside the line, so that they never meet the first and the last leg.
-  html += `<div class="tt-row tt-row-end" style="top:${head - 17}px"><b>${data.route.start}</b><i class="tt-square"></i><span class="tt-row-name">${data.route.startName[lang]}<small>${t.departure}</small></span></div>`;
+  if (minute !== undefined) {
+    html += `<i class="tt-spine is-done" style="top:${head}px;height:${y(Math.min(minute, total))}px"></i>`;
+  }
+  html += `<div class="tt-row tt-row-end" style="top:${head - 19}px"><b>${data.route.start}</b><i class="tt-square">${icons.station}</i><span class="tt-row-name">${data.route.startName[lang]}<small>${t.departure}</small></span></div>`;
   let leave = 0;
   for (const s of data.stops) {
     if (s.arriveMin > until) break;
     const legTop = y(leave) + head;
     const legHeight = y(s.arriveMin) - y(leave);
-    if (legHeight >= (compact ? 24 : 13)) {
-      html += `<span class="tt-leg${legHeight < 22 ? ' is-short' : ''}" style="top:${legTop}px;height:${legHeight}px">${format.duration(s.legMinutes, lang)}${compact ? '' : ` · ${format.distance(s.legMetres, lang)}`}</span>`;
+    if (legHeight >= (compact ? 22 : 14)) {
+      html += `<span class="tt-leg" style="top:${legTop}px;height:${legHeight}px">${icons.walk}${format.duration(s.legMinutes, lang)}${compact ? '' : ` · ${format.distance(s.legMetres, lang)}`}</span>`;
     }
     const state =
       minute === undefined
@@ -215,162 +198,228 @@ function chart(
       <b>${s.arrive}</b>
       <i class="tt-dwell"><span>${s.order}</span></i>
       <span class="tt-row-body"><span class="tt-row-name">${s.name[lang]}</span>${compact ? '' : `<span class="tt-row-why">${s.why[lang]}</span>`}</span>
+      ${compact ? '' : `<img class="tt-row-photo" src="${s.photo.src}" alt="" loading="lazy" />`}
     </div>`;
     leave = s.leaveMin;
   }
   if (until >= total) {
     const legHeight = y(total) - y(leave);
-    if (legHeight >= (compact ? 24 : 13)) {
-      html += `<span class="tt-leg${legHeight < 22 ? ' is-short' : ''}" style="top:${y(leave) + head}px;height:${legHeight}px">${format.duration(data.route.backMinutes, lang)}${compact ? '' : ` · ${format.distance(data.route.backMetres, lang)}`}</span>`;
+    if (legHeight >= (compact ? 22 : 14)) {
+      html += `<span class="tt-leg" style="top:${y(leave) + head}px;height:${legHeight}px">${icons.walk}${format.duration(data.route.backMinutes, lang)}</span>`;
     }
-    html += `<div class="tt-row tt-row-end" style="top:${y(total) + head - 1}px"><b>${data.route.finish}</b><i class="tt-square"></i><span class="tt-row-name">${data.route.startName[lang]}<small>${t.arrival}</small></span></div>`;
+    html += `<div class="tt-row tt-row-end" style="top:${y(total) + head + 1}px"><b>${data.route.finish}</b><i class="tt-square">${icons.station}</i><span class="tt-row-name">${data.route.startName[lang]}<small>${t.arrival}</small></span></div>`;
   }
-  if (minute !== undefined) {
-    html += `<div class="tt-now" style="top:${y(minute) + head}px"><b>${clockPlus(data.route.start, minute)}</b><i></i></div>`;
-  }
-  const height = y(Math.min(until, total)) + head + 24;
+  const height = y(Math.min(until, total)) + head + 26;
   return `<div class="tt-chart${compact ? ' is-compact' : ''}" style="height:${height}px" role="list" aria-label="${t.theLine}">${html}</div>`;
 }
 
-/** @param {any} data @param {'ru' | 'en'} lang */
-const hero = (data, lang) => {
+/** The head of the Route: its two times, its verdict, its measures. @param {any} data @param {'ru' | 'en'} lang */
+const head = (data, lang) => {
   const t = T[lang];
   const r = data.route;
-  return `<div class="tt-hero">
-    <div class="tt-times">
-      <p><span class="tt-cap">${t.out}</span><b>${r.start}</b></p>
+  return `<h1>${t.title}</h1>
+    <div class="tt-frame">
+      <p><span>${t.out}</span><b>${r.start}</b></p>
       <p class="tt-span"><span>${format.duration(r.totalMinutes, lang)}</span><i></i></p>
-      <p><span class="tt-cap">${t.back}</span><b>${r.finish}</b></p>
+      <p><span>${t.back}</span><b>${r.finish}</b></p>
     </div>
-    <h1>${t.title}</h1>
-    <p class="tt-verdict"><i class="tt-lamp"></i><b>${t.fits(r)}</b><span>${t.reserve(r)}</span><small>${t.checked(r.checkedAt)}</small></p>
-    <p class="tt-facts">${t.places(r.stopCount)} · ${format.distance(r.walkingMetres, lang)} · ${t.outside}</p>
-  </div>`;
+    <p class="tt-verdict"><i>${icons.check}</i><b>${t.fits(r)}</b><span>${t.reserve(r)}</span></p>
+    <ul class="tt-facts">
+      <li>${icons.pin}${t.places(r.stopCount)}</li>
+      <li>${icons.walk}${format.distance(r.walkingMetres, lang)}</li>
+      <li>${icons.eye}${t.outside}</li>
+    </ul>`;
 };
+
+/** The two actions that float over everything. @param {any} data @param {'ru' | 'en'} lang */
+const dock = (data, lang) => `<div class="tt-dock">
+    <button class="tt-pack lg">${icons.download}<span><b>${T[lang].pack}</b><small>${data.route.packMegabytes}${format.NBSP}${lang === 'ru' ? 'МБ' : 'MB'}</small></span></button>
+    <button class="tt-go lg lg-tint">${icons.play}<span>${T[lang].start}</span></button>
+  </div>`;
 
 /** @param {{ os: import('../shared/frames.js').Os, lang: 'ru' | 'en', data: any }} ctx */
 function route({ os, lang, data }) {
   const t = T[lang];
-  const { width } = SIZES[os];
+  const { width, height } = SIZES[os];
   const android = os === 'android';
-  const mapHeight = android ? 208 : 196;
+  const sheetTop = android ? 352 : 362;
   const view = fitView(
     [
       ...data.stops.map((/** @type {any} */ s) => ({ x: s.streetX, y: s.streetY })),
       { x: data.map.start.street_x, y: data.map.start.street_y },
     ],
     width,
-    mapHeight,
-    { top: 20, right: 34, bottom: 20, left: 34 },
+    height,
+    { top: 116, right: 34, bottom: height - sheetTop + 30, left: 34 },
   );
   const map = mapSvg(data, {
     view,
     lang,
-    layers: LAYERS,
-    labels: { max: 4, size: 9, upper: true, ranks: [1, 2], clearOf: routeSamples(data) },
+    layers: FLAT,
+    labels: { max: 5, size: 10, clearOf: routeSamples(data) },
     over: (ctx) => overlay(data, lang, ctx),
     label: t.theLine,
   });
   return {
     clock: data.route.nowBeforeStart,
     inner: `<div class="tt tt-route">
-      <header class="tt-bar">
-        <button class="tt-icon" aria-label="Back">${android ? icons.backAndroid : icons.backIos}</button>
-        <p><b>${t.route}</b> · ${t.option}</p>
-        <button class="tt-icon">${icons.edit}</button>
-        <button class="tt-icon">${android ? icons.shareAndroid : icons.shareIos}</button>
+      <div class="tt-under">${map}<span class="tt-osm" style="top:${sheetTop - 22}px">© OpenStreetMap</span></div>
+      <header class="tt-top">
+        <button class="tt-round lg lg-clear" aria-label="Back">${android ? icons.backAndroid : icons.backIos}</button>
+        <p class="tt-title lg lg-clear"><b>${t.kicker}</b><span>${t.checked(data.route.checkedAt)}</span></p>
+        <span class="tt-group lg lg-clear"><button aria-label="Edit">${icons.edit}</button><button aria-label="Share">${android ? icons.shareAndroid : icons.shareIos}</button></span>
       </header>
-      ${hero(data, lang)}
-      <div class="tt-map" style="height:${mapHeight}px">${map}<span class="tt-osm">© OpenStreetMap</span></div>
-      <div class="tt-table">
-        <p class="tt-colhead"><span>${t.colTime}</span><span>${t.colPlace}</span></p>
-        ${chart(data, lang, { scale: 7, until: 60 })}
-      </div>
-      <div class="tt-actions">
-        <button class="tt-pack">${icons.download}<span><b>${t.pack}</b><small>${t.packNote(data.route.packMegabytes)}</small></span></button>
-        <button class="tt-go">${t.start}${icons.arrowRight}</button>
-      </div>
+      <section class="tt-sheet lg" style="top:${sheetTop}px">
+        <i class="tt-grab"></i>
+        ${head(data, lang)}
+        ${chart(data, lang, { scale: 6, until: 44 })}
+      </section>
+      ${dock(data, lang)}
     </div>`,
   };
 }
 
-/** @param {any} story */
-const transcript = (story, from = 0) =>
-  story.sentences
-    .map((/** @type {any} */ s, /** @type {number} */ i) => {
-      if (i < from) return '';
-      const state =
-        i < story.current ? 'is-spoken' : i === story.current ? 'is-current' : 'is-ahead';
-      return `<li class="${state}"><time>${format.playback(s.startsAt)}</time><span>${s.text}${i === story.current ? '<sup>1</sup>' : ''}</span></li>`;
-    })
-    .join('');
+/** The sentence being spoken, word by word, with the ones before and after it. @param {any} story */
+function said(story) {
+  const at = (/** @type {number} */ i) => story.sentences[i];
+  const now = at(story.current);
+  const next = at(story.current + 1);
+  const end = next ? next.startsAt : story.total;
+  const share = (story.elapsed - now.startsAt) / (end - now.startsAt);
+  const words = now.text.split(' ');
+  const spoken = Math.round(words.length * Math.min(1, Math.max(0, share)));
+  const marked = words
+    .map((/** @type {string} */ w, /** @type {number} */ i) => (i < spoken ? `<b>${w}</b>` : w))
+    .join(' ');
+  const before = at(story.current - 1);
+  return `${before ? `<p class="tt-said-dim tt-said-before">${before.text}</p>` : ''}
+    <p class="tt-said-now">${marked}<sup>1</sup></p>
+    ${next ? `<p class="tt-said-dim">${next.text}</p>` : ''}`;
+}
 
-/** @param {any} story @param {'ru' | 'en'} lang */
-const sourceLine = (story, lang) =>
-  `<p class="tt-source"><b>${T[lang].source} 1</b> ${story.source.work} · ${lang === 'ru' ? '«' : '“'}${story.source.article}${lang === 'ru' ? '»' : '”'} · ${T[lang].revision(format.date(story.source.revision_date, lang))} · ${story.source.licence}</p>`;
-
-/** @param {any} data @param {'ru' | 'en'} lang */
-function player(data, lang) {
-  const t = T[lang];
-  const story = data.outingNow.story[lang];
-  const next = data.outingNow.next;
-  return `<div class="tt-player">
-    <div class="tt-progress"><span>${format.playback(story.elapsed)}</span><i style="--played:${(story.elapsed / story.total) * 100}%"></i><span>${format.playback(story.total)}</span></div>
-    <div class="tt-controls">
-      <button class="tt-key" aria-label="Speed">1×</button>
-      <button class="tt-key" aria-label="Back 10 seconds">${icons.back10}</button>
-      <button class="tt-key tt-key-main">${icons.pause}<span>${t.pause}</span></button>
-      <button class="tt-key" aria-label="Next">${icons.next}</button>
-      <button class="tt-key" aria-label="${t.map}">${icons.map}</button>
-    </div>
-    <p class="tt-next"><span class="tt-cap">${t.next}</span><b>${next.arrive}</b><i>${next.order}</i><span class="tt-next-name">${next.name[lang]}</span><span class="tt-next-far">${format.distance(next.legMetres, lang)} · ${format.duration(next.legMinutes, lang)}</span></p>
-  </div>`;
+/** The voice as bars: the played part in the accent, one bar alive. @param {any} story */
+function voice(story) {
+  const bars = 44;
+  const played = Math.round((story.elapsed / story.total) * bars);
+  let html = '';
+  for (let i = 0; i < bars; i++) {
+    // A fixed, uneven outline: speech, not a pattern redrawn on every load.
+    const level = 0.28 + 0.72 * Math.abs(Math.sin(i * 1.7) * Math.cos(i * 0.61 + 1));
+    html += `<i class="${i < played ? 'is-played' : ''}${i === played ? ' is-live' : ''}" style="height:${Math.round(level * 100)}%"></i>`;
+  }
+  return `<div class="tt-voice"><span>${format.playback(story.elapsed)}</span><div class="tt-bars">${html}</div><span>${format.playback(story.total)}</span></div>`;
 }
 
 /** @param {any} data @param {'ru' | 'en'} lang */
-const status = (data, lang) =>
-  `<p class="tt-status"><i class="tt-lamp"></i><b>${T[lang].onTime}</b><span>${T[lang].backAt(data.route.finish)}</span></p>`;
+function nowCard(data, lang) {
+  const t = T[lang];
+  const now = data.outingNow;
+  const story = now.story[lang];
+  const quote = lang === 'ru' ? ['«', '»'] : ['“', '”'];
+  return `<section class="tt-now lg">
+    <div class="tt-now-head">
+      <img src="${now.stop.photo.src}" alt="" />
+      <div>
+        <p class="tt-now-meta"><i>${now.stop.order}</i><b>${now.stop.arrive}</b><span>${t.stay(now.stop.leave)}</span></p>
+        <h1>${now.stop.name[lang]}</h1>
+        <p class="tt-now-kind">${kindIcon(now.stop.kind)}${now.stop.built[lang]} · ${t.seenOutside}</p>
+      </div>
+    </div>
+    <div class="tt-said">${said(story)}</div>
+    <p class="tt-cite">${icons.book}<span><b>1</b> ${story.source.work}, ${quote[0]}${story.source.article}${quote[1]}, ${t.revision(format.date(story.source.revision_date, lang))}, ${story.source.licence}</span></p>
+    <p class="tt-cite tt-made">${icons.shield}<span>${t.made}</span></p>
+    ${voice(story)}
+    <div class="tt-keys">
+      <button aria-label="Speed">1×</button>
+      <button aria-label="Back 10 seconds">${icons.back10}</button>
+      <button class="tt-key-main lg lg-tint" aria-label="Pause">${icons.pause}</button>
+      <button aria-label="Next">${icons.next}</button>
+      <button aria-label="Text">${icons.lines}</button>
+    </div>
+    <p class="tt-next"><i>${now.next.order}</i><span class="tt-next-body"><small>${t.next} · ${now.next.arrive}</small><span>${now.next.name[lang]}</span></span><span class="tt-next-far">${format.distance(now.next.legMetres, lang)} · ${format.duration(now.next.legMinutes, lang)}</span>${icons.chevronRight}</p>
+  </section>`;
+}
 
 /** @param {any} data @param {'ru' | 'en'} lang */
-const station = (data, lang) => {
-  const now = data.outingNow;
-  return `<div class="tt-station-head">
-    <p class="tt-station-meta"><i>${now.stop.order}</i><b>${now.stop.arrive}</b><span>${T[lang].stay(now.stop.leave)} · ${now.stop.built[lang]} · ${T[lang].seenOutside}</span></p>
-    <h1>${now.stop.name[lang]}</h1>
-  </div>`;
-};
+const statusPill = (data, lang) =>
+  `<p class="tt-status lg"><i class="tt-lamp"></i><b>${T[lang].onTime}</b><span>${T[lang].backAt(data.route.finish)}</span></p>`;
+
+/**
+ * The whole Outing as a rail of glass: stations as dots, "now" as a light.
+ * @param {any} data @param {number} minute @param {number} height
+ */
+function rail(data, minute, height) {
+  const inner = height - 48;
+  const y = (/** @type {number} */ m) => 24 + (m / data.route.totalMinutes) * inner;
+  const dots = data.stops
+    .map((/** @type {any} */ s) => {
+      const state = s.leaveMin <= minute ? 'is-done' : s.arriveMin <= minute ? 'is-current' : '';
+      return `<i class="tt-rail-dot ${state}" style="top:${y(s.arriveMin + 4)}px"></i>`;
+    })
+    .join('');
+  return `<aside class="tt-rail lg lg-clear" style="height:${height}px" aria-label="${data.route.start} – ${data.route.finish}">
+    <span class="tt-rail-end" style="top:6px">${data.route.start}</span>
+    <i class="tt-rail-line" style="top:24px;height:${inner}px"></i>
+    <i class="tt-rail-line is-done" style="top:24px;height:${y(minute) - 24}px"></i>
+    ${dots}
+    <i class="tt-rail-now" style="top:${y(minute)}px"></i>
+    <span class="tt-rail-end" style="bottom:6px">${data.route.finish}</span>
+  </aside>`;
+}
 
 /** @param {{ os: import('../shared/frames.js').Os, lang: 'ru' | 'en', data: any }} ctx */
 function outing({ os, lang, data }) {
   const t = T[lang];
+  const { width } = SIZES[os];
   const android = os === 'android';
   const now = data.outingNow;
-  const story = now.story[lang];
-  const { height } = SIZES[os];
-  const inset = INSETS[os];
-  // The whole Outing on the rail, top to bottom, to one scale.
-  const railHeight = height - inset.top - 48 - 40;
-  const railScale = (railHeight - 50) / data.route.totalMinutes;
+  // A few steps before the Place: the Story has begun on the approach.
+  const minute = now.stop.arriveMin - 0.6;
+  const here = positionAt(data, minute);
+  const mapHeight = android ? 452 : 436;
+  const pin = (/** @type {any} */ s, extra = '') => ({
+    x: s.x,
+    y: s.y,
+    className: `tt-pin${extra}`,
+    html: `<span class="tt-pin-badge">${kindIcon(s.kind)}<b>${s.order}</b></span>`,
+  });
+  const map = pitchedMap(data, {
+    width,
+    height: mapHeight,
+    lang,
+    layers: GROUND,
+    at: here,
+    bearing: bearingAt(data, minute),
+    u: 1.25,
+    near: 285,
+    pitch: 52,
+    walls: [3, 6, 9, 12, 15],
+    over: () =>
+      `${line(data, now.stop.order - 1)}<use href="#m-foot-${now.stop.order}" class="tt-foot"/>`,
+    standing: [
+      pin(now.stop, ' is-current'),
+      pin(now.next),
+      {
+        x: here.x,
+        y: here.y,
+        className: 'tt-me',
+        html: '<span class="tt-me-pulse"></span><span class="tt-me-dot"></span>',
+      },
+    ],
+    label: t.theLine,
+  });
   return {
     clock: now.clock,
     inner: `<div class="tt tt-outing">
-      <header class="tt-bar">
-        <button class="tt-icon" aria-label="Back">${android ? icons.backAndroid : icons.backIos}</button>
-        ${status(data, lang)}
-        <button class="tt-icon" aria-label="${t.more}">${android ? icons.moreAndroid : icons.moreIos}</button>
+      <div class="tt-under">${map}</div>
+      <header class="tt-top">
+        <button class="tt-round lg lg-clear" aria-label="Back">${android ? icons.backAndroid : icons.backIos}</button>
+        ${statusPill(data, lang)}
+        <button class="tt-round lg lg-clear" aria-label="More">${android ? icons.moreAndroid : icons.moreIos}</button>
       </header>
-      <div class="tt-split">
-        <aside class="tt-rail">${chart(data, lang, { scale: railScale, minute: now.stop.arriveMin + 1, compact: true })}</aside>
-        <div class="tt-main">
-          ${station(data, lang)}
-          <ol class="tt-transcript">${transcript(story, Math.max(0, story.current - 1))}</ol>
-          <div class="tt-foot">
-            ${sourceLine(story, lang)}
-            <p class="tt-made">${t.made}</p>
-          </div>
-          ${player(data, lang)}
-        </div>
-      </div>
+      ${rail(data, now.stop.arriveMin + 1, 196)}
+      <span class="tt-osm tt-osm-outing">© OpenStreetMap</span>
+      ${nowCard(data, lang)}
     </div>`,
   };
 }
@@ -378,31 +427,30 @@ function outing({ os, lang, data }) {
 // ── The web ─────────────────────────────────────────────────────────────────
 
 /** @param {'ru' | 'en'} lang */
-const webHead = (lang) => `
-  <header class="tt-webhead">
-    <span class="tt-wordmark">PROMENADE</span>
-    <nav><span class="tt-langs"><b>${lang === 'ru' ? 'РУС' : 'ENG'}</b>${lang === 'ru' ? 'ENG' : 'РУС'}</span><button class="tt-outline">${T[lang].open}</button></nav>
-  </header>`;
-
-const WEB_MAP = { width: 520, height: 700 };
+const webNav = (lang) => `<nav class="tt-webnav lg">
+    <span class="tt-wordmark">Promenade</span>
+    <span class="tt-langs"><b>${lang === 'ru' ? 'Рус' : 'Eng'}</b>${lang === 'ru' ? 'Eng' : 'Рус'}</span>
+    <button class="tt-open lg lg-tint">${T[lang].open}</button>
+  </nav>`;
 
 /** @param {{ lang: 'ru' | 'en', data: any }} ctx */
 function webRoute({ lang, data }) {
   const t = T[lang];
+  const size = SIZES.web;
   const view = fitView(
     [
       ...data.stops.map((/** @type {any} */ s) => ({ x: s.streetX, y: s.streetY })),
       { x: data.map.start.street_x, y: data.map.start.street_y },
     ],
-    WEB_MAP.width,
-    WEB_MAP.height,
-    { top: 60, right: 50, bottom: 60, left: 50 },
+    size.width,
+    size.height - 44,
+    { top: 96, right: 90, bottom: 70, left: 530 },
   );
   const map = mapSvg(data, {
     view,
     lang,
-    layers: LAYERS,
-    labels: { max: 9, size: 9.5, upper: true, clearOf: routeSamples(data) },
+    layers: FLAT,
+    labels: { max: 12, size: 11, clearOf: routeSamples(data) },
     over: (ctx) => overlay(data, lang, ctx),
     label: t.theLine,
   });
@@ -410,22 +458,14 @@ function webRoute({ lang, data }) {
     clock: data.route.nowBeforeStart,
     address: 'promenade.example/r/early-20th-century',
     inner: `<div class="tt tt-web tt-web-route">
-      ${webHead(lang)}
-      <div class="tt-cols">
-        <section class="tt-col-info">
-          <p class="tt-cap">${t.route} · ${t.option}</p>
-          ${hero(data, lang)}
-          <div class="tt-actions">
-            <button class="tt-go">${t.open}${icons.arrowRight}</button>
-            <p class="tt-webnote">${t.webNote}</p>
-          </div>
-        </section>
-        <section class="tt-col-chart">
-          <p class="tt-colhead"><span>${t.colTime}</span><span>${t.colPlace}</span></p>
-          ${chart(data, lang, { scale: 3.8 })}
-        </section>
-        <section class="tt-col-map">${map}<span class="tt-osm">© OpenStreetMap</span></section>
-      </div>
+      <div class="tt-under">${map}<span class="tt-osm">© OpenStreetMap</span></div>
+      ${webNav(lang)}
+      <section class="tt-sheet lg">
+        <p class="tt-kicker">${t.kicker} · ${t.checked(data.route.checkedAt)}</p>
+        ${head(data, lang)}
+        ${chart(data, lang, { scale: 6, until: 64 })}
+      </section>
+      <p class="tt-webnote lg">${t.webNote}</p>
     </div>`,
   };
 }
@@ -433,50 +473,38 @@ function webRoute({ lang, data }) {
 /** @param {{ lang: 'ru' | 'en', data: any }} ctx */
 function webOuting({ lang, data }) {
   const t = T[lang];
+  const size = SIZES.web;
   const now = data.outingNow;
-  const story = now.story[lang];
   const around = data.stops.filter((/** @type {any} */ s) => s.order <= 6);
   const view = fitView(
     around.map((/** @type {any} */ s) => ({ x: s.streetX, y: s.streetY })),
-    WEB_MAP.width,
-    WEB_MAP.height,
-    { top: 110, right: 70, bottom: 110, left: 70 },
+    size.width,
+    size.height - 44,
+    { top: 130, right: 330, bottom: 120, left: 520 },
   );
   const map = mapSvg(data, {
     view,
     lang,
-    layers: LAYERS,
-    labels: { max: 8, size: 9.5, upper: true, clearOf: routeSamples(data) },
-    over: (ctx) => overlay(data, lang, ctx, { current: now.stop.order }),
+    layers: FLAT,
+    labels: { max: 8, size: 11, clearOf: routeSamples(data) },
+    over: (ctx) =>
+      `<use href="#m-foot-${now.stop.order}" class="tt-foot"/>${overlay(data, lang, ctx, { current: now.stop.order })}`,
     label: now.stop.name[lang],
   });
   return {
     clock: now.clock,
     address: 'promenade.example/r/early-20th-century/2',
     inner: `<div class="tt tt-web tt-web-outing">
-      ${webHead(lang)}
-      <div class="tt-cols">
-        <section class="tt-col-chart">
-          <p class="tt-colhead"><span>${t.colTime}</span><span>${t.colPlace}</span></p>
-          ${chart(data, lang, { scale: 3.8, compact: true, selected: now.stop.order })}
-        </section>
-        <section class="tt-col-story">
-          ${station(data, lang)}
-          <ol class="tt-transcript">${transcript(story)}</ol>
-          <div class="tt-foot">
-            ${sourceLine(story, lang)}
-            <p class="tt-made">${t.made}</p>
-          </div>
-          ${player(data, lang)}
-          <p class="tt-webnote">${t.webNote}</p>
-        </section>
-        <section class="tt-col-map">${map}<span class="tt-osm">© OpenStreetMap</span></section>
-      </div>
+      <div class="tt-under">${map}<span class="tt-osm">© OpenStreetMap</span></div>
+      ${webNav(lang)}
+      ${nowCard(data, lang)}
+      <section class="tt-webchart lg">${chart(data, lang, { scale: 3.5, compact: true, selected: now.stop.order })}</section>
+      <p class="tt-webnote lg">${t.webNote}</p>
     </div>`,
   };
 }
 
-/** A piece of the map around the first Places, for the sheet of the direction. */
+/** A piece of the map, for the sheet of the direction. */
 function sample(
   /** @type {any} */ data,
   /** @type {'ru' | 'en'} */ lang,
@@ -494,33 +522,37 @@ function sample(
   return mapSvg(data, {
     view,
     lang,
-    layers: LAYERS,
-    labels: { max: 6, size: 9.5, upper: true, clearOf: routeSamples(data) },
+    layers: FLAT,
+    labels: { max: 6, size: 10, clearOf: routeSamples(data) },
     over: (ctx) => overlay(data, lang, ctx),
     label: 'The line of the Outing',
   });
 }
 
 /**
- * Steps the transcript to another sentence.
+ * Moves the spoken sentence on, as it follows the voice.
  * @param {Element} root @param {any} story @param {number} index
  */
 function follow(root, story, index) {
-  const list = root.querySelector('.tt-transcript');
-  const bar = root.querySelector('.tt-progress i');
-  const elapsed = root.querySelector('.tt-progress span');
-  if (!list || !(bar instanceof HTMLElement) || !elapsed) return;
-  list.innerHTML = transcript({ ...story, current: index }, Math.max(0, index - 1));
-  const at = story.sentences[index].startsAt + 1;
-  bar.style.setProperty('--played', `${(at / story.total) * 100}%`);
-  elapsed.textContent = format.playback(at);
+  const block = root.querySelector('.tt-said');
+  if (!block) return;
+  const next = story.sentences[index + 1];
+  const startsAt = story.sentences[index].startsAt;
+  const moved = {
+    ...story,
+    current: index,
+    elapsed: startsAt + ((next ? next.startsAt : story.total) - startsAt) * 0.5,
+  };
+  block.innerHTML = said(moved);
+  const old = root.querySelector('.tt-voice');
+  if (old) old.outerHTML = voice(moved);
 }
 
 const sheet = {
   reason: [
     'The first thing a person asks of this product is a question about time: will I be back for my train, will the place still be open. The product’s first promise is that the answer has been checked (PRODUCT-SPEC §1.3, RTE-6). Railways built the visual language of time one can trust — the timetable, and the line with its stations — and this direction speaks it.',
-    'So the Route is not a list of cards but a chart drawn to time: every minute takes the same height. The long leg looks long, the short stops crowd together, and during the Outing “now” is a place on the page — one glance says how far along you are and whether you are late.',
-    'Colour is kept for one thing, the verdict: green for on time, amber for a warning, red for what is broken. Everything else is black and white, which is also what reads best in the sun.',
+    'So the Route is a chart drawn to time: every minute takes the same height. The long leg looks long, the short stops crowd together, and during the Outing “now” is a light on a rail of glass at the edge of the screen.',
+    'Round two, at the owner’s request, gives the idea a body. The map is no longer a panel: it fills the screen and is the content. Controls and sheets are Liquid Glass floating over it, as Apple’s guidance has it. While one walks the map is seen at an angle with the way ahead up and the buildings standing; the line glows and moves in the direction of travel; the voice is drawn as bars; every Place has its photograph and the icon of its kind. Green is still the verdict “on time” — and now also the colour of the line itself.',
   ],
   roots: [
     {
@@ -531,130 +563,131 @@ const sheet = {
       url: 'https://en.wikipedia.org/w/index.php?oldid=1384277910',
     },
     {
-      what: 'The road as a strip.',
+      what: 'Glass where Apple puts it.',
       lesson:
-        'Ogilby’s Britannia was the first road atlas of England and Wales based on surveys and drawn to scale; a strip map lays a road out in the order it is travelled. A walk is a sequence before it is a shape.',
-      source: 'Wikipedia, “John Ogilby”',
-      url: 'https://en.wikipedia.org/w/index.php?oldid=1365488229',
+        'Apple describes Liquid Glass as the layer of controls and navigation that floats above content, to be used sparingly on custom controls and not for content itself. Here the content is the map; the sheet, the bars and the keys are the glass.',
+      source: 'Apple, Human Interface Guidelines: Materials',
+      url: 'https://developer.apple.com/design/human-interface-guidelines/materials',
     },
     {
-      what: 'One system on every surface.',
+      what: 'A sheet over a map.',
       lesson:
-        'Legible London gave London one walking map across stations, shelters, street signs and print, worked out with the people who walk it. Taken from there: the same chart on the phone, on the lock screen and on the web.',
-      source: 'Applied, “Legible London”',
-      url: 'https://applied.group/projects/legible-london',
+        'Apple’s guidance keeps the map usable behind a sheet that rests at detents and carries a grabber. The sheet of the Route rests at half height and opens to the whole chart.',
+      source: 'Apple, Human Interface Guidelines: Sheets',
+      url: 'https://developer.apple.com/design/human-interface-guidelines/sheets',
     },
     {
-      what: 'A face drawn for a city.',
+      what: 'The material exists in the chosen stack.',
       lesson:
-        'Sofia Sans was designed as the typeface of the city of Sofia, after the technical sans serifs of the early twentieth century: four widths, Cyrillic beside Latin, several styles of figures.',
-      source: 'Sofia Sans, project page',
-      url: 'https://github.com/lettersoup/Sofia-Sans',
+        'In Expo SDK 58 the package expo-glass-effect draws the system’s glass on iOS 26 and later and falls back to a plain view everywhere else — which is the decision taken for Android in this round.',
+      source: 'Expo, expo-glass-effect',
+      url: 'https://github.com/expo/expo/blob/main/packages/expo-glass-effect/README.md',
     },
   ],
   typeNote:
-    'Sofia Sans in three widths. The normal width carries text; Condensed carries names and labels, so that a long name of a Place fits beside its time; Extra Condensed carries the two times that frame the whole Outing. Every figure is tabular: times stand under times. SIL Open Font License 1.1.',
+    'Two faces. Unbounded, wide and round, sets what is a number: the two times that frame the Outing, the number of a Place. Onest sets everything that is read — names, sentences, labels — and carries Cyrillic and the Belarusian Latin letters alike. On an iPhone the system’s own face may take the place of Onest; the mockups keep Onest so that they look the same in every browser. Both are under the SIL Open Font License 1.1.',
   type: [
     {
-      role: 'The frame of the Outing',
-      face: 'Sofia Sans Extra Condensed 700',
-      css: "font: 700 72px/1 'Sofia Sans Extra Condensed'; font-variant-numeric: tabular-nums",
+      role: 'Times and numbers',
+      face: 'Unbounded 600–700',
+      css: "font: 700 54px/1.05 'Unbounded'; font-variant-numeric: tabular-nums; letter-spacing: -0.02em",
       ru: '14:00 — 16:45',
       en: '14:00 — 16:45',
     },
     {
       role: 'Names',
-      face: 'Sofia Sans Condensed 700',
-      css: "font: 700 30px/1.08 'Sofia Sans Condensed'",
+      face: 'Onest 650–700',
+      css: "font: 700 28px/1.12 'Onest'; letter-spacing: -0.015em",
       ru: 'Национальный академический театр имени Янки Купалы',
       en: 'Yanka Kupala National Academic Theatre',
     },
     {
-      role: 'Text',
-      face: 'Sofia Sans 400 and 600',
-      css: "font: 400 17px/1.4 'Sofia Sans'",
+      role: 'The sentence being spoken',
+      face: 'Onest 600, lit word by word',
+      css: "font: 600 22px/1.25 'Onest'; letter-spacing: -0.01em",
       ru: 'Храм был целиком построен из красного кирпича, что принесло ему народное прозвище «Красный костёл».',
       en: 'The bricks for its walls were sourced from Częstochowa, while the roof tiles came from Włocławek.',
     },
     {
-      role: 'Labels',
-      face: 'Sofia Sans Condensed 800, capitals, tracked',
-      css: "font: 800 13px/1.3 'Sofia Sans Condensed'; letter-spacing: 0.09em; text-transform: uppercase",
-      ru: 'Укладывается в 3 ч · запас 15 мин · по графику',
-      en: 'Fits your 3 h · 15 min to spare · on time',
+      role: 'Text and labels',
+      face: 'Onest 400–600',
+      css: "font: 500 15px/1.4 'Onest'",
+      ru: 'Укладывается в 3 ч · запас 15 мин · проверено в 13:51 · Poliakaŭ',
+      en: 'Fits your 3 h · 15 min to spare · checked at 13:51 · Poliakaŭ',
     },
   ],
   colourNote:
-    'Black and white, and three colours that each mean one thing. Green says “on time”, and is therefore also the colour of the person’s own position on the map and of “now” on the chart; amber will say a warning — hours unknown, running late; red will say a broken constraint. A colour never stands without the words that say the same.',
+    'Glass has no colour of its own: it takes it from the map beneath, so the map carries the palette — cool ground, white streets, soft green and blue. One colour is ours: green, the verdict “on time”, which is therefore the colour of the line, of the person, of “now” and of the one prominent action. Amber will say a warning and red a broken constraint. The contrast of text on glass is measured here against the glass as a solid; over a busy map it is the blur that keeps it, and with “reduce transparency” the glass turns solid.',
   colours: [
-    { token: '--bg', role: 'Ground' },
-    { token: '--panel', role: 'Panel' },
+    { token: '--surface', role: 'Glass, as a solid' },
     { token: '--ink', role: 'Ink' },
     { token: '--ink-2', role: 'Second ink' },
-    { token: '--line', role: 'Rule' },
-    { token: '--go', role: 'Verdict: on time' },
-    { token: '--warn', role: 'Verdict: warning' },
-    { token: '--stop', role: 'Verdict: broken' },
-    { token: '--m-road', role: 'Map: street' },
+    { token: '--accent', role: 'On time' },
+    { token: '--accent-ink', role: 'On time, as text' },
+    { token: '--warn', role: 'Warning' },
+    { token: '--stop', role: 'Broken' },
+    { token: '--m-ground', role: 'Map: ground' },
+    { token: '--m-building', role: 'Map: built' },
+    { token: '--m-green', role: 'Map: green' },
     { token: '--m-water', role: 'Map: water' },
   ],
   pairs: [
-    { text: '--ink', on: '--bg', what: 'Ink on the ground' },
-    { text: '--ink-2', on: '--bg', what: 'Second ink on the ground' },
-    { text: '--ink-2', on: '--panel', what: 'Second ink on a panel' },
-    { text: '--go', on: '--bg', what: '“On time”' },
-    { text: '--on-go', on: '--go', what: 'The clock on “now”' },
-    { text: '--warn', on: '--bg', what: 'A warning' },
-    { text: '--stop', on: '--bg', what: 'A broken constraint' },
-    { text: '--ink', on: '--m-road', what: 'The line on a street', large: true },
+    { text: '--ink', on: '--surface', what: 'Ink on glass' },
+    { text: '--ink-2', on: '--surface', what: 'Second ink on glass' },
+    { text: '--accent-ink', on: '--surface', what: '“On time” as text' },
+    { text: '--on-accent', on: '--accent', what: 'Label on the green action' },
+    { text: '--warn', on: '--surface', what: 'A warning' },
+    { text: '--stop', on: '--surface', what: 'A broken constraint' },
+    { text: '--line', on: '--m-ground', what: 'The line on the map', large: true },
   ],
   mapNote:
-    'A diagram laid over the streets. Buildings are left out; streets are grey bands of their true width, water and green barely tinted, the railway a ticked line. Over them runs the one heavy line of the Route with its stations as rings, and — the mark of this direction — a tick across the line for every ten minutes of the plan, with the clock written at the half-hours. The map answers “where will I be at four o’clock”. Fills, lines, symbols and text along a line: all within a MapLibre style (ADR-0008).',
+    'The map is the content, and it fills the screen. On the Route it is seen from above: cool ground, white streets of their true width, buildings as a quiet tone, and over them the line — green, with a white casing and a soft glow — its stations as discs and the clock written on it at the half-hours. During the Outing it is seen at an angle, with the direction of travel up: buildings stand, the Place one walks to carries the icon of its kind, the line ahead moves. Pitch, bearing and extruded buildings are things a MapLibre style does (ADR-0008).',
   storyNote:
-    'A transcript with a timetable of its own. Each sentence is a row that begins with the second it starts at; the row being spoken is large and carries a black bar at its edge. The rail on the left is the whole Outing to scale, with “now” on it. The controls are keys with square corners, labelled with a word where a word fits. On the phone this screen has no map: the rail is the map, and the map itself is one key away.',
+    'A card of glass over the tilted map. At its head, the photograph of the Place, its number and time; then the sentence being spoken, large, lit word by word as the voice says it, with the sentence before and the one after dimmed; the source and the “written automatically” note as two quiet lines with icons; the voice drawn as bars; five keys, the middle one green. At the left edge a rail of glass holds the whole Outing to scale, with “now” as a light on it.',
   motion: [
     {
       moment: 'The text follows the voice.',
-      how: 'Rows step. The next sentence takes the large size at once, as a line on a departure board changes; only the bar at the edge travels, 160 ms. Nothing slides or fades.',
+      how: 'Words light one by one at the pace of speech; when a sentence ends the next rises into its place in 300 ms, as lines do in a music player’s lyrics.',
     },
     {
       moment: 'Now.',
-      how: 'The green mark creeps down the rail in real time; the minutes to the next Place roll over digit by digit, 120 ms a digit.',
+      how: 'The mark of the person breathes — a ring grows and fades every two seconds; the line ahead moves towards the next Place; the bar of the voice under the playhead beats.',
     },
     {
       moment: 'Arriving.',
-      how: 'The capsule of the station fills with black from the top in 240 ms and its time turns bold.',
+      how: 'The map tilts from above to its walking angle in 600 ms while the card of glass rises from the bottom edge; the station on the rail lights green.',
     },
     {
       moment: 'The Route recalculated.',
-      how: 'The chart closes or opens the gap where the change is, 300 ms; the two frame times roll to their new values, and the verdict line says in words what changed.',
+      how: 'The line is redrawn along its new course in one stroke; the chart closes or opens the gap, and the two times of the frame roll to their new values.',
     },
   ],
   platforms: [
     {
       system: 'iOS.',
-      how: 'Bars and keys of 44 points and more; the chart scrolls under a fixed bar of actions.',
+      how: 'Liquid Glass, the system’s own: the sheet, the card, the round controls and the grouped toolbar float over the map; the sheet has a grabber and detents; controls are 44 points and more.',
     },
     {
       system: 'Android.',
-      how: 'The same chart; the arrow back and a 56 dp bar; keys of 48 dp and more.',
+      how: 'The same layout on solid Material 3 surfaces with their own elevation; no blur is imitated. The sheet is attached to the edges, corners are 28 dp, controls are 48 dp and more.',
     },
     {
       system: 'Web.',
-      how: 'Three columns: the frame of the Outing with its verdict, the whole chart from the first minute to the last on one screen, and the map. Listening puts the transcript in the middle.',
+      how: 'The map fills the window; a panel of glass at the left holds the Route, a capsule at the top right the name, the language and the way into the application. Listening shows the card and the compact chart.',
     },
   ],
   risks: [
-    'It is the most austere of the three. To some it will read as a tool rather than as an afternoon out.',
-    'A chart drawn to time is long on a phone: three Places fit under the map before scrolling. The rail of the Outing screen answers this; the Route screen does not.',
-    'Colour that only ever means a verdict depends on the verdicts being right: a green that proves wrong costs more here than anywhere.',
+    'Glass over a busy map costs legibility in direct sun. The sheets use the regular, more opaque glass; a “bright sunlight” setting that makes them solid belongs in the design system (D-02) and has to be tried outdoors (D-05).',
+    'A tilted map with standing buildings under a backdrop blur is the heaviest thing the application will draw. It has to be measured against the battery budget of NFR-7 on a mid-range Android phone before it is promised.',
+    'On Android the look is deliberately plainer: solid surfaces. Side by side, the iPhone will look richer.',
+    'A chart drawn to time is long on a phone; the sheet shows its beginning and opens to the rest.',
   ],
 };
 
 export const timetable = {
   id: 'timetable',
   name: { en: 'Timetable', ru: 'Расписание' },
-  idea: 'The walk as a line drawn to time: every minute takes the same height, the long leg looks long, and colour is kept for one thing — whether you are on time.',
+  idea: 'The walk as a line drawn to time, over a map that fills the screen: glass sheets and keys float above it, the line glows green while you are on time, and on the way the city is seen at an angle with the road ahead up.',
   screens: { route, outing },
   web: { route: webRoute, outing: webOuting },
   sample,

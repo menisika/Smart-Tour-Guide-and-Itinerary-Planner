@@ -160,7 +160,8 @@ a {
 
 .trio {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 440px));
+  justify-content: center;
   gap: clamp(16px, 2.4vw, 40px);
   padding: 28px clamp(16px, 3vw, 40px) 48px;
   align-items: start;
@@ -494,4 +495,36 @@ a {
 .map .m-label {
   paint-order: stroke fill;
   stroke-linejoin: round;
+}
+
+/* ── A map seen at an angle ────────────────────────────────────────────── */
+
+.map3d {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  overflow: hidden;
+}
+
+.map3d-ground {
+  position: absolute;
+  display: block;
+  transform-origin: 50% 100%;
+  backface-visibility: hidden;
+}
+
+/* Distance dissolves into the air, as it does on a real horizon. */
+.map3d-haze {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 34%;
+  background: linear-gradient(var(--haze, transparent), transparent);
+  pointer-events: none;
+}
+
+.map3d-pin {
+  position: absolute;
+  transform: translate(-50%, -100%) scale(calc(0.55 + var(--far) * 0.45));
+  transform-origin: 50% 100%;
 }

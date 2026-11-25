@@ -1,11 +1,16 @@
 /**
- * Direction 1 — Guidebook.
+ * Direction "Guidebook", second round.
  *
- * The city as a book one walks through: an engraved plan with a numbered key,
- * a Story set as a page to read, its source in a footnote.
+ * The idea is the first round's: the city as a book one walks through — an
+ * engraved plan with a numbered key, a Story set as a page, its source in a
+ * footnote. The owner asked for depth, effects, icons and Liquid Glass after
+ * Apple. So the plan now fills the screen and the key lies on it as a sheet of
+ * frosted glass, like tracing paper over a drawing; every Place has its
+ * photograph; and while a Story plays, the page opens under a photograph of
+ * the Place, with a loupe of glass that keeps the plan in sight.
  */
 import { format } from '../shared/data.js';
-import { INSETS, SIZES, icons } from '../shared/frames.js';
+import { SIZES, icons } from '../shared/frames.js';
 import {
   fitView,
   mapSvg,
@@ -18,86 +23,64 @@ import {
 
 const T = {
   ru: {
-    over: 'Маршрут · вариант 1 из 3',
+    kicker: 'Вариант 1 из 3',
     title: 'Архитектура начала XX века',
     sub: 'без музеев · пешком от вокзала и обратно',
-    places: 'мест',
-    onFoot: 'пути',
-    whole: 'всего',
-    checked: (/** @type {string} */ at) => `Проверено в ${at}.`,
+    places: (/** @type {number} */ n) => `${n} мест`,
+    checked: (/** @type {string} */ at) => `проверен в ${at}`,
+    fits: 'Укладывается в три часа.',
     verdict: (/** @type {any} */ r) =>
-      `Укладывается в три часа: у вокзала снова в ${r.finish}, за ${r.reserveMinutes} минут до срока. Все места осматриваются снаружи — часы работы не мешают.`,
-    key: 'Ключ к плану',
+      `У вокзала снова в ${r.finish}, за ${r.reserveMinutes} минут до срока; все места осматриваются снаружи.`,
     walk: (/** @type {string} */ min, /** @type {string} */ m) => `${min} пешком · ${m}`,
-    back: 'обратно к вокзалу',
     start: 'Начать прогулку',
-    pack: 'Скачать пакет',
-    packNote: (/** @type {number} */ mb) => `${mb} МБ · идти без сети`,
-    route: 'Маршрут',
+    pack: 'Пакет',
     station: 'Вокзал',
-    scale: 'м',
-    outing: 'Прогулка',
     of: (/** @type {number} */ a, /** @type {number} */ b) => `${a} из ${b}`,
     place: (/** @type {number} */ n) => `Место ${n}`,
-    outside: 'осматривается снаружи',
+    outsideShort: 'снаружи',
     made: 'Создано автоматически · проверено куратором',
-    onTime: (/** @type {string} */ at) => `В графике · у вокзала в ${at}`,
+    onTime: (/** @type {string} */ at) => `по графику · у вокзала в ${at}`,
     next: 'Далее',
     source: (/** @type {any} */ s, /** @type {string} */ date) =>
       `${s.work}, статья «${s.article}», версия от ${date}. ${s.licence}.`,
-    sources: 'Источники',
     more: 'Ещё',
-    guided: 'С гидом',
     open: 'Открыть в приложении',
-    listen: 'Слушать в браузере',
     webNote:
       'В браузере рассказы включаются вручную. Сами, по мере пути, и без сети они звучат в приложении.',
-    plate: (/** @type {number} */ n, /** @type {string} */ km) =>
-      `План. Маршрут в ${n} мест, ${km}`,
-    tapHint: 'Нажмите на фразу — увидите её источник или сообщите о неточности.',
+    photo: 'Фото',
+    plan: 'План',
   },
   en: {
-    over: 'Route · option 1 of 3',
+    kicker: 'Option 1 of 3',
     title: 'Early <span class="gb-nowrap">20th-century</span> architecture',
     sub: 'no museums · on foot from the station and back',
-    places: 'places',
-    onFoot: 'on foot',
-    whole: 'in all',
-    checked: (/** @type {string} */ at) => `Checked at ${at}.`,
+    places: (/** @type {number} */ n) => `${n} places`,
+    checked: (/** @type {string} */ at) => `checked at ${at}`,
+    fits: 'It fits your three hours.',
     verdict: (/** @type {any} */ r) =>
-      `It fits your three hours: back at the station at ${r.finish}, ${r.reserveMinutes} minutes before your limit. Every place is seen from outside, so no opening hours stand in the way.`,
-    key: 'Key to the plan',
+      `Back at the station at ${r.finish}, ${r.reserveMinutes} minutes before your limit; every place is seen from outside.`,
     walk: (/** @type {string} */ min, /** @type {string} */ m) => `${min} on foot · ${m}`,
-    back: 'back to the station',
     start: 'Start the outing',
-    pack: 'Get the pack',
-    packNote: (/** @type {number} */ mb) => `${mb} MB · walk offline`,
-    route: 'Route',
+    pack: 'Pack',
     station: 'Station',
-    scale: 'm',
-    outing: 'Outing',
     of: (/** @type {number} */ a, /** @type {number} */ b) => `${a} of ${b}`,
     place: (/** @type {number} */ n) => `Place ${n}`,
-    outside: 'seen from outside',
+    outsideShort: 'from outside',
     made: 'Written automatically · verified by a curator',
-    onTime: (/** @type {string} */ at) => `On time · at the station by ${at}`,
+    onTime: (/** @type {string} */ at) => `on time · at the station by ${at}`,
     next: 'Next',
     source: (/** @type {any} */ s, /** @type {string} */ date) =>
       `${s.work}, “${s.article}”, revision of ${date}. ${s.licence}.`,
-    sources: 'Sources',
     more: 'More',
-    guided: 'Guided',
     open: 'Open in the app',
-    listen: 'Listen in the browser',
     webNote:
       'In a browser you start each story yourself. In the app they begin as you arrive, and play without a network.',
-    plate: (/** @type {number} */ n, /** @type {string} */ km) =>
-      `Plan. A route of ${n} places, ${km}`,
-    tapHint: 'Tap a sentence to see its source or to report an inaccuracy.',
+    photo: 'Photo',
+    plan: 'Plan',
   },
 };
 
-const BASE_LAYERS = [
+const LAYERS = [
   'green',
   'water',
   'roads_minor',
@@ -108,6 +91,9 @@ const BASE_LAYERS = [
   'rail',
   'rail:ties',
 ];
+
+/** The icon of a kind of Place. @param {string} kind */
+const kindIcon = (kind) => icons[/** @type {keyof typeof icons} */ (kind)] ?? icons.building;
 
 /** Hatching for water and a stipple for green, sized in pixels whatever the view. */
 const patterns = (/** @type {{ u: number, id: string }} */ { u, id }) => `
@@ -125,13 +111,12 @@ const textures = (/** @type {{ id: string }} */ { id }) => `
   <use href="#m-green" fill="url(#${id}-stipple)" class="gb-texture"/>`;
 
 /**
- * @param {any} data @param {'ru' | 'en'} lang
- * @param {{ u: number }} ctx
- * @param {{ current?: number, walkedLegs?: number, position?: { x: number, y: number }, small?: boolean }} state
+ * @param {any} data @param {'ru' | 'en'} lang @param {{ u: number }} ctx
+ * @param {{ current?: number, walkedLegs?: number, position?: { x: number, y: number }, bare?: boolean }} state
  */
 function overlay(data, lang, { u }, state = {}) {
-  const { current = 0, walkedLegs = 0, position, small = false } = state;
-  const r = small ? 9.5 : 11;
+  const { current = 0, walkedLegs = 0, position, bare = false } = state;
+  const r = 11.5;
   const footprints = data.stops
     .map(
       (/** @type {any} */ s) =>
@@ -140,138 +125,124 @@ function overlay(data, lang, { u }, state = {}) {
     .join('');
   const walked =
     walkedLegs > 0 ? `<path class="gb-route-walked" d="${routePath(data, 0, walkedLegs)}"/>` : '';
-  const ahead = `<path class="gb-route-case" d="${routePath(data, walkedLegs)}"/><path class="gb-route" d="${routePath(data, walkedLegs)}"/>`;
+  const ahead = routePath(data, walkedLegs);
+  const way = `<path class="gb-route-glow" d="${ahead}"/><path class="gb-route-case" d="${ahead}"/><path class="gb-route" d="${ahead}"/>`;
   const at = spread(
     data.stops.map((/** @type {any} */ s) => ({ x: s.streetX, y: s.streetY })),
-    (r * 2 + 1.5) * u,
+    (r * 2 + 2) * u,
   );
-  // The Place one stands at carries its number on its own footprint.
-  const stops = data.stops
-    .map((/** @type {any} */ s, /** @type {number} */ i) =>
-      pinned(
-        position && s.order === current ? s.x : at[i].x,
-        position && s.order === current ? s.y : at[i].y,
+  const stops = bare
+    ? ''
+    : data.stops
+        .map((/** @type {any} */ s, /** @type {number} */ i) =>
+          pinned(
+            at[i].x,
+            at[i].y,
+            u,
+            `<circle class="gb-stop-shade" r="12" cy="1.5"/><circle r="${r}"/><text y="4.3" text-anchor="middle">${s.order}</text>`,
+            `gb-stop${s.order === current ? ' is-current' : ''}`,
+          ),
+        )
+        .join('');
+  const start = bare
+    ? ''
+    : pinned(
+        data.map.start.street_x,
+        data.map.start.street_y,
         u,
-        `<circle r="${r}"/><text y="${small ? 4 : 4.6}" text-anchor="middle">${s.order}</text>`,
-        `gb-stop${s.order === current ? ' is-current' : ''}${s.order < current ? ' is-done' : ''}`,
-      ),
-    )
-    .join('');
-  const start = pinned(
-    data.map.start.street_x,
-    data.map.start.street_y,
-    u,
-    `<rect x="-5.5" y="-5.5" width="11" height="11" transform="rotate(45)"/><text class="gb-start-label" x="12" y="4">${T[lang].station}</text>`,
-    'gb-start',
-  );
+        `<rect x="-6" y="-6" width="12" height="12" transform="rotate(45)"/><text class="gb-start-label" x="13" y="4.5">${T[lang].station}</text>`,
+        'gb-start',
+      );
   const me = position
     ? pinned(
         position.x,
         position.y,
         u,
-        '<circle class="gb-me-halo" r="13"/><circle class="gb-me" r="6"/>',
+        '<circle class="gb-me-halo" r="15"/><circle class="gb-me" r="6.5"/>',
         'gb-position',
       )
     : '';
-  return `${footprints}${walked}${ahead}${start}${stops}${me}`;
+  return `${footprints}${walked}${way}${start}${stops}${me}`;
 }
 
-/** A scale bar of a round number of metres. @param {number} u map units per pixel @param {string} unit */
-function scaleBar(u, unit) {
-  const metresPerPx = u / 2;
-  const metres = [50, 100, 200, 250, 500, 1000].find((m) => m / metresPerPx >= 64) ?? 1000;
-  const px = metres / metresPerPx;
-  return `<span class="gb-scale" style="--scale:${px}px"><i></i><span>0</span><span>${metres}${format.NBSP}${unit}</span></span>`;
-}
-
-/** @param {any} data @param {'ru' | 'en'} lang */
-function keyList(data, lang, limit = data.stops.length) {
+/** @param {any} data @param {'ru' | 'en'} lang @param {number} limit */
+function keyList(data, lang, limit) {
   const t = T[lang];
   return data.stops
     .slice(0, limit)
     .map(
       (/** @type {any} */ s) => `
-      <li class="gb-leg">${t.walk(format.duration(s.legMinutes, lang), format.distance(s.legMetres, lang))}</li>
+      <li class="gb-leg">${icons.walk}${t.walk(format.duration(s.legMinutes, lang), format.distance(s.legMetres, lang))}</li>
       <li class="gb-entry">
         <span class="gb-num">${s.order}</span>
-        <span class="gb-entry-body">
-          <span class="gb-entry-line"><span class="gb-entry-name">${s.name[lang]}</span><span class="gb-leader"></span><span class="gb-entry-time">${s.arrive}</span></span>
-          <span class="gb-entry-why">${s.why[lang]}</span>
-        </span>
+        <img src="${s.photo.src}" alt="" loading="lazy" />
+        <span class="gb-entry-body"><span class="gb-entry-name">${s.name[lang]}</span><span class="gb-entry-why">${s.why[lang]}</span></span>
+        <span class="gb-entry-time">${s.arrive}</span>
       </li>`,
     )
     .join('');
 }
 
-/** @param {any} data @param {'ru' | 'en'} lang */
-const facts = (data, lang) => {
+/** The head of the Route. @param {any} data @param {'ru' | 'en'} lang */
+const head = (data, lang) => {
   const t = T[lang];
-  const km = format.distance(data.route.walkingMetres, lang).split(format.NBSP);
-  const whole = format.duration(data.route.totalMinutes, lang);
-  return `<dl class="gb-facts">
-    <div><dt>${t.places}</dt><dd>${data.route.stopCount}</dd></div>
-    <div><dt>${t.onFoot}</dt><dd>${km[0]}<small>${format.NBSP}${km[1]}</small></dd></div>
-    <div><dt>${t.whole}</dt><dd>${whole.replace(/(\D+)/g, '<small>$1</small>')}</dd></div>
-  </dl>`;
+  const r = data.route;
+  return `<h1>${t.title}</h1>
+    <p class="gb-sub">${t.sub}</p>
+    <ul class="gb-facts">
+      <li>${icons.pin}${t.places(r.stopCount)}</li>
+      <li>${icons.walk}${format.distance(r.walkingMetres, lang)}</li>
+      <li>${icons.clock}${format.duration(r.totalMinutes, lang)}</li>
+    </ul>
+    <p class="gb-verdict"><i>${icons.shield}</i><span><b>${t.fits}</b> ${t.verdict(r)}</span></p>`;
 };
 
 /** @param {any} data @param {'ru' | 'en'} lang */
-const verdict = (data, lang) =>
-  `<p class="gb-verdict"><span class="gb-runin">${T[lang].checked(data.route.checkedAt)}</span> ${T[lang].verdict(data.route)}</p>`;
+const dock = (data, lang) => `<div class="gb-dock">
+    <button class="gb-pack lg">${icons.download}<span><b>${T[lang].pack}</b><small>${data.route.packMegabytes}${format.NBSP}${lang === 'ru' ? 'МБ' : 'MB'}</small></span></button>
+    <button class="gb-go lg lg-tint">${icons.play}<span>${T[lang].start}</span></button>
+  </div>`;
 
 /** @param {{ os: import('../shared/frames.js').Os, lang: 'ru' | 'en', data: any }} ctx */
 function route({ os, lang, data }) {
   const t = T[lang];
-  const { width } = SIZES[os];
-  const inset = INSETS[os];
+  const { width, height } = SIZES[os];
   const android = os === 'android';
-  const plateHeight = android ? 286 : 318;
+  const sheetTop = android ? 350 : 360;
   const view = fitView(
     [
       ...data.stops.map((/** @type {any} */ s) => ({ x: s.streetX, y: s.streetY })),
       { x: data.map.start.street_x, y: data.map.start.street_y },
     ],
     width,
-    plateHeight,
-    { top: android ? 22 : inset.top + 62, right: 30, bottom: 40, left: 30 },
+    height,
+    { top: 116, right: 34, bottom: height - sheetTop + 30, left: 34 },
   );
   const map = mapSvg(data, {
     view,
     lang,
-    layers: BASE_LAYERS,
-    labels: { max: 7, size: 10.5, clearOf: routeSamples(data) },
+    layers: LAYERS,
+    labels: { max: 5, size: 10.5, clearOf: routeSamples(data) },
     defs: patterns,
     under: (ctx) => textures(ctx),
     over: (ctx) => overlay(data, lang, ctx),
-    label: t.plate(data.route.stopCount, format.distance(data.route.walkingMetres, lang)),
+    label: t.plan,
   });
-  const share = android ? icons.shareAndroid : icons.shareIos;
-  const more = android ? icons.moreAndroid : icons.moreIos;
-  const bar = android
-    ? `<header class="gb-appbar"><button class="gb-icon" aria-label="Back">${icons.backAndroid}</button><h2>${t.route}</h2><button class="gb-icon">${icons.edit}</button><button class="gb-icon">${share}</button><button class="gb-icon">${more}</button></header>`
-    : `<div class="gb-float"><button class="gb-round" aria-label="Back">${icons.backIos}</button><span></span><button class="gb-round">${icons.edit}</button><button class="gb-round">${share}</button></div>`;
-  const actions = android
-    ? `<div class="gb-actions"><button class="gb-pack">${icons.download}<span><b>${t.pack}</b><small>${t.packNote(data.route.packMegabytes)}</small></span></button><button class="gb-fab">${icons.walk}<span>${t.start}</span></button></div>`
-    : `<div class="gb-actions"><button class="gb-pack">${icons.download}<span><b>${t.pack}</b><small>${t.packNote(data.route.packMegabytes)}</small></span></button><button class="gb-primary">${t.start}</button></div>`;
   return {
     clock: data.route.nowBeforeStart,
     inner: `<div class="gb gb-route">
-      ${android ? bar : ''}
-      <div class="gb-plate" style="height:${plateHeight}px">
-        ${map}
-        ${android ? '' : bar}
-        <div class="gb-plate-foot">${scaleBar(view.u, t.scale)}<span class="gb-osm">© OpenStreetMap</span></div>
-      </div>
-      <div class="gb-page">
-        <p class="gb-over">${t.over}</p>
-        <h1>${t.title}</h1>
-        <p class="gb-sub">${t.sub}</p>
-        ${facts(data, lang)}
-        ${verdict(data, lang)}
-        <h3 class="gb-over gb-key-head">${t.key}</h3>
-        <ol class="gb-key">${keyList(data, lang, 4)}</ol>
-      </div>
-      ${actions}
+      <div class="gb-under">${map}<span class="gb-osm" style="top:${sheetTop - 22}px">© OpenStreetMap</span></div>
+      <header class="gb-top">
+        <button class="gb-round lg lg-clear" aria-label="Back">${android ? icons.backAndroid : icons.backIos}</button>
+        <p class="gb-title lg lg-clear"><b>${t.kicker}</b><span>${t.checked(data.route.checkedAt)}</span></p>
+        <span class="gb-group lg lg-clear"><button aria-label="Edit">${icons.edit}</button><button aria-label="Share">${android ? icons.shareAndroid : icons.shareIos}</button></span>
+      </header>
+      <section class="gb-sheet lg" style="top:${sheetTop}px">
+        <i class="gb-grab"></i>
+        ${head(data, lang)}
+        <ol class="gb-key">${keyList(data, lang, 3)}</ol>
+      </section>
+      ${dock(data, lang)}
     </div>`,
   };
 }
@@ -292,62 +263,73 @@ function storyText(story, from = 0) {
     .join(' ');
 }
 
-/** @param {any} story @param {'ru' | 'en'} lang */
-function player(story, lang) {
+/** @param {any} data @param {'ru' | 'en'} lang */
+function player(data, lang) {
   const t = T[lang];
+  const story = data.outingNow.story[lang];
+  const next = data.outingNow.next;
   const ticks = story.sentences
     .slice(1)
     .map((/** @type {any} */ s) => `<i style="left:${(s.startsAt / story.total) * 100}%"></i>`)
     .join('');
-  return `<div class="gb-timeline">
+  return `<section class="gb-player lg">
+    <div class="gb-timeline">
       <span>${format.playback(story.elapsed)}</span>
       <span class="gb-track" style="--played:${(story.elapsed / story.total) * 100}%">${ticks}<b></b></span>
       <span>${format.playback(story.total)}</span>
     </div>
     <div class="gb-controls">
-      <button class="gb-ctl gb-ctl-text" aria-label="Speed">1×</button>
-      <button class="gb-ctl" aria-label="Back 10 seconds">${icons.back10}</button>
-      <button class="gb-ctl gb-ctl-main" aria-label="Pause">${icons.pause}</button>
-      <button class="gb-ctl" aria-label="Next">${icons.next}</button>
-      <button class="gb-ctl gb-ctl-text" aria-label="${t.more}">${t.more}</button>
-    </div>`;
+      <button aria-label="Speed">1×</button>
+      <button aria-label="Back 10 seconds">${icons.back10}</button>
+      <button class="gb-main lg lg-tint" aria-label="Pause">${icons.pause}</button>
+      <button aria-label="Next">${icons.next}</button>
+      <button aria-label="${t.more}">${t.more}</button>
+    </div>
+    <p class="gb-next"><span class="gb-num">${next.order}</span><span class="gb-next-body"><small>${t.next} · ${next.arrive}</small><span>${next.name[lang]}</span></span><span class="gb-next-far">${format.distance(next.legMetres, lang)} · ${format.duration(next.legMinutes, lang)}</span>${icons.chevronRight}</p>
+  </section>`;
 }
 
-/** @param {any} data @param {'ru' | 'en'} lang */
-const nextLine = (data, lang) => {
-  const next = data.outingNow.next;
-  return `<p class="gb-next"><span class="gb-over">${T[lang].next}</span><span class="gb-num">${next.order}</span><span class="gb-next-name">${next.name[lang]}</span><span class="gb-next-far">${format.distance(next.legMetres, lang)} · ${format.duration(next.legMinutes, lang)}</span></p>`;
-};
+/** The page of a Story: where it is, what it says, where that comes from. @param {any} data @param {'ru' | 'en'} lang */
+function page(data, lang, from = 0) {
+  const t = T[lang];
+  const now = data.outingNow;
+  const story = now.story[lang];
+  const date = format.date(story.source.revision_date, lang);
+  return `<p class="gb-kicker">${kindIcon(now.stop.kind)}${t.place(now.stop.order)} · ${now.stop.built[lang]} · ${t.outsideShort}</p>
+    <h1>${now.stop.name[lang]}</h1>
+    <div class="gb-reading">
+      <p class="gb-text">${storyText(story, from)}</p>
+      <i class="gb-rule" aria-hidden="true"></i>
+    </div>
+    <p class="gb-footnote"><sup>1</sup> ${t.source(story.source, date)}</p>
+    <p class="gb-made">${icons.shield}${t.made}</p>`;
+}
 
-/** @param {any} data */
-const ticksOf = (data) =>
-  `<span class="gb-ticks">${data.stops.map((/** @type {any} */ s) => `<i class="${s.order < data.outingNow.stop.order ? 'is-done' : s.order === data.outingNow.stop.order ? 'is-current' : ''}"></i>`).join('')}</span>`;
+/** The photograph of the Place, credited where it is shown. @param {any} stop @param {'ru' | 'en'} lang */
+const hero = (stop, lang) =>
+  `<figure class="gb-hero"><img src="${stop.photo.src}" alt="" /><figcaption>${T[lang].photo}: ${stop.photo.author} · ${stop.photo.licence}</figcaption></figure>`;
 
 /** @param {{ os: import('../shared/frames.js').Os, lang: 'ru' | 'en', data: any }} ctx */
 function outing({ os, lang, data }) {
   const t = T[lang];
-  const { width } = SIZES[os];
   const android = os === 'android';
   const now = data.outingNow;
   const story = now.story[lang];
-  const bandHeight = android ? 136 : 124;
   const here = positionAt(data, now.stop.arriveMin + 1);
-  // About a metre and a half to a pixel: the Place, the next one and the streets between.
-  const u = 3;
-  const cx = (now.stop.streetX + now.next.streetX) / 2;
-  const cy = (now.stop.y + now.next.streetY) / 2;
+  // The loupe: the plan around the person, at about a metre to a pixel.
+  const size = 104;
+  const u = 2.3;
   const view = {
-    x: cx - (width * u) / 2,
-    y: cy - (bandHeight * u) / 2,
-    w: width * u,
-    h: bandHeight * u,
+    x: here.x - (size * u) / 2,
+    y: now.stop.y - (size * u) / 2 + 20,
+    w: size * u,
+    h: size * u,
     u,
   };
-  const map = mapSvg(data, {
+  const loupe = mapSvg(data, {
     view,
     lang,
-    layers: BASE_LAYERS,
-    labels: { max: 2, size: 10.5, clearOf: routeSamples(data) },
+    layers: LAYERS,
     defs: patterns,
     under: (ctx) => textures(ctx),
     over: (ctx) =>
@@ -355,39 +337,22 @@ function outing({ os, lang, data }) {
         current: now.stop.order,
         walkedLegs: now.stop.order,
         position: here,
-        small: true,
+        bare: true,
       }),
-    label: t.onTime(data.route.finish),
+    label: t.plan,
   });
-  const date = format.date(story.source.revision_date, lang);
   return {
     clock: now.clock,
     inner: `<div class="gb gb-outing">
-      <header class="gb-runhead">
-        <button class="gb-icon" aria-label="Back">${android ? icons.backAndroid : icons.backIos}</button>
-        <p><span class="gb-over">${t.outing} · ${t.of(now.stop.order, data.route.stopCount)}</span>${ticksOf(data)}</p>
-        <button class="gb-icon" aria-label="${t.route}">${icons.list}</button>
+      ${hero(now.stop, lang)}
+      <header class="gb-top">
+        <button class="gb-round lg lg-clear" aria-label="Back">${android ? icons.backAndroid : icons.backIos}</button>
+        <p class="gb-title lg lg-clear"><b>${t.of(now.stop.order, data.route.stopCount)}</b><span>${t.onTime(data.route.finish)}</span></p>
+        <button class="gb-round lg lg-clear" aria-label="${t.plan}">${icons.list}</button>
       </header>
-      <div class="gb-band" style="height:${bandHeight}px">
-        ${map}
-        <span class="gb-band-tag">${t.onTime(data.route.finish)}</span>
-      </div>
-      <div class="gb-chapter">
-        <p class="gb-over">${t.place(now.stop.order)} · ${now.stop.built[lang]} · ${t.outside}</p>
-        <h1>${now.stop.name[lang]}</h1>
-      </div>
-      <div class="gb-reading">
-        <p class="gb-text" data-follow>${storyText(story, story.current - 1)}</p>
-        <i class="gb-rule" aria-hidden="true"></i>
-      </div>
-      <div class="gb-under">
-        <p class="gb-footnote"><sup>1</sup> ${t.source(story.source, date)}</p>
-        <p class="gb-made">${t.made}</p>
-      </div>
-      <div class="gb-player">
-        ${player(story, lang)}
-        ${nextLine(data, lang)}
-      </div>
+      <button class="gb-loupe lg" aria-label="${t.plan}"><span>${loupe}</span></button>
+      <article class="gb-page">${page(data, lang, story.current - 1)}</article>
+      ${player(data, lang)}
     </div>`,
   };
 }
@@ -395,56 +360,47 @@ function outing({ os, lang, data }) {
 // ── The web ─────────────────────────────────────────────────────────────────
 
 /** @param {'ru' | 'en'} lang */
-const webHead = (lang) => `
-  <header class="gb-webhead">
+const webNav = (lang) => `<nav class="gb-webnav lg">
     <span class="gb-wordmark">Promenade</span>
-    <nav><span class="gb-langs"><b>${lang === 'ru' ? 'Рус' : 'Eng'}</b> · ${lang === 'ru' ? 'Eng' : 'Рус'}</span><button class="gb-outline">${T[lang].open}</button></nav>
-  </header>`;
-
-const WEB_PLATE = { width: 712, height: 612 };
+    <span class="gb-langs"><b>${lang === 'ru' ? 'Рус' : 'Eng'}</b>${lang === 'ru' ? 'Eng' : 'Рус'}</span>
+    <button class="gb-open lg lg-tint">${T[lang].open}</button>
+  </nav>`;
 
 /** @param {{ lang: 'ru' | 'en', data: any }} ctx */
 function webRoute({ lang, data }) {
   const t = T[lang];
+  const size = SIZES.web;
   const view = fitView(
     [
       ...data.stops.map((/** @type {any} */ s) => ({ x: s.streetX, y: s.streetY })),
       { x: data.map.start.street_x, y: data.map.start.street_y },
     ],
-    WEB_PLATE.width,
-    WEB_PLATE.height,
-    { top: 56, right: 60, bottom: 70, left: 60 },
+    size.width,
+    size.height - 44,
+    { top: 96, right: 90, bottom: 70, left: 540 },
   );
   const map = mapSvg(data, {
     view,
     lang,
-    layers: BASE_LAYERS,
-    labels: { max: 14, size: 11, clearOf: routeSamples(data) },
+    layers: LAYERS,
+    labels: { max: 12, size: 11.5, clearOf: routeSamples(data) },
     defs: patterns,
     under: (ctx) => textures(ctx),
     over: (ctx) => overlay(data, lang, ctx),
-    label: t.plate(data.route.stopCount, format.distance(data.route.walkingMetres, lang)),
+    label: t.plan,
   });
   return {
     clock: data.route.nowBeforeStart,
     address: 'promenade.example/r/early-20th-century',
     inner: `<div class="gb gb-web gb-web-route">
-      ${webHead(lang)}
-      <div class="gb-spread">
-        <figure class="gb-webplate">
-          <div class="gb-neat">${map}</div>
-          <figcaption><span>${t.plate(data.route.stopCount, format.distance(data.route.walkingMetres, lang))}</span>${scaleBar(view.u, t.scale)}<span class="gb-osm">© OpenStreetMap</span></figcaption>
-        </figure>
-        <div class="gb-page">
-          <p class="gb-over">${t.over}</p>
-          <h1>${t.title}</h1>
-          <p class="gb-sub">${t.sub}</p>
-          ${facts(data, lang)}
-          ${verdict(data, lang)}
-          <h3 class="gb-over gb-key-head">${t.key}</h3>
-          <ol class="gb-key">${keyList(data, lang, 5)}</ol>
-        </div>
-      </div>
+      <div class="gb-under">${map}<span class="gb-osm">© OpenStreetMap</span></div>
+      ${webNav(lang)}
+      <section class="gb-sheet lg">
+        <p class="gb-kicker">${icons.shield}${t.kicker} · ${t.checked(data.route.checkedAt)}</p>
+        ${head(data, lang)}
+        <ol class="gb-key">${keyList(data, lang, 5)}</ol>
+      </section>
+      <p class="gb-webnote lg">${t.webNote}</p>
     </div>`,
   };
 }
@@ -452,59 +408,44 @@ function webRoute({ lang, data }) {
 /** @param {{ lang: 'ru' | 'en', data: any }} ctx */
 function webOuting({ lang, data }) {
   const t = T[lang];
+  const size = SIZES.web;
   const now = data.outingNow;
-  const story = now.story[lang];
   const around = data.stops.filter((/** @type {any} */ s) => s.order <= 6);
   const view = fitView(
     around.map((/** @type {any} */ s) => ({ x: s.streetX, y: s.streetY })),
-    WEB_PLATE.width,
-    WEB_PLATE.height,
-    { top: 90, right: 90, bottom: 100, left: 90 },
+    size.width,
+    size.height - 44,
+    { top: 130, right: 110, bottom: 120, left: 590 },
   );
   const map = mapSvg(data, {
     view,
     lang,
-    layers: BASE_LAYERS,
-    labels: { max: 10, size: 11, clearOf: routeSamples(data) },
+    layers: LAYERS,
+    labels: { max: 8, size: 11.5, clearOf: routeSamples(data) },
     defs: patterns,
     under: (ctx) => textures(ctx),
     over: (ctx) => overlay(data, lang, ctx, { current: now.stop.order }),
     label: now.stop.name[lang],
   });
-  const date = format.date(story.source.revision_date, lang);
   return {
     clock: now.clock,
     address: 'promenade.example/r/early-20th-century/2',
     inner: `<div class="gb gb-web gb-web-outing">
-      ${webHead(lang)}
-      <div class="gb-spread">
-        <figure class="gb-webplate">
-          <div class="gb-neat">${map}</div>
-          <figcaption><span>${t.over}: ${t.title}</span>${scaleBar(view.u, t.scale)}<span class="gb-osm">© OpenStreetMap</span></figcaption>
-        </figure>
-        <div class="gb-page">
-          <p class="gb-over">${t.place(now.stop.order)} · ${t.of(now.stop.order, data.route.stopCount)} · ${now.stop.built[lang]} · ${t.outside}</p>
-          <h1>${now.stop.name[lang]}</h1>
-          <div class="gb-reading">
-            <p class="gb-text" data-follow>${storyText(story, story.current - 1)}</p>
-            <i class="gb-rule" aria-hidden="true"></i>
-          </div>
-          <p class="gb-footnote"><sup>1</sup> ${t.source(story.source, date)}</p>
-          <p class="gb-made">${t.made}</p>
-          <div class="gb-player">
-            ${player(story, lang)}
-            ${nextLine(data, lang)}
-          </div>
-          <p class="gb-webnote">${t.webNote}</p>
-        </div>
-      </div>
+      <div class="gb-under">${map}<span class="gb-osm">© OpenStreetMap</span></div>
+      ${webNav(lang)}
+      <article class="gb-page">
+        ${hero(now.stop, lang)}
+        <div class="gb-page-body">${page(data, lang, 0)}</div>
+      </article>
+      ${player(data, lang)}
+      <p class="gb-webnote lg">${t.webNote}</p>
     </div>`,
   };
 }
 
 /**
- * Puts the marginal rule beside the sentence being spoken, and brings that
- * sentence into the reading window, as the text does when it follows the audio.
+ * Puts the marginal rule beside the sentence being spoken, and keeps the
+ * reading window to whole lines.
  * @param {Element} root
  */
 function settle(root) {
@@ -517,10 +458,10 @@ function settle(root) {
       !(text instanceof HTMLElement) ||
       !(current instanceof HTMLElement) ||
       !(rule instanceof HTMLElement)
-    )
+    ) {
       continue;
+    }
     const lineHeight = parseFloat(getComputedStyle(text).lineHeight);
-    // The window shows whole lines only.
     text.style.maxHeight = '';
     text.style.maxHeight = `${Math.floor(reading.clientHeight / lineHeight) * lineHeight}px`;
     const rects = current.getClientRects();
@@ -548,8 +489,8 @@ function sample(
   return mapSvg(data, {
     view,
     lang,
-    layers: BASE_LAYERS,
-    labels: { max: 6, size: 11, clearOf: routeSamples(data) },
+    layers: LAYERS,
+    labels: { max: 6, size: 11.5, clearOf: routeSamples(data) },
     defs: patterns,
     under: (ctx) => textures(ctx),
     over: (ctx) => overlay(data, lang, ctx, { current: 2 }),
@@ -575,9 +516,9 @@ function follow(root, story, index) {
 
 const sheet = {
   reason: [
-    'Before a phone, the companion of a walk was a printed guide. It solved the problem this product has set itself: it took a stranger through a city along a suggested way, and it stood behind what it said. Its forms are still the clearest ones for that job — a plan with numbered buildings and a key, text set to be read on the move, the source at the foot of the page.',
-    'The product promises facts with sources (PRODUCT-SPEC §1.3). In this direction the source is not a control hidden behind an icon: it is where a reader has always looked for it, in a footnote, and the mark that leads to it is the numeral readers already know.',
-    'It is the calmest of the three and the one that asks for the most reading. It suits a person who chose Guided Mode because they want to know, not only to arrive.',
+    'Before a phone, the companion of a walk was a printed guide. It solved the problem this product has set itself: it took a stranger through a city along a suggested way, and it stood behind what it said. Its forms are still the clearest ones for that job — a plan with numbered buildings and a key, text set to be read, the source at the foot of the page.',
+    'The product promises facts with sources (PRODUCT-SPEC §1.3). In this direction the source is where a reader has always looked for it, in a footnote, and the mark that leads to it is the numeral readers already know.',
+    'Round two, at the owner’s request, takes the book off the shelf. The beige page and the single serif are gone. The plan fills the screen and the key lies on it as a sheet of frosted glass — tracing paper over a drawing. Every Place has its photograph, credited where it is shown, and the icon of its kind. While a Story plays, the page opens under the photograph of the Place; a loupe of glass keeps the plan and the person in sight; the controls float in a capsule of glass. The text itself stays on a solid page: glass is for what floats, not for what is read.',
   ],
   roots: [
     {
@@ -590,82 +531,82 @@ const sheet = {
     {
       what: 'The engraved city plan.',
       lesson:
-        'Nolli’s plan of Rome, engraved in 1748, and the figure-ground diagram draw a city as built against unbuilt. Here the built is a tone, the streets are the paper, and the Places of the Route are the only solid red: the plan shows the very walls a Story is about.',
+        'Nolli’s plan of Rome, engraved in 1748, draws a city as built against unbuilt. Here the built is a tone, the streets are white, water is hatched and green is stippled, and the Places of the Route are the only solid red.',
       source: 'Wikipedia, “Giambattista Nolli”',
       url: 'https://en.wikipedia.org/w/index.php?oldid=1385710114',
     },
     {
-      what: 'A face made for reading on screens.',
+      what: 'Glass where Apple puts it.',
       lesson:
-        'Literata was made as the typeface of a book-reading application and redrawn by TypeTogether as a variable family for digital text; its project page lists a Modern Cyrillic 2021 award.',
-      source: 'Literata, project page',
-      url: 'https://github.com/googlefonts/literata',
+        'Apple describes Liquid Glass as the layer of controls and navigation that floats above content, and says not to use it for content itself. So the key, the bars, the loupe and the player are glass; the page of a Story is not.',
+      source: 'Apple, Human Interface Guidelines: Materials',
+      url: 'https://developer.apple.com/design/human-interface-guidelines/materials',
+    },
+    {
+      what: 'Text that follows the voice.',
+      lesson:
+        'Apple’s transcripts of podcasts are synchronised with the audio, and a tap on the text plays from there. The sentence being spoken is marked in the margin, and every sentence is also a control.',
+      source: 'Apple Support, transcripts in Apple Podcasts',
+      url: 'https://support.apple.com/en-us/127831',
     },
   ],
   typeNote:
-    'One family for everything: Literata, with its optical sizes — the same letter is drawn finer in a title and sturdier in a caption — and its upright italic, used for whatever is said in passing: the why of a Place, a walking leg, a caption of the plan. Numerals are lining, and tabular wherever times stand in a column. SIL Open Font License 1.1.',
+    'Three faces, each with one job. Noto Serif Display, tall and sharp, sets a title and nothing smaller. Source Serif 4 sets what is read at length — the Story, with its optical sizes — and its italic sets what is said in passing. Inter sets the interface: labels, times, controls; on an iPhone the system’s own face may take its place. All three carry Cyrillic and the Belarusian Latin letters, and all are under the SIL Open Font License 1.1.',
   type: [
     {
       role: 'Title',
-      face: 'Literata 480–500, optical size taken from the size',
-      css: "font: 480 40px/1.1 'Literata'; letter-spacing: -0.012em",
+      face: 'Noto Serif Display 600',
+      css: "font: 600 44px/1.06 'Noto Serif Display'; letter-spacing: -0.012em",
       ru: 'Костёл Святого Симеона и Святой Елены',
       en: 'Church of Saints Simon and Helena',
     },
     {
       role: 'Story text',
-      face: 'Literata 400, 18.5 on 27',
-      css: "font: 400 19px/1.45 'Literata'",
+      face: 'Source Serif 4, 400, 18.5 on 27',
+      css: "font: 400 19px/1.45 'Source Serif 4'",
       ru: 'Храм был целиком построен из красного кирпича, что принесло ему народное прозвище «Красный костёл».',
       en: 'The bricks for its walls were sourced from Częstochowa, while the roof tiles came from Włocławek.',
     },
     {
       role: 'Said in passing',
-      face: 'Literata Italic 400',
-      css: "font: italic 400 16px/1.4 'Literata'",
+      face: 'Source Serif 4 Italic',
+      css: "font: italic 400 16px/1.4 'Source Serif 4'",
       ru: '1910 год — эпоха из вашего пожелания · охраняется как наследие',
       en: '1910 — the period you asked for · heritage-listed',
     },
     {
-      role: 'Label',
-      face: 'Literata 650, capitals, tracked',
-      css: "font: 650 12px/1.3 'Literata'; letter-spacing: 0.11em; text-transform: uppercase",
-      ru: 'Маршрут · вариант 1 из 3 · ключ к плану',
-      en: 'Route · option 1 of 3 · key to the plan',
-    },
-    {
-      role: 'Numerals',
-      face: 'Literata 500, lining and tabular',
-      css: "font: 500 30px/1.2 'Literata'; font-variant-numeric: lining-nums tabular-nums",
-      ru: '14:28 · 5,7 км · 2 ч 45 мин',
-      en: '14:28 · 5.7 km · 2 h 45 min',
+      role: 'Interface',
+      face: 'Inter 500–700, tabular figures',
+      css: "font: 600 15px/1.4 'Inter'; font-variant-numeric: tabular-nums",
+      ru: '11 мест · 5,7 км · 2 ч 45 мин · 14:28 · Poliakaŭ',
+      en: '11 places · 5.7 km · 2 h 45 min · 14:28 · Poliakaŭ',
     },
   ],
   colourNote:
-    'Paper, ink and one rubric red, as in a book printed in two colours. The red is never decoration: it marks what belongs to the Route — its line, its Places, the sentence being spoken, a footnote mark. In the dark theme the page becomes a night edition: the same inks on dark paper, the red lifted so that it still reads.',
+    'White, black, and one red — the second ink of a printed guide, now bright. The red is never decoration: it marks what belongs to the Route — its line, its Places, the sentence being spoken, a footnote mark, the one prominent action. Everything else takes its colour from the photographs and from the plan under the glass. In the dark theme the page is near black and the red is lifted so that it still reads.',
   colours: [
-    { token: '--paper', role: 'Paper' },
-    { token: '--paper-2', role: 'Paper, shaded' },
+    { token: '--surface', role: 'Page, and glass as a solid' },
     { token: '--ink', role: 'Ink' },
     { token: '--ink-2', role: 'Second ink' },
-    { token: '--rule', role: 'Rule' },
-    { token: '--rubric', role: 'Rubric' },
+    { token: '--accent', role: 'Red' },
     { token: '--m-ground', role: 'Plan: ground' },
     { token: '--m-building', role: 'Plan: built' },
     { token: '--m-street', role: 'Plan: street' },
+    { token: '--m-green', role: 'Plan: green' },
+    { token: '--m-water', role: 'Plan: water' },
   ],
   pairs: [
-    { text: '--ink', on: '--paper', what: 'Ink on paper' },
-    { text: '--ink-2', on: '--paper', what: 'Second ink on paper' },
-    { text: '--ink-2', on: '--paper-2', what: 'Second ink on shaded paper' },
-    { text: '--rubric', on: '--paper', what: 'Rubric on paper' },
+    { text: '--ink', on: '--surface', what: 'Ink on the page' },
+    { text: '--ink-2', on: '--surface', what: 'Second ink on the page' },
+    { text: '--accent', on: '--surface', what: 'Red on the page' },
+    { text: '--on-accent', on: '--accent', what: 'Label on the red action' },
     { text: '--ink-2', on: '--m-street', what: 'Street name on a street' },
-    { text: '--rubric', on: '--m-ground', what: 'Route on the plan', large: true },
+    { text: '--accent', on: '--m-ground', what: 'Route on the plan', large: true },
   ],
   mapNote:
-    'An engraved plan. Streets keep their true width and are left as paper; what is built is a flat tone; water is hatched and green is stippled, as a plate would have them; the railway is the ladder line of old plans. Street names run along the streets in italic. The Route is a red line, and every Place on it is drawn twice: as its number, and as its own footprint filled in red. Nothing here is beyond a MapLibre style — fills, two fill patterns, lines with casings and dashes, text along a line (ADR-0008).',
+    'An engraved plan that fills the screen. Streets keep their true width and are white; what is built is a flat tone; water is hatched and green is stippled, as a plate would have them; the railway is the ladder line of old plans. Street names run along the streets in italic. The Route is a red line with a soft glow, and every Place on it is drawn twice: as its number, and as its own footprint filled in red. While a Story plays the plan shrinks into a loupe of glass that follows the person. Fills, two fill patterns, lines with casings and dashes, text along a line: all within a MapLibre style (ADR-0008).',
   storyNote:
-    'A page to read. The text is continuous prose; the sentence being spoken is in full ink and a red rule stands beside it in the margin, while what was said and what is to come stay in the second ink — still readable, because the text is also for those who cannot hear it (NFR-27). A superscript numeral leads to the source at the foot of the page, as a footnote does. Below, the player is a colophon: one large control, and a line with a tick for every sentence.',
+    'A page that opens under the photograph of the Place. The title is set large in a display serif; the text is continuous prose, with the sentence being spoken in full ink and a red rule beside it in the margin, and the rest in the second ink — still readable, because the text is also for those who cannot hear it (NFR-27). A superscript numeral leads to the source at the foot of the page. The photograph carries the name of its author and its licence. The controls float below in a capsule of glass, and a round loupe of glass at the corner of the photograph shows the plan and where one stands.',
   motion: [
     {
       moment: 'The text follows the voice.',
@@ -673,11 +614,11 @@ const sheet = {
     },
     {
       moment: 'Arriving.',
-      how: 'The number of the Place is stamped: it appears a little large and settles in 280 ms, once, with no bounce. The plan eases to the Place.',
+      how: 'The plan closes into the loupe — the glass circle draws in from the full screen in 500 ms — while the photograph of the Place settles under the status bar and the page rises.',
     },
     {
-      moment: 'A Story starting by itself.',
-      how: 'The page of the previous Place lifts away upward and the new chapter head is already there — a page turned, 360 ms.',
+      moment: 'The loupe.',
+      how: 'It follows the person on the plan; a touch opens it back to the full plan with the same movement in reverse.',
     },
     {
       moment: 'The Route recalculated.',
@@ -687,28 +628,29 @@ const sheet = {
   platforms: [
     {
       system: 'iOS.',
-      how: 'The plan runs under the status bar and round controls float on it; the actions sit in a bar above the home indicator. Controls are 44 points and more.',
+      how: 'Liquid Glass, the system’s own: the key as a sheet with a grabber, the round controls, the loupe and the capsule of the player. The page of a Story is a solid surface. Controls are 44 points and more.',
     },
     {
       system: 'Android.',
-      how: 'A top app bar with the arrow back, the plan under it; the primary action is an extended floating button. Controls are 48 dp and more.',
+      how: 'The same layout on solid Material 3 surfaces: no blur is imitated. The sheet and the player are attached to the edges, corners are 28 dp, controls are 48 dp and more.',
     },
     {
       system: 'Web.',
-      how: 'A spread: the plan as a plate with a double neat line and a caption on the left, the page on the right. Stories are started by hand, and the page says so.',
+      how: 'The plan fills the window; the key is a panel of glass at the left. Listening puts the page with its photograph at the left as a solid sheet, and the player in a capsule of glass over the plan.',
     },
   ],
   risks: [
-    'It asks for the most reading. In bright sun the second ink of the spoken text is the first thing to try on a real phone.',
-    'A serif on warm paper can drift toward nostalgia. The plan and the red have to stay sharp and the layouts spare, or it becomes a period piece.',
-    'The plan is the densest map of the three: with a whole Route on a phone, the footprints of the Places are small.',
+    'It asks for the most reading. In bright sun the second ink of the text that is not being spoken is the first thing to try on a real phone.',
+    'It leans on photographs. A Place without a good free photograph will look poorer; the design needs a dignified state for that, which D-02 has to draw.',
+    'A sheet of glass over a dense plan costs legibility; the key uses the regular, more opaque glass, and a “bright sunlight” setting that makes it solid belongs in the design system.',
+    'On Android the look is deliberately plainer: solid surfaces.',
   ],
 };
 
 export const guidebook = {
   id: 'guidebook',
   name: { en: 'Guidebook', ru: 'Путеводитель' },
-  idea: 'The city as a book you walk through: an engraved plan with a numbered key, a Story set as a page, its source in a footnote.',
+  idea: 'The city as a book you walk through: an engraved plan under a sheet of frosted glass, a photograph for every Place, a Story set as a page with its source in a footnote, and a loupe of glass that keeps the plan in sight.',
   screens: { route, outing },
   web: { route: webRoute, outing: webOuting },
   settle,

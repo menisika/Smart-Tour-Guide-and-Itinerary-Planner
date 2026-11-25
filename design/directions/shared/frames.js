@@ -75,6 +75,34 @@ export const icons = {
   pack: stroke('<path d="m4 8 8-4.5L20 8v8l-8 4.5L4 16V8ZM4 8l8 4.5L20 8M12 12.5v8"/>'),
   arrowDown: stroke('<path d="M12 4.5v15M6 13.5l6 6 6-6"/>'),
   arrowRight: stroke('<path d="M4.5 12h15M13.5 6l6 6-6 6"/>'),
+  // The kinds of Place, in the same hand.
+  building: stroke(
+    '<path d="M5 20.5V7l7-3.5L19 7v13.5M3.5 20.5h17M9 10h1.5M13.5 10H15M9 13.5h1.5M13.5 13.5H15M10.5 20.5V17h3v3.5"/>',
+  ),
+  church: stroke(
+    '<path d="M12 2.5v3.5M10.4 4h3.2M9.5 20.5V9.5L12 6l2.5 3.5v11M9.5 12.5l-5 2.5v5.5M14.5 12.5l5 2.5v5.5M3.5 20.5h17M12 20.5v-3.5"/>',
+  ),
+  theatre: stroke(
+    '<path d="M3.5 9.5 12 4l8.5 5.5h-17ZM6 12.5V18M10 12.5V18M14 12.5V18M18 12.5V18M3.5 20.5h17"/>',
+  ),
+  ensemble: stroke(
+    '<path d="M4.5 20.5V8.5L7 5l2.5 3.5v12M14.5 20.5v-12L17 5l2.5 3.5v12M9.5 14h5M3 20.5h18"/>',
+  ),
+  station: stroke(
+    '<rect x="6" y="3.5" width="12" height="13" rx="3"/><path d="M6 10.5h12M9.5 16.5 8 20.5M14.5 16.5l1.5 4"/><path d="M9.5 13.5h.01M14.5 13.5h.01" stroke-width="2.4"/>',
+  ),
+  pin: stroke(
+    '<path d="M12 21s-6.5-5.7-6.5-10.6a6.5 6.5 0 0 1 13 0C18.5 15.3 12 21 12 21Z"/><circle cx="12" cy="10.4" r="2.3"/>',
+  ),
+  clock: stroke('<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>'),
+  eye: stroke(
+    '<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="2.8"/>',
+  ),
+  shield: stroke(
+    '<path d="M12 3 5 5.8v5.6c0 4.3 2.9 7.7 7 9.1 4.1-1.4 7-4.8 7-9.1V5.8L12 3Z"/><path d="m8.8 12 2.3 2.3 4.2-4.6"/>',
+  ),
+  lines: stroke('<path d="M5 6.5h14M5 11.5h14M5 16.5h9"/>'),
+  chevronRight: stroke('<path d="m9 5 7 7-7 7"/>'),
   lock: stroke(
     '<rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/>',
   ),

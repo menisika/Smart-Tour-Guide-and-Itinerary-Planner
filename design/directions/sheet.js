@@ -14,7 +14,7 @@ const main = /** @type {HTMLElement} */ (document.getElementById('sheet'));
 const nav = /** @type {HTMLElement} */ (document.getElementById('nav'));
 
 nav.innerHTML =
-  `<a href="./">All three, side by side</a>` +
+  `<a href="./">Both, side by side</a>` +
   directions
     .map(
       (d) =>

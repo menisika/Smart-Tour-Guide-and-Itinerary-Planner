@@ -122,8 +122,30 @@ function builtLabel(stop, lang) {
   return '';
 }
 
+/**
+ * A photograph of a Place with what has to be said beside it: who made it and
+ * under which licence.
+ * @param {any} photos @param {number} order
+ */
+function photoOf(photos, order) {
+  const photo = photos.photos.find((/** @type {any} */ p) => p.order === order);
+  if (!photo) return undefined;
+  return {
+    src: new URL(`../../${photo.file}`, import.meta.url).pathname,
+    ratio: photo.width / photo.height,
+    author: photo.author.replace(/\s*\(.*$/, ''),
+    licence: photo.licence,
+    source: photo.source,
+  };
+}
+
 export async function loadData() {
-  const [outing, story, map] = await Promise.all([read('outing'), read('story'), read('map')]);
+  const [outing, story, map, photos] = await Promise.all([
+    read('outing'),
+    read('story'),
+    read('map'),
+    read('photos'),
+  ]);
   const start = outing.request.start_clock;
   const visit = outing.assumptions.visit_minutes;
   const count = outing.stops.length;
@@ -143,6 +165,8 @@ export async function loadData() {
       built: { ru: builtLabel(s, 'ru'), en: builtLabel(s, 'en') },
       why: { ru: whyHere(s, 'ru', count), en: whyHere(s, 'en', count) },
       heritage: s.heritage,
+      kind: s.kind,
+      photo: photoOf(photos, s.order),
       x: geometry.x,
       y: geometry.y,
       streetX: geometry.street_x,
