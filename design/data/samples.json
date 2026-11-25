@@ -1,0 +1,79 @@
+{
+  "about": "Sample data for states and screens that the reference Outing does not hold. Nothing here is measured, and no screen shows it as if it were: each screen that uses it says so in its note. Names of Places, times and distances of the reference Outing are never taken from this file.",
+  "today": "2026-11-25",
+  "options": {
+    "about": "The first two Routes offered are real: the reference Outing, and the same Route without the Place named in outing.json → study.skip_order, whose way round was found on the pedestrian graph. The third is a sample: a subset of the same Places with times that were not measured.",
+    "third": {
+      "stop_orders": [1, 2, 3, 4, 5, 6, 11],
+      "total_min": 120,
+      "walking_m": 4100
+    }
+  },
+  "nothing_fits": {
+    "about": "A request that cannot be met: half an hour from the same start. The nearest Place is the first of the reference Outing; the walk to it is measured, the walk back is taken as the same leg.",
+    "budget_min": 30,
+    "add_min": 10
+  },
+  "custom_place": {
+    "about": "A Custom Place added while editing, to show a broken constraint: its visit makes the Route longer than the budget.",
+    "after_order": 6,
+    "visit_min": 20
+  },
+  "late": {
+    "about": "A sample of the state 'behind'.",
+    "minutes": 6
+  },
+  "battery": {
+    "about": "A sample of the state in which the charge will not last the Outing.",
+    "percent": 18
+  },
+  "shorten": {
+    "about": "The request of SC-1: forty minutes left. What the planner would keep is not computed here.",
+    "left_min": 40,
+    "extend_min": 60,
+    "break_min": 20
+  },
+  "pack": {
+    "about": "A sample of a download under way.",
+    "done_mb": 7
+  },
+  "account": {
+    "about": "A sample person on a reserved example domain.",
+    "email": "anna@promenade.example",
+    "routes_in_account": 3
+  },
+  "corrections": {
+    "about": "Samples of the three outcomes of a Correction. The sentence each is attached to is a sentence of the cited passage in story.json, by its index.",
+    "items": [
+      {
+        "sentence": {
+          "ru": 4,
+          "en": 1
+        },
+        "sent": "2026-11-25",
+        "outcome": "accepted"
+      },
+      {
+        "sentence": {
+          "ru": 2,
+          "en": 0
+        },
+        "sent": "2026-11-25",
+        "outcome": "pending"
+      },
+      {
+        "sentence": {
+          "ru": 5,
+          "en": 2
+        },
+        "sent": "2026-11-24",
+        "outcome": "declined"
+      }
+    ]
+  },
+  "code": {
+    "about": "Digits typed into a one-time code: some so far, and six that do not match.",
+    "digits": "482",
+    "wrong": "482913"
+  }
+}
