@@ -1,0 +1,16 @@
+{
+  "name": "@promenade/eslint-plugin",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Lint rules that enforce architecture decisions of Promenade.",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "peerDependencies": {
+    "eslint": ">=10"
+  },
+  "devDependencies": {
+    "eslint": "catalog:"
+  }
+}

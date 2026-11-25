@@ -1,0 +1,43 @@
+packages:
+  - apps/*
+  - packages/*
+  - tools/*
+
+# One place for the versions that several workspace packages share.
+# Versions were read from the npm registry on 24 November 2026.
+catalog:
+  # TypeScript 7.0 is "latest" on npm, but typescript-eslint 8.74 supports
+  # "<6.1.0", and NestJS 12 and Expo SDK 58 are both on 6.0.
+  typescript: ~6.0.3
+  '@types/node': ^26.6.6
+
+  # Checks
+  eslint: ^10.15.0
+  '@eslint/js': ^10.0.1
+  typescript-eslint: ^8.74.0
+  eslint-plugin-react-hooks: ^7.1.1
+  globals: ^17.14.0
+  dependency-cruiser: ^18.9.0
+  prettier: ^3.10.1
+
+  # Tests
+  vitest: ^5.1.1
+  vite: ^8.3.8
+  fast-check: ^4.11.0
+
+  # Shared runtime libraries
+  zod: ^4.6.7
+  # Expo SDK 58 pins React exactly; the console follows it so that the
+  # workspace holds one copy.
+  react: 19.3.0
+  react-dom: 19.3.0
+  '@types/react': ~19.3.0
+  '@types/react-dom': ~19.3.0
+
+# pnpm runs the install script of a dependency only when it is allowed here,
+# and stops on one that has not been reviewed.
+allowBuilds:
+  # Its script only checks that the native binary was installed and otherwise
+  # falls back to a WebAssembly build. pnpm installs the binary as an optional
+  # dependency, so the script has nothing to do.
+  '@swc/core': false

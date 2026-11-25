@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "target": "ES2023",
+    "lib": ["ES2023"],
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+
+    // Workspace packages publish their sources under this condition, so that
+    // type checking, linting and tests work on a fresh clone without a build.
+    // At run time Node.js does not know the condition and loads `dist`.
+    "customConditions": ["@promenade/source"],
+
+    // Relative imports are written with the `.ts` extension, as Node.js
+    // expects when it runs TypeScript directly; `tsc` rewrites them to `.js`.
+    "rewriteRelativeImportExtensions": true,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+
+    // TypeScript 6 no longer loads every `@types/*` package by default.
+    // Shared packages get no ambient types at all, which keeps Node.js and
+    // browser globals out of code that must also run on a phone.
+    "types": [],
+    "skipLibCheck": true,
+
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true
+  }
+}

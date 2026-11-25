@@ -1,0 +1,19 @@
+# Generated
+pnpm-lock.yaml
+**/dist
+**/coverage
+**/.expo
+infra/.terraform
+infra/.terraform.lock.hcl
+
+# Written and owned outside this skeleton
+docs/adr
+docs/research
+docs/PRODUCT-SPEC.md
+docs/architecture-overview.md
+spikes
+CONCEPT.md
+GLOSSARY.md
+
+# Recorded responses are data: they are kept byte for byte
+apps/api/recordings/**/*.json

@@ -1,0 +1,15 @@
+{
+  // The build graph: `pnpm build` runs `tsc -b` on this file and compiles the
+  // shared packages and the API into their `dist` folders, in dependency order.
+  // The mobile app and the console are built by their own bundlers.
+  "files": [],
+  "references": [
+    { "path": "packages/contracts/tsconfig.build.json" },
+    { "path": "packages/i18n/tsconfig.build.json" },
+    { "path": "packages/routing/tsconfig.build.json" },
+    { "path": "packages/planner/tsconfig.build.json" },
+    { "path": "packages/verifier/tsconfig.build.json" },
+    { "path": "packages/triggers/tsconfig.build.json" },
+    { "path": "apps/api/tsconfig.build.json" }
+  ]
+}
