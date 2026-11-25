@@ -80,6 +80,7 @@ export const W = {
     notUnderstood: 'Пожелание не поняли',
     notUnderstoodNote: 'Построим по профилю. Скажите иначе — или идите дальше.',
     needsNetworkToPlan: 'Чтобы построить новый маршрут, нужна сеть',
+    needsNetwork: 'Нужна сеть',
     savedOpen: 'Сохранённые маршруты открываются и без неё',
     // ── The Routes offered ────────────────────────────────────────────────
     optionsKicker: (/** @type {number} */ n, /** @type {string} */ at) =>
@@ -371,6 +372,7 @@ export const W = {
     notUnderstood: 'We did not understand the wish',
     notUnderstoodNote: 'We will plan from your profile. Say it another way — or go on.',
     needsNetworkToPlan: 'A new route needs a network',
+    needsNetwork: 'Needs a network',
     savedOpen: 'Saved routes open without one',
     optionsKicker: (/** @type {number} */ n, /** @type {string} */ at) =>
       `${n} options · checked at ${at}`,

@@ -124,7 +124,7 @@ function request({ os, theme, lang, data, state: is }) {
     inner: `<div class="tt tt-request">
       <div class="tt-under">${map}${osm(`top:${underTop(os) - 4}px;right:auto;left:14px`)}</div>
       <header class="tt-top"><span class="tt-fill"></span>${round(icons.locate, t.say.locate)}</header>
-      ${offline ? noNetwork(lang, { top: underTop(os) + 30, rest: w.savedOpen }) : ''}
+      ${offline ? noNetwork(lang, { top: underTop(os) + 30, rest: w.needsNetworkToPlan }) : ''}
       ${sheet(
         flow(
           [
@@ -155,7 +155,7 @@ function request({ os, theme, lang, data, state: is }) {
               w.familiarOptions.map((name) => ({ label: name })),
               1,
             ),
-            action(offline ? w.needsNetworkToPlan : w.showReading, {
+            action(offline ? w.needsNetwork : w.showReading, {
               icon: offline ? icons.noNetwork : icons.arrowRight,
               state: offline ? 'disabled' : undefined,
             }),
