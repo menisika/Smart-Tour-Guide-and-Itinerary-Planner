@@ -72,7 +72,7 @@ Generated from the packages; change a status in its package, never here.
 
 <!-- generated:board -->
 <!-- prettier-ignore-start -->
-182 work packages: 175 todo · 1 in progress · 0 blocked · 6 done · 0 dropped.
+182 work packages: 174 todo · 2 in progress · 0 blocked · 6 done · 0 dropped.
 
 | Package | Title | Status | Depends on |
 |---|---|---|---|
@@ -81,7 +81,7 @@ Generated from the packages; change a status in its package, never here.
 | D-03 | Screens of the solo Outing on iOS and Android | **done** | D-02 |
 | D-04 | Screens of the web and of the console | **done** | D-02 |
 | D-09 | Key screens of the Party and of the Catalog | **done** | D-02 |
-| D-05 | Walk-through and the owner's approval | todo | D-03, D-04, D-09 |
+| D-05 | Walk-through and the owner's approval | **in progress** | D-03, D-04, D-09 |
 | D-06 | Screens of the Party in full | todo | D-05 |
 | D-07 | Screens of the Catalog in full | todo | D-05 |
 | D-08 | Screens of bicycle and car, and of other cities | todo | D-05 |
@@ -281,7 +281,7 @@ flowchart LR
   D_03["<b>D-03</b><br/>Screens of the solo Outing on iOS and Android"]:::done
   D_04["<b>D-04</b><br/>Screens of the web and of the console"]:::done
   D_09["<b>D-09</b><br/>Key screens of the Party and of the Catalog"]:::done
-  D_05["<b>D-05</b><br/>Walk-through and the owner's approval"]:::todo
+  D_05["<b>D-05</b><br/>Walk-through and the owner's approval"]:::progress
   D_06["<b>D-06</b><br/>Screens of the Party in full"]:::todo
   D_07["<b>D-07</b><br/>Screens of the Catalog in full"]:::todo
   D_08["<b>D-08</b><br/>Screens of bicycle and car, and of other cities"]:::todo
@@ -422,7 +422,7 @@ flowchart LR
 
 ### D-05 · Walk-through and the owner's approval
 
-- **Status:** todo
+- **Status:** in progress
 - **Depends on:** D-03, D-04, D-09
 - **Requirements:** —
 - **Decisions:** ADR-0005, ADR-0007
