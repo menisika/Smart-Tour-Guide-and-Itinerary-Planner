@@ -125,4 +125,6 @@ Question 8 of the brief — whether the plainer Android is acceptable — stays 
 
 ## The owner's acceptance
 
-Shown to the owner on 25 November 2026. The answer — acceptance, or what to change in another round — is recorded here when it is given; until then `D-02` stays `in progress`.
+**Accepted on 25 November 2026.** The owner accepted the system as it was shown, without asking for another round; `D-02` is closed. The screens of `D-03`, `D-04` and `D-09` are made from it.
+
+The four answers given above to the questions of the brief were shown to the owner as proposals together with the system; the owner accepted the system without changing any of them. Two things in them stay open by their own wording and are not settled by this acceptance: whether the sun theme comes on by itself, and what the tilted map costs the battery. Both need a phone, and belong to `D-05`.
