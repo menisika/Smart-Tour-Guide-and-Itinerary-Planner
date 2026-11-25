@@ -1,0 +1,261 @@
+{
+  "about": "The reference Outing for scenario SC-1, as measured in docs/research/06-minsk-city-data.md §8.1. Every name, coordinate, distance and time below is copied from that measurement; nothing is invented for the mockups.",
+  "source": {
+    "report": "docs/research/06-minsk-city-data.md#81-reference-outing-for-sc-1",
+    "file": "spikes/minsk-city-data/out/08-material.json",
+    "openstreetmap_extract": "2026-11-22",
+    "licence": "Names, coordinates and footprints © OpenStreetMap contributors, ODbL 1.0; labels marked name_from_wikidata are Wikidata labels, CC0."
+  },
+  "request": {
+    "about": "The request of SC-1. The clock times are a choice made for the mockups; the durations are measured.",
+    "start_clock": "14:00",
+    "budget_min": 180,
+    "travel_mode": "foot",
+    "wish": {
+      "ru": "архитектура начала XX века, без музеев",
+      "en": "early 20th-century architecture, no museums"
+    }
+  },
+  "assumptions": {
+    "walking_kmh": 4.5,
+    "visit_minutes": 8
+  },
+  "start_finish": {
+    "name": {
+      "ru": "Железнодорожный вокзал",
+      "en": "Railway station"
+    },
+    "lat": 53.89056,
+    "lon": 27.55118
+  },
+  "totals": {
+    "walking_m": 5740,
+    "walking_min": 77,
+    "visiting_min": 88,
+    "total_min": 165,
+    "back_to_start_m": 323
+  },
+  "route_pack_area_bbox": [27.53524, 53.88697, 27.57073, 53.90643],
+  "stops": [
+    {
+      "order": 1,
+      "name": {
+        "ru": "Дом Поляков",
+        "en": "Poliakaŭ House"
+      },
+      "name_from_wikidata": {
+        "ru": true,
+        "en": true
+      },
+      "lat": 53.89448,
+      "lon": 27.54134,
+      "built": "1917",
+      "leg_m": 974,
+      "arrive_min": 13,
+      "heritage": true,
+      "experienced": "outside",
+      "wikidata": "Q29642243",
+      "osm": "way/25435141"
+    },
+    {
+      "order": 2,
+      "name": {
+        "ru": "Костёл Святого Симеона и Святой Елены",
+        "en": "Church of Saints Simon and Helena"
+      },
+      "name_from_wikidata": {
+        "ru": false,
+        "en": false
+      },
+      "lat": 53.89647,
+      "lon": 27.54763,
+      "built": "1910",
+      "leg_m": 537,
+      "arrive_min": 28,
+      "heritage": true,
+      "experienced": "outside",
+      "wikidata": "Q1742825",
+      "osm": "way/100418249"
+    },
+    {
+      "order": 3,
+      "name": {
+        "ru": "Дом Абрампольского",
+        "en": "Abrampoĺski House"
+      },
+      "name_from_wikidata": {
+        "ru": true,
+        "en": true
+      },
+      "lat": 53.89653,
+      "lon": 27.5486,
+      "built": "1912",
+      "leg_m": 122,
+      "arrive_min": 38,
+      "heritage": true,
+      "experienced": "outside",
+      "wikidata": "Q15472005",
+      "osm": "way/25387578"
+    },
+    {
+      "order": 4,
+      "name": {
+        "ru": "Дом Униховского",
+        "en": "Unichoŭski House"
+      },
+      "name_from_wikidata": {
+        "ru": true,
+        "en": true
+      },
+      "lat": 53.89669,
+      "lon": 27.54915,
+      "built": "early 20th century",
+      "leg_m": 155,
+      "arrive_min": 48,
+      "heritage": true,
+      "experienced": "outside",
+      "wikidata": "Q15472375",
+      "osm": "way/35996170"
+    },
+    {
+      "order": 5,
+      "name": {
+        "ru": "Театр имени М.Горького",
+        "en": "National Academic Drama Theatre Maxim Gorky"
+      },
+      "name_from_wikidata": {
+        "ru": false,
+        "en": true
+      },
+      "lat": 53.89839,
+      "lon": 27.55127,
+      "built": "early 20th century",
+      "leg_m": 325,
+      "arrive_min": 60,
+      "heritage": false,
+      "experienced": "outside",
+      "wikidata": "Q4314968",
+      "osm": "way/25387470"
+    },
+    {
+      "order": 6,
+      "name": {
+        "ru": "Дом Малина",
+        "en": "Malin House"
+      },
+      "name_from_wikidata": {
+        "ru": false,
+        "en": true
+      },
+      "lat": 53.89766,
+      "lon": 27.55157,
+      "built": "late 19th – early 20th century",
+      "leg_m": 169,
+      "arrive_min": 70,
+      "heritage": true,
+      "experienced": "outside",
+      "wikidata": "Q13030665",
+      "osm": "way/38809287"
+    },
+    {
+      "order": 7,
+      "name": {
+        "ru": "Юбилейный Дом",
+        "en": "Niezaliežnasci Avenue, 26"
+      },
+      "name_from_wikidata": {
+        "ru": false,
+        "en": true
+      },
+      "lat": 53.90284,
+      "lon": 27.56463,
+      "built": "1913",
+      "leg_m": 1144,
+      "arrive_min": 94,
+      "heritage": true,
+      "experienced": "outside",
+      "wikidata": "Q64518136",
+      "osm": "way/25327580"
+    },
+    {
+      "order": 8,
+      "name": {
+        "ru": "Национальный академический театр имени Янки Купалы",
+        "en": "Yanka Kupala National Academic Theatre"
+      },
+      "name_from_wikidata": {
+        "ru": false,
+        "en": false
+      },
+      "lat": 53.90091,
+      "lon": 27.56275,
+      "built": "1890",
+      "leg_m": 401,
+      "arrive_min": 107,
+      "heritage": false,
+      "experienced": "outside",
+      "wikidata": "Q1429567",
+      "osm": "way/25327619"
+    },
+    {
+      "order": 9,
+      "name": {
+        "ru": "Красный дом",
+        "en": "Karla Marksa Street 5, Minsk"
+      },
+      "name_from_wikidata": {
+        "ru": false,
+        "en": true
+      },
+      "lat": 53.89601,
+      "lon": 27.55289,
+      "built": "early 20th century",
+      "leg_m": 900,
+      "arrive_min": 127,
+      "heritage": true,
+      "experienced": "outside",
+      "wikidata": "Q64518139",
+      "osm": "way/35996172"
+    },
+    {
+      "order": 10,
+      "name": {
+        "ru": "Дом Костровицкой",
+        "en": "Kastravickaja House"
+      },
+      "name_from_wikidata": {
+        "ru": true,
+        "en": true
+      },
+      "lat": 53.89491,
+      "lon": 27.55424,
+      "built": "1911",
+      "leg_m": 181,
+      "arrive_min": 137,
+      "heritage": true,
+      "experienced": "outside",
+      "wikidata": "Q13030666",
+      "osm": "way/25434700"
+    },
+    {
+      "order": 11,
+      "name": {
+        "ru": "Ворота Минска",
+        "en": "The Minsk Gate"
+      },
+      "name_from_wikidata": {
+        "ru": false,
+        "en": false
+      },
+      "lat": 53.89189,
+      "lon": 27.55178,
+      "built": "not dated in OpenStreetMap; tagged as Stalinist neoclassicism",
+      "leg_m": 510,
+      "arrive_min": 152,
+      "heritage": false,
+      "experienced": "outside",
+      "wikidata": "Q17611440",
+      "osm": "relation/9383682"
+    }
+  ]
+}

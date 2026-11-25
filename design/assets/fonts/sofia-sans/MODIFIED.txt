@@ -1,0 +1,7 @@
+Sofia Sans in this folder differs from the released typeface in one respect.
+
+The file sofia-sans-latin-ext-wght-normal.woff2 has two letters more: ŭ (U+016D) and Ŭ (U+016C), which the
+typeface lacks and the Belarusian Latin alphabet needs. Each is composed from
+the typeface's own u (or U) and its own breve, the one of ă (or Ă), placed by
+the rule written in design/tools/add-ubreve.py, the script that made the change.
+Nothing else was touched; the licence is unchanged (OFL.txt).
