@@ -1,0 +1,138 @@
+/*
+ * What holds a specimen: a piece of a screen, of the width of its system,
+ * with the map, a photograph or the solid page behind the component. Nothing
+ * here is a component; a screen of the product uses none of it.
+ */
+
+.stage {
+  flex: none;
+  border-radius: 28px;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink) 14%, transparent);
+}
+
+.screen[data-os='android'].stage {
+  border-radius: 20px;
+}
+
+/* The solid page, with the margins a screen gives its content. */
+.tt-on-page {
+  position: relative;
+  min-height: inherit;
+  padding: var(--space-20);
+  background: var(--surface);
+}
+
+.screen[data-os='android'] .tt-on-page {
+  padding: var(--space-20) var(--space-16);
+}
+
+.tt-under-page {
+  background: var(--surface);
+}
+
+.tt-under-plain {
+  background: var(--m-ground);
+}
+
+/* A pane of glass that fills the stage, for what the timetable says. */
+.tt-pane {
+  position: absolute;
+  inset: var(--space-8);
+  padding: var(--space-16) 18px;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+
+.tt-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+}
+
+.screen .tt-stack .tt-action {
+  flex: none;
+}
+
+.screen .tt-stack .tt-action.is-plain {
+  align-self: flex-start;
+}
+
+.tt-gap {
+  height: var(--space-16);
+}
+
+.tt-fill {
+  flex: 1;
+}
+
+.stage .tt-top-stage,
+.screen[data-os='android'].stage .tt-top-stage {
+  top: 14px;
+}
+
+.tt-side {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.stage .tt-menu {
+  top: 68px;
+}
+
+.stage .tt-sheet {
+  bottom: var(--size-sheet-inset);
+}
+
+.stage .tt-player,
+.stage .tt-mini {
+  bottom: 14px;
+}
+
+.tt-chart-window {
+  position: relative;
+  overflow: hidden;
+}
+
+.tt-chart-window .tt-chart {
+  margin-top: 0;
+}
+
+/* The materials, side by side. */
+.tt-materials {
+  position: absolute;
+  inset: var(--space-16);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-12);
+}
+
+.tt-swatch {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-8);
+  padding: var(--space-12) var(--space-16);
+  border-radius: var(--radius-card);
+  font: var(--type-label);
+  font-weight: 500;
+}
+
+.tt-swatch b {
+  font: var(--type-caption);
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+}
+
+.tt-swatch-page {
+  background: var(--surface);
+  box-shadow: var(--lift-page);
+  font: var(--type-guide-aside);
+  font-size: calc(17px * var(--ts-full));
+  line-height: 1.25;
+  font-style: normal;
+  font-weight: 600;
+}

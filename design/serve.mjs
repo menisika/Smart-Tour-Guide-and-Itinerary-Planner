@@ -35,6 +35,8 @@ const TYPES = {
   '.jpg': 'image/jpeg',
   '.webp': 'image/webp',
   '.woff2': 'font/woff2',
+  '.pmtiles': 'application/octet-stream',
+  '.pbf': 'application/x-protobuf',
   '.txt': 'text/plain; charset=utf-8',
   '.md': 'text/markdown; charset=utf-8',
 };
@@ -57,14 +59,40 @@ function resolveFile(urlPath) {
   return undefined;
 }
 
+/**
+ * The one thing the pages do not carry themselves: the renderer of the live
+ * map on the system's page and the reader of its tile archive. They are
+ * development dependencies of the repository, served from where pnpm put them.
+ * @type {Record<string, string>}
+ */
+const VENDOR = {
+  '/vendor/maplibre-gl.css': 'maplibre-gl/dist/maplibre-gl.css',
+  '/vendor/maplibre-gl.mjs': 'maplibre-gl/dist/maplibre-gl.mjs',
+  '/vendor/maplibre-gl-shared.mjs': 'maplibre-gl/dist/maplibre-gl-shared.mjs',
+  '/vendor/maplibre-gl-worker.mjs': 'maplibre-gl/dist/maplibre-gl-worker.mjs',
+  '/vendor/pmtiles.mjs': 'pmtiles/dist/esm/index.js',
+};
+
+/** @param {string} urlPath @returns {string | undefined} */
+function vendorFile(urlPath) {
+  const target = VENDOR[urlPath];
+  if (!target) return undefined;
+  const file = join(root, '..', 'node_modules', target);
+  try {
+    return statSync(file).isFile() ? file : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 const server = createServer((request, response) => {
   const url = new URL(request.url ?? '/', 'http://localhost');
   if (url.pathname === '/') {
-    response.writeHead(302, { location: '/directions/' });
+    response.writeHead(302, { location: '/system/' });
     response.end();
     return;
   }
-  const file = resolveFile(url.pathname);
+  const file = vendorFile(url.pathname) ?? resolveFile(url.pathname);
   if (!file) {
     response.writeHead(404, { 'content-type': 'text/plain; charset=utf-8' });
     response.end(`Not found: ${url.pathname}\n`);
@@ -88,7 +116,7 @@ const server = createServer((request, response) => {
 });
 
 server.listen(port, host, () => {
-  console.log(`Design mockups: http://localhost:${port}/`);
+  console.log(`Design: http://localhost:${port}/`);
   if (lan) {
     for (const addresses of Object.values(networkInterfaces())) {
       for (const address of addresses ?? []) {

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="mark/app-icon-dark.svg" />
+    <title>Promenade — design system</title>
+    <link rel="stylesheet" href="system.css" />
+    <link rel="stylesheet" href="stage.css" />
+    <link rel="stylesheet" href="page.css" />
+  </head>
+  <body>
+    <div class="sys-ground" id="ground" aria-hidden="true"></div>
+
+    <header class="sys-hero">
+      <div class="sys-hero-words">
+        <p class="sys-lockup" id="lockup"></p>
+        <h1>Design system</h1>
+        <p class="sys-lead">
+          One system of tokens and components from which every screen of Promenade is made: the same
+          idea on each platform, and native to each. The timetable speaks in a sans and in numerals,
+          on glass over the map. The guide speaks in a serif, on a solid page.
+        </p>
+        <ul class="sys-figures" id="figures"></ul>
+      </div>
+      <div class="sys-hero-screens" id="hero"></div>
+    </header>
+
+    <nav class="sys-nav sys-glass" aria-label="Sections and what to show">
+      <div class="sys-nav-links" id="links"></div>
+      <form class="sys-switches" id="switches" aria-label="What to show"></form>
+    </nav>
+
+    <main id="system"></main>
+
+    <footer class="sys-foot">
+      <p>
+        Work package <code>D-02</code> of the work plan. The Outing is the reference Outing of
+        scenario SC-1, measured on OpenStreetMap data: its names, times and distances are real. The
+        text shown as a Story is a passage quoted from Wikipedia and cited where it is shown.
+        Photographs are from Wikimedia Commons, each with its author and licence. Map data ©
+        OpenStreetMap contributors.
+      </p>
+      <p>
+        <a href="check.html">The check of every component</a> ·
+        <a href="../directions/">The two reference screens</a> · <a href="README.md">README</a> ·
+        <a href="../brief.md">The brief</a>
+      </p>
+    </footer>
+
+    <script type="module" src="index.js"></script>
+  </body>
+</html>
