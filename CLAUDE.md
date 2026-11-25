@@ -9,7 +9,7 @@ A planner of city outings; this is its monorepo. One developer owns it, and Clau
 - **What the product must do** → [docs/PRODUCT-SPEC.md](docs/PRODUCT-SPEC.md), by requirement ID.
 - **Why something is built the way it is** → [docs/adr/](docs/adr/README.md).
 - **How the repository works and how each architecture rule is enforced** → [docs/development.md](docs/development.md).
-- **Committing, branching, opening a pull request** → [CONTRIBUTING.md](CONTRIBUTING.md).
+- **Committing, branching, opening a pull request** → [CONTRIBUTING.md](CONTRIBUTING.md). A commit message ends with its `Refs:` line: leave out the `Co-Authored-By` line and any other attribution.
 
 ## Rules no tool checks
 
