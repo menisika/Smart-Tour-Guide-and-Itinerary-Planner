@@ -139,6 +139,7 @@ const server = createServer((request, response) => {
 
 server.listen(port, host, () => {
   console.log(`Design: http://localhost:${port}/`);
+  console.log(`  the system   /system/\n  the screens  /screens/\n  the walks    /walkthrough/`);
   if (lan) {
     for (const addresses of Object.values(networkInterfaces())) {
       for (const address of addresses ?? []) {

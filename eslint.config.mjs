@@ -66,7 +66,12 @@ export default defineConfig(
 
   // The design mockups are pages: their scripts run in a browser.
   {
-    files: ['design/directions/**/*.js', 'design/system/**/*.js', 'design/screens/**/*.js'],
+    files: [
+      'design/directions/**/*.js',
+      'design/system/**/*.js',
+      'design/screens/**/*.js',
+      'design/walkthrough/**/*.js',
+    ],
     languageOptions: { globals: globals.browser },
   },
 

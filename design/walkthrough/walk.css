@@ -1,0 +1,291 @@
+/*
+ * The pages of the click-through walks. Nothing here is a part of a screen:
+ * the one thing drawn on a screen is the ring round the control that leads on.
+ */
+
+body.wt {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--surface-2);
+  color: var(--ink);
+  font:
+    15px/1.45 var(--font-text),
+    system-ui,
+    sans-serif;
+}
+
+.wt-bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 14px;
+  background: color-mix(in srgb, var(--surface-2) 90%, transparent);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.wt-bar p {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+.wt-bar p b {
+  margin-right: 8px;
+  font:
+    700 12px/1 var(--font-num),
+    sans-serif;
+}
+
+.wt-bar p small {
+  display: block;
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+.wt-back,
+.wt-next {
+  flex: none;
+  display: grid;
+  place-items: center;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.wt-next {
+  background: var(--ink);
+  color: var(--surface);
+}
+
+.wt-stage {
+  display: grid;
+  place-items: start center;
+  padding: 14px 16px 24px;
+}
+
+/* The control that leads on. It can always be tapped; its ring is shown
+   while hints are on, and after two taps that led nowhere. */
+.wt-go.is-shown {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+  animation: wt-breath 1.6s var(--ease-standard) infinite;
+}
+
+.wt-go.is-nudged {
+  animation: wt-nudge 0.4s var(--ease-standard) 1;
+}
+
+@keyframes wt-breath {
+  50% {
+    outline-offset: 7px;
+  }
+}
+
+@keyframes wt-nudge {
+  30% {
+    transform: scale(1.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wt-go.is-shown,
+  .wt-go.is-nudged {
+    animation: none;
+  }
+}
+
+/* On a phone the screen is the phone. */
+@media (max-width: 480px) {
+  .wt-stage {
+    padding: 0;
+  }
+
+  .wt-stage .screen {
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .wt-bar {
+    padding: 4px 8px;
+  }
+
+  .wt-bar p small {
+    display: none;
+  }
+}
+
+/* ── The list of walks ─────────────────────────────────────────────────── */
+
+.wt-list {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 28px 20px 80px;
+}
+
+.wt-list h1 {
+  margin: 0 0 8px;
+  font:
+    700 28px/1.15 var(--font-num),
+    sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.wt-list > p {
+  margin: 0;
+  max-width: 70ch;
+  color: var(--ink-2);
+}
+
+.wt-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin: 22px 0 6px;
+}
+
+.wt-choices fieldset {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.wt-choices legend {
+  float: left;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.wt-choices div {
+  display: flex;
+  padding: 3px;
+  border-radius: 999px;
+  background: var(--surface);
+}
+
+.wt-choices input {
+  position: absolute;
+  opacity: 0;
+}
+
+.wt-choices span {
+  display: block;
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.wt-choices input:checked + span {
+  background: var(--ink);
+  color: var(--surface);
+}
+
+.wt-choices input:focus-visible + span {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.wt-walks {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+  padding: 0;
+  list-style: none;
+}
+
+.wt-walks a {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 64px;
+  padding: 12px 18px;
+  border-radius: 18px;
+  background: var(--surface);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.wt-walks b {
+  flex: none;
+  width: 56px;
+  font:
+    700 15px/1 var(--font-num),
+    sans-serif;
+}
+
+.wt-walks span {
+  flex: 1;
+  min-width: 0;
+  font-weight: 600;
+}
+
+.wt-walks small {
+  display: block;
+  font-weight: 400;
+  color: var(--ink-2);
+}
+
+.wt-walks i {
+  flex: none;
+  font-style: normal;
+  font-weight: 700;
+  color: var(--accent-ink);
+}
+
+.wt-walks .is-done i::before {
+  content: '✓ ';
+}
+
+.wt-notes {
+  margin-top: 36px;
+}
+
+.wt-notes h2 {
+  margin: 0 0 6px;
+  font:
+    700 18px/1.2 var(--font-num),
+    sans-serif;
+}
+
+.wt-notes pre {
+  margin: 10px 0;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: var(--surface);
+  font:
+    12.5px/1.55 ui-monospace,
+    'SF Mono',
+    Menlo,
+    Consolas,
+    monospace;
+  white-space: pre-wrap;
+}
+
+.wt-notes button {
+  min-height: 44px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}

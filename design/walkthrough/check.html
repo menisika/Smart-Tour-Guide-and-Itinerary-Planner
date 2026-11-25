@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="../system/mark/app-icon-dark.svg" />
+    <title>Promenade — check of the walks</title>
+    <link rel="stylesheet" href="../system/system.css" />
+    <link rel="stylesheet" href="../screens/page.css" />
+  </head>
+  <body>
+    <main class="pg">
+      <h1>Check of the walks</h1>
+      <p class="pg-lead">
+        Draws every step of the six <a href="./">walks</a> for both phones and in both languages and
+        looks for a dead end: a step whose way on is not on the screen, is not a control, or is
+        hidden under another pane. It has to report nothing.
+      </p>
+      <pre id="report" class="pg-report">Walking…</pre>
+    </main>
+    <script type="module" src="check.js"></script>
+  </body>
+</html>
