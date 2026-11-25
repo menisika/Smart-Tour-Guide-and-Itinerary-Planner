@@ -1,0 +1,29 @@
+{
+  "name": "@promenade/planner",
+  "version": "0.0.0",
+  "private": true,
+  "description": "The deterministic planner (ADR-0006). Integer arithmetic only.",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "@promenade/source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@promenade/contracts": "workspace:*"
+  },
+  "devDependencies": {
+    "@promenade/verifier": "workspace:*",
+    "fast-check": "catalog:",
+    "typescript": "catalog:"
+  }
+}

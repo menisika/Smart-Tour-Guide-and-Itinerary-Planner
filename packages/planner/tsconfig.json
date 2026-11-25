@@ -1,0 +1,9 @@
+{
+  // Type-checks sources and tests together; emits nothing.
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "erasableSyntaxOnly": true
+  },
+  "include": ["src"]
+}

@@ -1,0 +1,25 @@
+{
+  "name": "@promenade/routing",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Travel times as precomputed integer costs (ADR-0009). Integer arithmetic only.",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "@promenade/source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "catalog:"
+  }
+}

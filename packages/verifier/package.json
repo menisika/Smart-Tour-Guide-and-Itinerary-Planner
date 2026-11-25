@@ -1,0 +1,27 @@
+{
+  "name": "@promenade/verifier",
+  "version": "0.0.0",
+  "private": true,
+  "description": "The independent verifier of Routes (ADR-0006). May not import the planner. Integer arithmetic only.",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "@promenade/source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@promenade/contracts": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "catalog:"
+  }
+}
