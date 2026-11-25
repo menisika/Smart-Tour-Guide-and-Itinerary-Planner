@@ -27,7 +27,9 @@ One package is one branch and one pull request ([CONTRIBUTING.md](../CONTRIBUTIN
 
 ## The map
 
-A box is a track, an arrow reads "is needed by". Grey — not started, yellow — under way, green — done. Each track below has a map of its own packages.
+The stages in order, and the tracks of each with their progress. Grey — not started, yellow — under way, green — done.
+
+The tracks of stage S1 lean on each other package by package, so each track below has a map of its own: a box is a package, an arrow reads "is needed by", and a dashed box is a package of another track.
 
 <!-- generated:map -->
 <!-- prettier-ignore-start -->
