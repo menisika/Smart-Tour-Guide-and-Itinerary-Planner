@@ -232,7 +232,10 @@ async function polygons(where, tolerance, marginM, extra = '') {
        AND lon BETWEEN ${box.west - dLon} AND ${box.east + dLon}
        AND lat BETWEEN ${box.south - dLat} AND ${box.north + dLat}`,
   );
-  return result.map((r) => geometryPath(JSON.parse(r.g), tolerance)).join('');
+  return result
+    .map((r) => geometryPath(JSON.parse(r.g), tolerance))
+    .sort()
+    .join('');
 }
 
 /** @param {string} where @param {number} tolerance */
@@ -242,7 +245,10 @@ async function lines(where, tolerance) {
      FROM way w JOIN way_line l ON l.id = w.id
      WHERE ST_Intersects(l.line, ${ENVELOPE}) AND (${where})`,
   );
-  return result.map((r) => geometryPath(JSON.parse(r.g), tolerance)).join('');
+  return result
+    .map((r) => geometryPath(JSON.parse(r.g), tolerance))
+    .sort()
+    .join('');
 }
 
 const tag = (/** @type {string} */ k) => `w.tags['${k}']`;
@@ -387,6 +393,34 @@ for (let i = 0; i + 1 < order.length; i++) {
   });
 }
 
+// ── The Route recalculated ──────────────────────────────────────────────────
+// What the walk becomes when one Place is skipped (OUT-9): the way from the
+// Place before it straight to the Place after it, on the same graph. Which
+// Place is skipped is a choice written in the data; the new leg is measured.
+/** @param {number} skipped index into `points` */
+function detourAround(skipped) {
+  const from = snapped[skipped - 1];
+  const to = snapped[(skipped + 1) % points.length];
+  search.run(from.node, 80_000);
+  const nodes = search.path(to.node);
+  /** @type {[number, number][]} */
+  const pts = nodes.map((/** @type {number} */ n) =>
+    project(graph.lon[n] / 1e7, graph.lat[n] / 1e7),
+  );
+  return {
+    skip: skipped,
+    from: skipped - 1,
+    to: (skipped + 1) % points.length,
+    metres: Math.round((search.dist[to.node] + (from.metres + to.metres) * 10) / 10),
+    points: simplify(pts, 1.5),
+  };
+}
+const saved = outing.stops.map((/** @type {any} */ s) => {
+  const d = detourAround(s.order);
+  return `${s.order}: ${legs[s.order - 1].metres + legs[s.order].metres - d.metres}`;
+});
+const detour = outing.study?.skip_order ? detourAround(outing.study.skip_order) : undefined;
+
 const place = (/** @type {{lat: number, lon: number}} */ p, /** @type {number} */ i) => {
   const [x, y] = project(p.lon, p.lat);
   const [sx, sy] = project(graph.lon[snapped[i].node] / 1e7, graph.lat[snapped[i].node] / 1e7);
@@ -414,6 +448,7 @@ const map = {
     footprint: footprints.get(s.order),
   })),
   legs,
+  ...(detour ? { detour } : {}),
 };
 
 const target = here('../data/map.json');
@@ -428,4 +463,6 @@ console.log(`  labels       ${labels.length}, areas ${areas.length}`);
 console.log(
   `  legs, m      ${legs.map((l) => l.metres).join(' ')}  (measured: ${outing.stops.map((/** @type {any} */ s) => s.leg_m).join(' ')} ${outing.totals.back_to_start_m})`,
 );
+console.log(`  metres saved by skipping each Place: ${saved.join('  ')}`);
+if (detour) console.log(`  detour       skipping ${detour.skip}: ${detour.metres} m`);
 console.log(`wrote ${target}, ${kb(JSON.stringify(map))}`);
