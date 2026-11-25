@@ -77,6 +77,11 @@
 
 /* ── The locked phone ──────────────────────────────────────────────────── */
 
+/* On the lock screen the system's own bars are light, whatever the theme. */
+.screen:has(.tt-lock) {
+  --sys-ink: #ffffff;
+}
+
 /* The wallpaper is the person's own; a plain dark ground stands for it. */
 .tt-lock {
   position: absolute;

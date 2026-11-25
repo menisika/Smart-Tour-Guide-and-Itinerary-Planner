@@ -257,10 +257,14 @@
   letter-spacing: var(--type-row-tracking);
 }
 
-/* The "why" of a Place is the guide speaking: a serif, in italic. */
+/* The "why" of a Place is the guide speaking: a serif, in italic. It is cut
+   to whole lines, as many as the minutes of the row leave room for. */
 .tt-row-why {
-  flex: 1;
-  min-height: 0;
+  flex: none;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
   margin-top: 1px;
   overflow: hidden;
   font: var(--type-guide-aside);

@@ -56,7 +56,7 @@ export const T = {
     // ── The Story ─────────────────────────────────────────────────────────
     made: 'Создано автоматически · проверено куратором',
     photo: 'Фото',
-    noPhoto: 'Свободной фотографии пока нет · план по данным © OpenStreetMap',
+    noPhoto: 'Свободного фото пока нет · план © OpenStreetMap',
     source: (/** @type {any} */ s, /** @type {string} */ date) =>
       `${s.work}, статья «${s.article}», версия от ${date}. ${s.licence}.`,
     storyEnded: 'Рассказ окончен',
@@ -193,7 +193,7 @@ export const T = {
     next: 'Next',
     made: 'Written automatically · verified by a curator',
     photo: 'Photo',
-    noPhoto: 'No free photograph yet · plan from © OpenStreetMap data',
+    noPhoto: 'No free photograph yet · plan © OpenStreetMap',
     source: (/** @type {any} */ s, /** @type {string} */ date) =>
       `${s.work}, “${s.article}”, revision of ${date}. ${s.licence}.`,
     storyEnded: 'The story has ended',

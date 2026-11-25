@@ -138,11 +138,29 @@ export function mini(data, lang) {
 }
 
 /**
- * Puts the rule beside the sentence being spoken, and keeps the reading
- * window to whole lines.
+ * What can only be done once the text is on the page and has a size: the rule
+ * is put beside the sentence being spoken, the reading window is kept to
+ * whole lines, and the "why" of a Place in the chart is kept to the whole
+ * lines its row has room for — a row is as high as its minutes.
  * @param {Element} root
  */
 export function settle(root) {
+  for (const why of root.querySelectorAll('.tt-row-why')) {
+    const body = why.parentElement;
+    const name = body?.querySelector('.tt-row-name');
+    if (
+      !(why instanceof HTMLElement) ||
+      !(body instanceof HTMLElement) ||
+      !(name instanceof HTMLElement)
+    ) {
+      continue;
+    }
+    why.style.display = '';
+    const line = parseFloat(getComputedStyle(why).lineHeight);
+    const lines = Math.floor((body.clientHeight - name.offsetHeight - 1) / line);
+    if (lines < 1) why.style.display = 'none';
+    else why.style.setProperty('-webkit-line-clamp', String(lines));
+  }
   for (const reading of root.querySelectorAll('.tt-reading')) {
     const text = reading.querySelector('.tt-text');
     const current = reading.querySelector('.is-current');

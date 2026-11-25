@@ -263,7 +263,7 @@ code {
   color: var(--accent-ink);
 }
 
-.sys-sheet h2 {
+.sys-sheet h2:not(.screen *) {
   margin: 0;
   font: 700 clamp(24px, 3.4vw, 34px) / 1.08 var(--font-num);
   letter-spacing: -0.035em;
@@ -276,17 +276,17 @@ code {
   font: 400 17.5px/1.5 var(--font-serif);
 }
 
-.sys-sheet h3 {
+.sys-sheet h3:not(.screen *) {
   margin: 44px 0 6px;
   font: 700 19px/1.25 var(--font-text);
   letter-spacing: -0.015em;
 }
 
-.sys-sheet h3:first-of-type {
+.sys-sheet h3:first-of-type:not(.screen *) {
   margin-top: 0;
 }
 
-.sys-sheet h4 {
+.sys-sheet h4:not(.screen *) {
   margin: 0 0 8px;
   font: 600 12px/1.3 var(--font-text);
   letter-spacing: 0.04em;

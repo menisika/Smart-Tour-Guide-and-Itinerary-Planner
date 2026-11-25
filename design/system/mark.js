@@ -18,20 +18,20 @@ const LINE_WIDTH = 11;
 
 /**
  * The sign alone.
- * @param {{ line: string, paper: string, edge?: string }} colours `paper` is the square of the start and the disc of the stop; `edge` lifts the line off a ground
+ * @param {{ line: string, paper: string, edge?: string, dot?: string }} colours `paper` is the square of the start and the disc of the stop; `edge` lifts the line off a ground; `dot` is the disc alone, for a mark of one colour, where it takes the colour of the ground
  * @param {{ size?: number, title?: string }} [options]
  */
-export function sign({ line, paper, edge }, { size = 96, title } = {}) {
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="14 12 72 84" width="${(size * 72) / 84}" height="${size}"${title ? ` role="img" aria-label="${title}"` : ' aria-hidden="true"'}>${signBody({ line, paper, edge })}</svg>`;
+export function sign({ line, paper, edge, dot }, { size = 96, title } = {}) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="14 12 72 84" width="${(size * 72) / 84}" height="${size}"${title ? ` role="img" aria-label="${title}"` : ' aria-hidden="true"'}>${signBody({ line, paper, edge, dot })}</svg>`;
 }
 
-/** @param {{ line: string, paper: string, edge?: string }} colours */
-function signBody({ line, paper, edge }) {
+/** @param {{ line: string, paper: string, edge?: string, dot?: string }} colours */
+function signBody({ line, paper, edge, dot = paper }) {
   return `<g fill="none" stroke-linecap="round" stroke-linejoin="round">
     ${edge ? `<path d="${LINE}" stroke="${edge}" stroke-width="${LINE_WIDTH + 4.5}"/>` : ''}
     <path d="${LINE}" stroke="${line}" stroke-width="${LINE_WIDTH}"/>
     <rect x="24" y="68" width="20" height="20" rx="6" fill="${paper}"${edge ? ` stroke="${edge}" stroke-width="2.2"` : ''}/>
-    <circle cx="71" cy="43" r="4.3" fill="${paper}"/>
+    <circle cx="71" cy="43" r="4.3" fill="${dot}"/>
   </g>`;
 }
 
@@ -121,10 +121,10 @@ function wordBody(outline, tracking) {
  * The sign and the name together. The sign stands as high as a capital and a
  * half; the space between them is the width of the sign's line twice.
  * @param {any} outline
- * @param {{ line: string, paper: string, ink: string, edge?: string }} colours
+ * @param {{ line: string, paper: string, ink: string, edge?: string, dot?: string }} colours
  * @param {{ height?: number }} [options] height of a capital, in points
  */
-export function lockup(outline, { line, paper, ink, edge }, { height = 24 } = {}) {
+export function lockup(outline, { line, paper, ink, edge, dot }, { height = 24 } = {}) {
   const { width, body } = wordBody(outline, -0.02);
   const cap = outline.capHeight;
   // The sign is 76 units high on its grid of 96: scaled so that it is 1.5 capitals.
@@ -136,7 +136,7 @@ export function lockup(outline, { line, paper, ink, edge }, { height = 24 } = {}
   const boxHeight = cap * 1.5;
   const scale = height / cap;
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 ${top - 30} ${Math.round(total)} ${boxHeight + 60}" width="${(total * scale).toFixed(1)}" height="${((boxHeight + 60) * scale).toFixed(1)}" role="img" aria-label="${outline.word}">
-    <g transform="translate(${-24 * signScale} ${top - 20.5 * signScale}) scale(${signScale})">${signBody({ line, paper, edge })}</g>
+    <g transform="translate(${-24 * signScale} ${top - 20.5 * signScale}) scale(${signScale})">${signBody({ line, paper, edge, dot })}</g>
     <g transform="translate(${signWidth + gap} 0)" fill="${ink}">${body}</g>
   </svg>`;
 }
