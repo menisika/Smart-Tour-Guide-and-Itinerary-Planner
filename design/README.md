@@ -14,32 +14,33 @@ Then open <http://localhost:4310/>. To hold a mockup in the hand, serve it to th
 pnpm design --lan
 ```
 
-| Page                                                            | What it is                                                                                                                                                                         |
-| --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `/directions/`                                                  | The three directions side by side: one screen, system, theme and language at a time, chosen with the switches. The choice is kept in the address, so a view can be sent as a link. |
-| `/directions/guidebook.html`, `timetable.html`, `playbill.html` | The sheet of a direction: its reasons, type, colours with their contrast, map, motion, and all twenty-four drawings.                                                               |
-| `/directions/one.html#d=…&screen=…&os=…&theme=…&lang=…`         | One screen at its real size. On a phone the outline of the device is dropped and the screen fills the width.                                                                       |
-| `/directions/check.html`                                        | Draws every variant of every screen and reports a control, a title or a line of text that leaves its screen or is cut.                                                             |
+| Page                                                    | What it is                                                                                                                                                                   |
+| ------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/directions/`                                          | The directions side by side: one screen, system, theme and language at a time, chosen with the switches. The choice is kept in the address, so a view can be sent as a link. |
+| `/directions/timetable.html`, `guidebook.html`          | The sheet of a direction: its reasons, type, colours with their contrast, map, motion, and all twenty-four drawings.                                                         |
+| `/directions/one.html#d=…&screen=…&os=…&theme=…&lang=…` | One screen at its real size. On a phone the outline of the device is dropped and the screen fills the width.                                                                 |
+| `/directions/check.html`                                | Draws every variant of every screen and reports a control, a title or a line of text that leaves its screen or is cut.                                                       |
 
 The server is `serve.mjs`: a hundred lines over Node's `http`, no dependency. Any static server pointed at this folder does the same.
 
 ## What is here
 
 ```
-brief.md             who the design is for, what it must never look like, the three directions, licences, the owner's choice
+brief.md             who the design is for, what it must never look like, the directions, licences, the owner's choice
 data/
   outing.json        the reference Outing of scenario SC-1: every name, time and distance on the screens
   story.json         the passages shown while "a Story plays", quoted and cited
+  photos.json        the photograph of each Place: file, author, licence, source
   map.json           the geometry of the map (generated)
-assets/fonts/        the font files, each family with its licence
+assets/
+  fonts/             the font files, each family with its licence
+  photos/            the photographs, scaled and without metadata
 directions/
-  shared/            the page around the mockups, device outlines, icons, the map, the loading of data
-  guidebook/         direction 1
-  timetable/         direction 2
-  playbill/          direction 3
-  index.html, one.html, <direction>.html and their scripts
+  shared/            the page around the mockups, device outlines, icons, the map, Liquid Glass, the loading of data
+  timetable/         the direction "Timetable"
+  guidebook/         the direction "Guidebook"
+  index.html, one.html, check.html, <direction>.html and their scripts
 tools/build-map.mjs  builds data/map.json from OpenStreetMap data
-tools/add-ubreve.py  adds the letters ŭ and Ŭ to Sofia Sans, which lacks them (run once; needs fontTools)
 serve.mjs            the static server behind `pnpm design`
 ```
 
@@ -52,6 +53,8 @@ A direction is two files: a module that returns the markup of each screen for a 
 - **Everything shipped has a licence that allows it**, recorded in [the brief](brief.md#8-licences). A font is added as files under `assets/fonts/<family>/` with its licence text beside them, a `@font-face` rule in `directions/shared/fonts.css`, and a line in that table.
 - **A map treatment uses only what a MapLibre style can express** ([ADR-0008](../docs/adr/0008-maps-openstreetmap-pmtiles-and-maplibre.md)): fills, fill patterns, lines with widths, casings and dashes, symbols, text along a line.
 - **Pictographic characters are not icons.** Icons are drawn, in `directions/shared/frames.js`.
+- **Glass is the layer of controls over the content**, never the ground of text that is read; `directions/shared/glass.css` holds the material and its solid stand-in for Android and for "reduce transparency".
+- **A photograph is shown with its author and its licence**, taken from `data/photos.json`.
 
 ## Which checks of the repository apply
 
