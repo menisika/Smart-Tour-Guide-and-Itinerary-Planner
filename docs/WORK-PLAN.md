@@ -312,11 +312,11 @@ flowchart LR
 
 **Tasks**
 
-- [ ] Write `design/brief.md` from the specification: who uses the product and in what conditions (walking, one hand, sunlight, headphones, the screen locked), what it should feel like, a list of what it must never look like, and scenarios SC-1…SC-7 as the screens they imply.
-- [ ] Study what exists and record it with sources: the products named in `docs/research/01-market-competitors-users.md`, and recognised work in maps, audio guides and travel — what to learn from each and what to avoid.
-- [ ] Propose three directions that differ in idea, not in colour. Each has a name, a reason tied to the subject (a city, a walk, a voice, company), type for Latin and Cyrillic, colour in light and dark, a treatment of the map and of the Story being played, and motion.
-- [ ] Draw the same two screens in each direction — the Route with its map, and the Outing while a Story plays — for iOS, Android and the web, with the names, times and distances of a real Outing in Russian and English. Story text is taken from a cited passage of an open source, or marked as sample text: no history is invented for a mockup.
-- [ ] Put the three side by side as static pages under `design/directions/`, opened with one command. `design/README.md` says how to open them and which checks of the repository apply to the folder.
+- [x] Write `design/brief.md` from the specification: who uses the product and in what conditions (walking, one hand, sunlight, headphones, the screen locked), what it should feel like, a list of what it must never look like, and scenarios SC-1…SC-7 as the screens they imply.
+- [x] Study what exists and record it with sources: the products named in `docs/research/01-market-competitors-users.md`, and recognised work in maps, audio guides and travel — what to learn from each and what to avoid.
+- [x] Propose three directions that differ in idea, not in colour. Each has a name, a reason tied to the subject (a city, a walk, a voice, company), type for Latin and Cyrillic, colour in light and dark, a treatment of the map and of the Story being played, and motion.
+- [x] Draw the same two screens in each direction — the Route with its map, and the Outing while a Story plays — for iOS, Android and the web, with the names, times and distances of a real Outing in Russian and English. Story text is taken from a cited passage of an open source, or marked as sample text: no history is invented for a mockup.
+- [x] Put the three side by side as static pages under `design/directions/`, opened with one command. `design/README.md` says how to open them and which checks of the repository apply to the folder.
 
 **Done when**
 
@@ -5881,9 +5881,12 @@ A stage is closed by the rule of [specification §7.4](PRODUCT-SPEC.md#74-when-a
 
 What was made better than a package asked for. One line each; the pull request holds the detail.
 
-| Package | Improvement | Pull request |
-| ------- | ----------- | ------------ |
-| —       | —           | —            |
+| Package | Improvement                                                                                                                                                                                               | Pull request             |
+| ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
+| D-01    | The map of the mockups is real: OpenStreetMap geometry and the walked line of the reference Outing, built by `design/tools/build-map.mjs`, so that a map treatment is judged on true streets              | the pull request of D-01 |
+| D-01    | Every drawing opens alone at its real size and fits a phone held in the hand (`one.html`, `pnpm design --lan`); `check.html` looks through all seventy-two for a control or a text that leaves its screen | the pull request of D-01 |
+| D-01    | The sheet of each direction computes the contrast of its colour pairs from its own style sheet and plays the text following the voice                                                                     | the pull request of D-01 |
+| D-01    | The brief lists the screens of scenarios SC-8 and SC-9 beside SC-1…SC-7, and the letters a typeface must carry; Sofia Sans, which lacks ŭ, was given it                                                   | the pull request of D-01 |
 
 ## Plan change log
 
