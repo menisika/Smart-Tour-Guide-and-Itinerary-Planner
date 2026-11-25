@@ -1,6 +1,6 @@
 # The screens
 
-Every screen of the mockups, assembled from the components of the [design system](../system/README.md). The phone's screens of the solo Outing are work package `D-03` of the [work plan](../../docs/WORK-PLAN.md#d-03--screens-of-the-solo-outing-on-ios-and-android); the public web and the internal console are `D-04`; the key screens of the Party and of the Catalog are `D-09`.
+Every screen of the mockups, assembled from the components of the [design system](../system/README.md). The phone's screens of the solo Outing are work package `D-03` of the [work plan](../../docs/WORK-PLAN.md#d-03--screens-of-the-solo-outing-on-ios-and-android); the public web and the internal console are `D-04`; the key screens of the Party and of the Catalog are `D-09`. What the walk through the packages of stage S1 found missing was drawn in `D-05`, whose walks, reviews and record are in [`design/walkthrough/`](../walkthrough/README.md).
 
 - [Open it](#open-it)
 - [What is here](#what-is-here)
@@ -39,6 +39,7 @@ phone/
   before.js      first launch and the Profile, the request, the Routes offered, the Route, editing, the Route Pack, the check before the start
   outing.js      a Story, the way between two Places, Quiet Mode, sources and Corrections, the lock screen, questions and changes on the way, the end, the journal
   after.js       Routes and Outings kept, the account, Corrections, notifications, the Profile and settings
+  more.js        what stage S1 builds and no mockup showed: states over those screens, the prompts of the trigger rules, the letter with the code
 web/
   pages.js       the public web at two widths: the Route Page, the Invitation, the request, editing, a Story by hand, signing in, deleting the account; what a messenger shows of a link
   words.js       the words the web adds
@@ -88,6 +89,10 @@ Its components are in `system/parts/console.js` and `system/css/console.css` (cl
 | `console-venues`        | Venue selection (`CUR-6`)                                                                                             |
 | `console-dashboards`    | Coverage, cost per Place, ratings, trigger reliability, failures (`CUR-8`)                                            |
 | `console-admin`         | Roles, Plans and what they grant, limits and budgets of Preparation, the audit log (`CUR-9`)                          |
+| `console-places`        | The list of Places with its filters, the Territories with no tagged Entrance, the list of Key Places                  |
+| `console-operations`    | Usage against free allowances and budgets, the last runs, the backlogs (`NFR-28`, `NFR-30`, `NFR-34`)                 |
+| `console-sign-in`       | Signing in to the console, and the refusal of a person without an internal role (`ACC-9`)                             |
+| `console-update`        | "Update required" for the console (ADR-0025)                                                                          |
 
 Scenario SC-5 runs through them from starting Preparation to a verified Dossier, and the console half of SC-6 (`SC-6-console`) from the Corrections inbox to the fact fixed and the author told.
 
@@ -133,7 +138,7 @@ The Party is that of SC-2, with the first names of the specification's scenarios
 - a pane, a heading or a control that leaves its screen;
 - a line of text that is cut or clipped; a prominent action whose words take two lines.
 
-What stands in a part that scrolls may lie below its edge: it is reached by scrolling. What is behind a pane that waits for an answer is covered on purpose. At the close of `D-03` it reported 1 008 drawings of 35 screens and 7 128 controls measured, with nothing to look at; the system's own check reported 1 184 drawings of 45 components. At the close of `D-04`: 1 398 drawings of 55 screens and 15 840 controls; the system's check, 1 294 drawings of 61 components. At the close of `D-09`: 1 842 drawings of 66 screens and 18 864 controls; the system's check, 1 394 drawings of 66 components.
+What stands in a part that scrolls may lie below its edge: it is reached by scrolling. What is behind a pane that waits for an answer is covered on purpose. At the close of `D-03` it reported 1 008 drawings of 35 screens and 7 128 controls measured, with nothing to look at; the system's own check reported 1 184 drawings of 45 components. At the close of `D-04`: 1 398 drawings of 55 screens and 15 840 controls; the system's check, 1 294 drawings of 61 components. At the close of `D-09`: 1 842 drawings of 66 screens and 18 864 controls; the system's check, 1 394 drawings of 66 components. With what `D-05` added: 2 406 drawings of 77 screens and 26 862 controls; the system's check, 1 446 drawings of 70 components; and the check of the walks, 6 walks of 72 steps without a dead end.
 
 It does not judge how a screen looks. That is done by eye, here and in `D-05`.
 
@@ -157,8 +162,8 @@ No claim about history is written for a mockup: the field of a Correction is sho
 A mockup is a claim about what the specification means. These are the places where a drawing had to decide; a “no” to any of them changes the screens.
 
 1. **Not every screen can be in all five states.** `D-03` asks for each screen in its states: usual, loading, empty, no network, error. A screen that is drawn from what is on the device has nothing to load; the Outing runs from a Route Pack that is complete and checked. The registry names, for every screen, the states it is drawn in and the reason for each one it cannot be in, and the index shows both.
-2. **Without a network, a solo Outing of stage S1 has little that is unavailable.** SC-4 names the Chat, live positions and “ask the guide”; a Party of one has no Chat and no shared positions (`PTY-1`), and “ask the guide” is of stage S3. What stage S1 shows as unavailable is what it has: a new Route, sharing, opening a source, signing in, deleting the account. The rows of the Party are drawn with the Party in `D-09`.
-3. **Travel Mode is not shown in the request** while only “on foot” exists (`RTE-1`, S4).
+2. **Without a network, a solo Outing of stage S1 has little that is unavailable.** SC-4 names the Chat, live positions and “ask the guide”; a Party of one has no Chat and no shared positions (`PTY-1`), and “ask the guide” is of stage S3. What stage S1 shows as unavailable is what it has: a new Route, sharing, opening a source, signing in with Apple or Google, deleting the account. Signing in by e-mail is not refused: the request for a code waits and goes out when the network returns (`S1-ACC-04`). The rows of the Party are drawn with the Party in `D-09`.
+3. **Travel Mode is a row of the request with one value**, “on foot”, the only mode stage S1 has (`RTE-1`, `S1-RTE-14`).
 4. **“Nothing fits” is the empty state of the Routes offered**, with one-tap relaxations (`RTE-10`). Its numbers follow from the measured leg to the nearest Place, a Route of a single Place (`RTE-11`).
 5. **A Dealbreaker is a switch and a dislike is a chip**, on two screens, so that hard and soft are never confused (§4.2, rules).
 6. **Unknown opening hours (`RTE-13`) are shown on a sample.** Every Place of the reference Outing is seen from outside and has no hours to miss.
@@ -188,6 +193,19 @@ A mockup is a claim about what the specification means. These are the places whe
 28. **A Complaint is offered on a Review, from its own control, and says that one signal hides nothing** (`CAT-9`, §4.9, rules).
 29. **The Recap has no award and no streak** (§1.4): the walked line, what was asked for, and three measures.
 30. **The map of Visits is made of Visits, not of a track** (`OUT-8`, `NFR-14`): the Places of an Outing, marked.
+
+31. **A Place is moved by holding and dragging its row, and by the two keys that do the same.** `S1-RTE-15` says “drag to reorder”; the keys are what WCAG 2.2 asks beside it, and what a drawing can show.
+32. **Leaving out Places with unknown hours is a switch of the request** (`RTE-13`, `S1-RTE-14`), and the same switch stands on the page of a Place that has the warning.
+33. **A page of the application in a browser is that page.** The packages name the Profile, the collection, past Outings, the notifications, “how I understood” and the Routes offered “on the app and the web”; they are drawn as the application's pages in a browser's window, by ADR-0007. Rows that only the application has stay on the Profile in the mockup and are absent on the web in the product.
+34. **In stage S1 deleting an account removes what stage S1 has**: the Profile, Routes, the history of Outings, Corrections, and the pages of Routes shared by a link. Published Routes, Reviews and names in a Chat join the list with their stages (`S1-ACC-11`).
+35. **The prompts of the trigger rules are one screen in six states** (`prompts`): two that do not wait (T6, T8) and four questions (T9, T10, far from the start, a Place that closes early).
+36. **Three things a package builds are not drawn, on purpose**: the planner's timing screen (`S1-OUT-07`), the export of the device's log (`S1-OUT-22`) and the reachability page (`S1-OPS-05`). They are tools of the check on real phones, not screens of the product. The alerts to Administrators are plain text through the outbox and are not drawn either.
+
+37. **In the console a Territory "with no Entrance" is one with no tagged Entrance** (`S1-PLC-03`): every Territory of the research has paths crossing its boundary, so the flag stands beside the count of crossings.
+38. **A person without a role is refused before the console opens; a person with the wrong role is refused inside it**, at the page they may not see, and both attempts are recorded (`ACC-8`, `ACC-9`).
+39. **"Update required" in the console stands in place of the whole console**: nothing the tab did would be accepted.
+40. **The rate limits an Administrator changes are those of the costly actions** (ADR-0028); the limit on answers to an Invitation joins them with stage S2.
+41. **Freshness "by area and by kind" is two tables**, because the research measured the two separately.
 
 ## The owner's acceptance
 
