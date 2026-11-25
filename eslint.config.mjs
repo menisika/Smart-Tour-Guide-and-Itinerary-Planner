@@ -64,6 +64,12 @@ export default defineConfig(
     languageOptions: { globals: globals.node },
   },
 
+  // The design mockups are pages: their scripts run in a browser.
+  {
+    files: ['design/directions/**/*.js'],
+    languageOptions: { globals: globals.browser },
+  },
+
   {
     files: ['apps/mobile/**/*.{ts,tsx}', 'apps/console/**/*.{ts,tsx}'],
     extends: [reactHooks.configs.flat.recommended],
