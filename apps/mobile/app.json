@@ -1,0 +1,16 @@
+{
+  "expo": {
+    "name": "Promenade",
+    "slug": "promenade",
+    "version": "0.0.0",
+    "scheme": "promenade",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "platforms": ["ios", "android", "web"],
+    "web": {
+      "bundler": "metro",
+      "output": "server"
+    },
+    "plugins": ["expo-router"]
+  }
+}
