@@ -1,0 +1,109 @@
+/*
+ * What every mock screen starts from: the ground, the ink, the default type,
+ * and the few rules that hold everywhere.
+ */
+
+.screen {
+  --sys-ink: var(--ink);
+  background: var(--m-ground);
+  color: var(--ink);
+  font: var(--type-body);
+}
+
+/* A timetable is read in columns: numerals keep one width everywhere. It is
+   said to every element, because the `font` shorthand that sets a role of the
+   type scale would otherwise undo it. */
+.screen,
+.screen * {
+  font-variant-numeric: tabular-nums lining-nums !important;
+}
+
+.screen :where(button) {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.screen :where(h1, h2, h3, p, ul, ol, li, figure, fieldset, legend) {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.screen :where(ul, ol) {
+  list-style: none;
+}
+
+/* A control answers a touch at once, before anything else happens. */
+.screen :where(button, .tt-touch) {
+  transition:
+    transform var(--dur-press) var(--ease-standard),
+    opacity var(--dur-press) var(--ease-standard);
+}
+
+.screen :where(button, .tt-touch):active,
+.screen .is-pressed {
+  transform: scale(0.96);
+  opacity: 0.86;
+}
+
+.screen :where(button):disabled,
+.screen .is-disabled {
+  opacity: 0.4;
+  cursor: default;
+  transform: none;
+}
+
+/* Keyboard focus on the web, and with a keyboard attached to a phone. */
+.screen :where(button, a, input, textarea, [tabindex]):focus-visible,
+.screen .is-focused {
+  outline: 2.5px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.tt {
+  position: absolute;
+  inset: 0;
+}
+
+.tt-under {
+  position: absolute;
+  inset: 0;
+}
+
+.tt-nowrap {
+  white-space: nowrap;
+}
+
+/* Said to a screen reader and not shown. */
+.tt-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* The attribution of the map: always in sight (ADR-0008, point 6). */
+.tt-osm {
+  position: absolute;
+  right: var(--space-12);
+  z-index: 1;
+  padding: var(--space-2) var(--space-6);
+  border-radius: var(--radius-xs);
+  font: var(--type-micro);
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  color: var(--ink-2);
+}
+
+.screen[data-theme='sun'] .tt-osm {
+  background: var(--surface);
+  color: var(--ink);
+}

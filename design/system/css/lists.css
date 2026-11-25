@@ -1,0 +1,243 @@
+/*
+ * Lists: rows of settings, the Places of a Route being edited, the journal of
+ * what waits for a network. A row is a full target high; what can be done by
+ * dragging — putting Places in another order — has keys that do the same.
+ */
+
+/* A group of rows on the page. */
+.tt-list {
+  border-radius: var(--radius-card);
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+.screen[data-os='android'] .tt-list {
+  border-radius: 0;
+  background: none;
+}
+
+.screen[data-theme='sun'] .tt-list {
+  box-shadow: inset 0 0 0 1.5px var(--ink);
+}
+
+.tt-list-title {
+  margin: 0 0 var(--space-6) var(--space-16);
+  font: var(--type-label);
+  color: var(--ink-2);
+}
+
+.screen[data-os='android'] .tt-list-title {
+  margin-left: 0;
+  color: var(--accent-ink);
+}
+
+.screen .tt-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  width: 100%;
+  min-height: var(--size-control);
+  padding: var(--space-8) var(--space-16);
+  font: var(--type-body);
+  text-align: left;
+}
+
+.tt-item + .tt-item {
+  box-shadow: inset 0 0.5px 0 var(--rule);
+}
+
+.screen[data-os='android'] .tt-item {
+  min-height: 56px;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.screen[data-os='android'] .tt-item + .tt-item {
+  box-shadow: none;
+}
+
+.tt-item > .icon {
+  width: 22px;
+  height: 22px;
+  color: var(--ink-2);
+}
+
+.tt-item-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.tt-item-body small {
+  display: block;
+  font: var(--type-caption);
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.tt-item-value {
+  flex: none;
+  max-width: 46%;
+  overflow: hidden;
+  font: var(--type-body);
+  color: var(--ink-2);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.tt-item > .icon.tt-item-go {
+  width: 16px;
+  height: 16px;
+  color: var(--ink-3);
+}
+
+.screen[data-os='android'] .tt-item > .icon.tt-item-go {
+  display: none;
+}
+
+/* A row that needs a network there is none of: said, never hidden (OUT-15). */
+.tt-item.is-off .tt-item-body,
+.tt-item.is-off > .icon:first-child {
+  color: var(--ink-2);
+}
+
+.tt-item.is-off .tt-item-value {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  max-width: none;
+  font: var(--type-caption);
+}
+
+.tt-item.is-off .tt-item-value .icon {
+  width: 14px;
+  height: 14px;
+}
+
+/* ── The Places of a Route being edited ────────────────────────────────── */
+
+.tt-place {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  min-height: 64px;
+  padding: var(--space-8) 0;
+}
+
+.tt-place + .tt-place {
+  box-shadow: inset 0 0.5px 0 var(--rule);
+}
+
+.tt-place > i {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--surface);
+  font: var(--type-numeral);
+  line-height: 24px;
+  font-style: normal;
+  text-align: center;
+}
+
+.tt-place img,
+.tt-place .tt-thumb-plan {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-s);
+  object-fit: cover;
+  box-shadow: var(--lift-thumb);
+}
+
+.tt-place-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.tt-place-body b {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  font: var(--type-row);
+  letter-spacing: var(--type-row-tracking);
+}
+
+.tt-place-body small {
+  display: block;
+  font: var(--type-caption);
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.screen .tt-place button {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: var(--target);
+  height: var(--target);
+  border-radius: var(--radius-full);
+  color: var(--ink-2);
+}
+
+.tt-place .icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* A broken constraint is listed under the Place it belongs to. */
+.tt-place-problem {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-6);
+  margin: 0 0 var(--space-8) 32px;
+  font: var(--type-caption);
+  color: var(--stop);
+}
+
+.tt-place-problem .icon {
+  width: 15px;
+  height: 15px;
+}
+
+/* ── The journal: what waits for a network ─────────────────────────────── */
+
+.tt-journal li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-10);
+  min-height: 40px;
+  padding: var(--space-6) 0;
+  font: var(--type-label);
+  font-weight: 500;
+}
+
+.tt-journal li + li {
+  box-shadow: inset 0 0.5px 0 var(--rule);
+}
+
+.tt-journal li > span {
+  flex: 1;
+  min-width: 0;
+}
+
+.tt-journal small {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  font: var(--type-caption);
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.tt-journal .icon {
+  width: 16px;
+  height: 16px;
+}
+
+.tt-journal .is-sent small {
+  color: var(--accent-ink);
+}

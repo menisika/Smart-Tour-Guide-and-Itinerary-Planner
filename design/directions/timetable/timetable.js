@@ -1,453 +1,83 @@
 /**
  * The chosen direction: Timetable, with the guide of Guidebook.
  *
- * The owner's decision after the second round: Timetable is the base, and
- * the way the guide speaks comes from Guidebook. So two voices share a screen
- * and are told apart by type. What the timetable says — times, the verdict,
- * the line, the controls — is set in a sans and in numerals, on glass over a
- * map that fills the screen. What the guide says — why a Place is here, the
- * Story, its source — is set in a serif, on a solid page under a photograph
- * of the Place.
+ * Two voices share a screen and are told apart by type and by material. What
+ * the timetable says — times, the verdict, the line, the controls — is set in
+ * a sans and in numerals, on glass over a map that fills the screen. What the
+ * guide says — why a Place is here, the Story, its source — is set in a
+ * serif, on a solid page under a photograph of the Place.
+ *
+ * Since `D-02` these two screens are made of the components of the design
+ * system (`design/system/`); this file only arranges them.
  */
-import { format } from '../shared/data.js';
-import { SIZES, icons } from '../shared/frames.js';
-import {
-  bearingAt,
-  fitView,
-  mapSvg,
-  pinned,
-  pitchedMap,
-  positionAt,
-  routePath,
-  routeSamples,
-  spread,
-} from '../shared/map.js';
+import { SIZES } from '../shared/frames.js';
+import { icons, platformIcon } from '../../system/icons.js';
+import { back, group, round, titlePill } from '../../system/parts/controls.js';
+import { layersOf, overlay, planMap, routePoints, walkMap } from '../../system/parts/map.js';
+import { fitView, mapSvg, routeSamples } from '../shared/map.js';
+import { board, chart, dock, head } from '../../system/parts/route.js';
+import { sheet as sheetOf } from '../../system/parts/sheets.js';
+import { follow, guide, player, settle } from '../../system/parts/story.js';
+import { T } from '../../system/strings.js';
 
-const T = {
-  ru: {
-    kicker: 'Вариант 1 из 3',
-    title: 'Архитектура начала XX века, без музеев',
-    out: 'Выход',
-    back: 'У вокзала',
-    fits: (/** @type {any} */ r) => `Укладывается в ${format.duration(r.budgetMinutes, 'ru')}`,
-    reserve: (/** @type {any} */ r) => `запас ${format.duration(r.reserveMinutes, 'ru')}`,
-    checked: (/** @type {string} */ at) => `проверен в ${at}`,
-    places: (/** @type {number} */ n) => `${n} мест`,
-    outside: 'все снаружи',
-    station: 'Вокзал',
-    departure: 'выход',
-    arrival: 'возвращение',
-    start: 'Начать прогулку',
-    pack: 'Пакет',
-    onTime: 'По графику',
-    backAt: (/** @type {string} */ at) => `у вокзала в ${at}`,
-    stay: (/** @type {string} */ until) => `здесь до ${until}`,
-    seenOutside: 'снаружи',
-    made: 'Создано автоматически · проверено куратором',
-    next: 'Далее',
-    open: 'Открыть в приложении',
-    webNote:
-      'В браузере рассказ включают вручную. По прибытии сам и без сети он звучит в приложении.',
-    revision: (/** @type {string} */ date) => `версия от ${date}`,
-    photo: 'Фото',
-    source: (/** @type {any} */ s, /** @type {string} */ date) =>
-      `${s.work}, статья «${s.article}», версия от ${date}. ${s.licence}.`,
-    theLine: 'Линия прогулки',
-  },
-  en: {
-    kicker: 'Option 1 of 3',
-    title: 'Early <span class="tt-nowrap">20th-century</span> architecture, no museums',
-    out: 'Leave',
-    back: 'At the station',
-    fits: (/** @type {any} */ r) => `Fits your ${format.duration(r.budgetMinutes, 'en')}`,
-    reserve: (/** @type {any} */ r) => `${format.duration(r.reserveMinutes, 'en')} to spare`,
-    checked: (/** @type {string} */ at) => `checked at ${at}`,
-    places: (/** @type {number} */ n) => `${n} places`,
-    outside: 'all from outside',
-    station: 'Station',
-    departure: 'leave',
-    arrival: 'back',
-    start: 'Start the outing',
-    pack: 'Pack',
-    onTime: 'On time',
-    backAt: (/** @type {string} */ at) => `station by ${at}`,
-    stay: (/** @type {string} */ until) => `here until ${until}`,
-    seenOutside: 'outside',
-    made: 'Written automatically · verified by a curator',
-    next: 'Next',
-    open: 'Open in the app',
-    webNote:
-      'In a browser you start a story yourself. In the app it begins as you arrive, and plays without a network.',
-    revision: (/** @type {string} */ date) => `revision of ${date}`,
-    photo: 'Photo',
-    source: (/** @type {any} */ s, /** @type {string} */ date) =>
-      `${s.work}, “${s.article}”, revision of ${date}. ${s.licence}.`,
-    theLine: 'The line of the outing',
-  },
-};
+/** @typedef {{ os: import('../shared/frames.js').Os, theme: 'light' | 'dark' | 'sun', lang: 'ru' | 'en', data: any }} Ctx */
 
-const FLAT = [
-  'green',
-  'water',
-  'roads_minor',
-  'roads_mid',
-  'roads_major',
-  'buildings',
-  'rail',
-  'rail:ties',
-];
-const GROUND = ['green', 'water', 'roads_minor', 'roads_mid', 'roads_major', 'rail', 'rail:ties'];
-
-/** @param {string} clock @param {number} minutes */
-const clockPlus = (clock, minutes) => {
-  const [h, m] = clock.split(':').map(Number);
-  const total = h * 60 + m + minutes;
-  return `${String(Math.floor(total / 60)).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`;
-};
-
-/** The icon of a kind of Place. @param {string} kind */
-const kindIcon = (kind) => icons[/** @type {keyof typeof icons} */ (kind)] ?? icons.building;
-
-/** The line as it lies on the ground: a glow, a casing, the line, and the part ahead in motion. */
-const line = (/** @type {any} */ data, /** @type {number} */ walkedLegs) => {
-  const ahead = routePath(data, walkedLegs);
-  const walked =
-    walkedLegs > 0 ? `<path class="tt-line-walked" d="${routePath(data, 0, walkedLegs)}"/>` : '';
-  return `${walked}<path class="tt-line-glow" d="${ahead}"/><path class="tt-line-case" d="${ahead}"/><path class="tt-line" d="${ahead}"/><path class="tt-line-march" d="${ahead}"/>`;
-};
-
-/**
- * @param {any} data @param {'ru' | 'en'} lang @param {{ u: number }} ctx
- * @param {{ current?: number, marks?: boolean }} state
- */
-function overlay(data, lang, { u }, state = {}) {
-  const { current = 0, marks = true } = state;
-  const at = spread(
-    data.stops.map((/** @type {any} */ s) => ({ x: s.streetX, y: s.streetY })),
-    25 * u,
-  );
-  let ticks = '';
-  if (marks) {
-    for (let m = 30; m < data.route.totalMinutes; m += 30) {
-      const p = positionAt(data, m);
-      if ('atStop' in p) continue;
-      if (at.some((s) => Math.hypot(s.x - p.x, s.y - p.y) < 30 * u)) continue;
-      const label = clockPlus(data.route.start, m);
-      ticks += pinned(
-        p.x,
-        p.y,
-        u,
-        `<rect x="-19" y="-10" width="38" height="20" rx="10"/><text y="4" text-anchor="middle">${label}</text>`,
-        'tt-mark',
-      );
-    }
-  }
-  const stations = data.stops
-    .map((/** @type {any} */ s, /** @type {number} */ i) =>
-      pinned(
-        at[i].x,
-        at[i].y,
-        u,
-        `<circle class="tt-station-shade" r="12" cy="1.5"/><circle r="11.5"/><text y="4" text-anchor="middle">${s.order}</text>`,
-        `tt-station${s.order === current ? ' is-current' : ''}`,
-      ),
-    )
-    .join('');
-  const start = pinned(
-    data.map.start.street_x,
-    data.map.start.street_y,
-    u,
-    `<rect class="tt-terminus-mark" x="-8" y="-8" width="16" height="16" rx="4"/><text x="15" y="4.5">${T[lang].station}</text>`,
-    'tt-terminus',
-  );
-  // From Guidebook: the map shows the very walls a Story is about.
-  const feet = data.stops
-    .map((/** @type {any} */ s) => `<use href="#m-foot-${s.order}" class="tt-foot"/>`)
-    .join('');
-  return `${feet}${line(data, 0)}${ticks}${start}${stations}`;
-}
-
-/**
- * The chart: every minute of the Outing takes the same height.
- * @param {any} data @param {'ru' | 'en'} lang
- * @param {{ scale: number, minute?: number, compact?: boolean, until?: number, selected?: number }} options
- */
-function chart(
-  data,
-  lang,
-  { scale, minute, compact = false, until = data.route.totalMinutes, selected },
-) {
-  const t = T[lang];
-  const y = (/** @type {number} */ m) => Math.round(m * scale);
-  const total = data.route.totalMinutes;
-  const head = 22;
-  let html = '';
-  html += `<i class="tt-spine" style="top:${head}px;height:${y(Math.min(until, total))}px"></i>`;
-  if (minute !== undefined) {
-    html += `<i class="tt-spine is-done" style="top:${head}px;height:${y(Math.min(minute, total))}px"></i>`;
-  }
-  html += `<div class="tt-row tt-row-end" style="top:${head - 19}px"><b>${data.route.start}</b><i class="tt-square">${icons.station}</i><span class="tt-row-name">${data.route.startName[lang]}<small>${t.departure}</small></span></div>`;
-  let leave = 0;
-  for (const s of data.stops) {
-    if (s.arriveMin > until) break;
-    const legTop = y(leave) + head;
-    const legHeight = y(s.arriveMin) - y(leave);
-    if (legHeight >= (compact ? 22 : 14)) {
-      html += `<span class="tt-leg" style="top:${legTop}px;height:${legHeight}px">${icons.walk}${format.duration(s.legMinutes, lang)}${compact ? '' : ` · ${format.distance(s.legMetres, lang)}`}</span>`;
-    }
-    const state =
-      minute === undefined
-        ? s.order === selected
-          ? ' is-current'
-          : ''
-        : s.leaveMin <= minute
-          ? ' is-done'
-          : s.arriveMin <= minute
-            ? ' is-current'
-            : '';
-    html += `<div class="tt-row tt-stop${state}" style="top:${y(s.arriveMin) + head}px;height:${y(s.leaveMin) - y(s.arriveMin)}px">
-      <b>${s.arrive}</b>
-      <i class="tt-dwell"><span>${s.order}</span></i>
-      <span class="tt-row-body"><span class="tt-row-name">${s.name[lang]}</span>${compact ? '' : `<span class="tt-row-why">${s.why[lang]}</span>`}</span>
-      ${compact ? '' : `<img class="tt-row-photo" src="${s.photo.src}" alt="" loading="lazy" />`}
-    </div>`;
-    leave = s.leaveMin;
-  }
-  if (until >= total) {
-    const legHeight = y(total) - y(leave);
-    if (legHeight >= (compact ? 22 : 14)) {
-      html += `<span class="tt-leg" style="top:${y(leave) + head}px;height:${legHeight}px">${icons.walk}${format.duration(data.route.backMinutes, lang)}</span>`;
-    }
-    html += `<div class="tt-row tt-row-end" style="top:${y(total) + head + 1}px"><b>${data.route.finish}</b><i class="tt-square">${icons.station}</i><span class="tt-row-name">${data.route.startName[lang]}<small>${t.arrival}</small></span></div>`;
-  }
-  const height = y(Math.min(until, total)) + head + 26;
-  return `<div class="tt-chart${compact ? ' is-compact' : ''}" style="height:${height}px" role="list" aria-label="${t.theLine}">${html}</div>`;
-}
-
-/** The head of the Route: its two times, its verdict, its measures. @param {any} data @param {'ru' | 'en'} lang */
-const head = (data, lang) => {
-  const t = T[lang];
-  const r = data.route;
-  return `<h1>${t.title}</h1>
-    <div class="tt-frame">
-      <p><span>${t.out}</span><b>${r.start}</b></p>
-      <p class="tt-span"><span>${format.duration(r.totalMinutes, lang)}</span><i></i></p>
-      <p><span>${t.back}</span><b>${r.finish}</b></p>
-    </div>
-    <p class="tt-verdict"><i>${icons.check}</i><b>${t.fits(r)}</b><span>${t.reserve(r)}</span></p>
-    <ul class="tt-facts">
-      <li>${icons.pin}${t.places(r.stopCount)}</li>
-      <li>${icons.walk}${format.distance(r.walkingMetres, lang)}</li>
-      <li>${icons.eye}${t.outside}</li>
-    </ul>`;
-};
-
-/** The two actions that float over everything. @param {any} data @param {'ru' | 'en'} lang */
-const dock = (data, lang) => `<div class="tt-dock">
-    <button class="tt-pack lg">${icons.download}<span><b>${T[lang].pack}</b><small>${data.route.packMegabytes}${format.NBSP}${lang === 'ru' ? 'МБ' : 'MB'}</small></span></button>
-    <button class="tt-go lg lg-tint">${icons.play}<span>${T[lang].start}</span></button>
-  </div>`;
-
-/** @param {{ os: import('../shared/frames.js').Os, lang: 'ru' | 'en', data: any }} ctx */
-function route({ os, lang, data }) {
+/** @param {Ctx} ctx */
+function route({ os, theme, lang, data }) {
   const t = T[lang];
   const { width, height } = SIZES[os];
-  const android = os === 'android';
-  const sheetTop = android ? 352 : 362;
-  const view = fitView(
-    [
-      ...data.stops.map((/** @type {any} */ s) => ({ x: s.streetX, y: s.streetY })),
-      { x: data.map.start.street_x, y: data.map.start.street_y },
-    ],
+  const sheetTop = os === 'android' ? 352 : 362;
+  const map = planMap(data, {
+    lang,
+    theme,
     width,
     height,
-    { top: 116, right: 34, bottom: height - sheetTop + 30, left: 34 },
-  );
-  const map = mapSvg(data, {
-    view,
-    lang,
-    layers: FLAT,
-    labels: { max: 5, size: 10, clearOf: routeSamples(data) },
-    over: (ctx) => overlay(data, lang, ctx),
-    label: t.theLine,
+    padding: { top: 116, right: 34, bottom: height - sheetTop + 30, left: 34 },
   });
   return {
     clock: data.route.nowBeforeStart,
     inner: `<div class="tt tt-route">
       <div class="tt-under">${map}<span class="tt-osm" style="top:${sheetTop - 22}px">© OpenStreetMap</span></div>
       <header class="tt-top">
-        <button class="tt-round lg lg-clear" aria-label="Back">${android ? icons.backAndroid : icons.backIos}</button>
-        <p class="tt-title lg lg-clear"><b>${t.kicker}</b><span>${t.checked(data.route.checkedAt)}</span></p>
-        <span class="tt-group lg lg-clear"><button aria-label="Edit">${icons.edit}</button><button aria-label="Share">${android ? icons.shareAndroid : icons.shareIos}</button></span>
+        ${back(os, t.say.back)}
+        ${titlePill(t.kicker, t.checked(data.route.checkedAt))}
+        ${group([
+          [icons.edit, t.say.edit],
+          [platformIcon('share', os), t.say.share],
+        ])}
       </header>
-      <section class="tt-sheet lg" style="top:${sheetTop}px">
-        <i class="tt-grab"></i>
-        ${head(data, lang)}
-        ${chart(data, lang, { scale: 6, until: 44 })}
-      </section>
+      ${sheetOf(`${head(data, lang)}${chart(data, lang, { scale: 6, until: 44 })}`, { lang, top: sheetTop })}
       ${dock(data, lang)}
     </div>`,
   };
 }
 
-/**
- * The text of a Story as the guide's page has it: continuous prose, the
- * sentence being spoken marked, and inside it the words already said.
- * @param {any} story
- * @param {number} from the first sentence shown: what was spoken before it has scrolled away
- */
-function storyText(story, from = 0) {
-  return story.sentences
-    .map((/** @type {any} */ s, /** @type {number} */ i) => {
-      if (i < from) return '';
-      if (i !== story.current) return `<span class="tt-sentence">${s.text}</span>`;
-      const next = story.sentences[i + 1];
-      const end = next ? next.startsAt : story.total;
-      const share = Math.min(1, Math.max(0, (story.elapsed - s.startsAt) / (end - s.startsAt)));
-      const words = s.text.split(' ');
-      const spoken = Math.round(words.length * share);
-      const rest = spoken < words.length ? ` ${words.slice(spoken).join(' ')}` : '';
-      return `<span class="tt-sentence is-current"><b>${words.slice(0, spoken).join(' ')}</b>${rest}<sup>1</sup></span>`;
-    })
-    .join(' ');
-}
-
-/** The voice as bars: the played part in the accent, one bar alive. @param {any} story */
-function voice(story) {
-  const bars = 44;
-  const played = Math.round((story.elapsed / story.total) * bars);
-  let html = '';
-  for (let i = 0; i < bars; i++) {
-    // A fixed, uneven outline: speech, not a pattern redrawn on every load.
-    const level = 0.28 + 0.72 * Math.abs(Math.sin(i * 1.7) * Math.cos(i * 0.61 + 1));
-    html += `<i class="${i < played ? 'is-played' : ''}${i === played ? ' is-live' : ''}" style="height:${Math.round(level * 100)}%"></i>`;
-  }
-  return `<div class="tt-voice"><span>${format.playback(story.elapsed)}</span><div class="tt-bars">${html}</div><span>${format.playback(story.total)}</span></div>`;
-}
-
-/**
- * The page of the guide: the photograph of the Place with its author, the
- * name, the Story as prose, its source in a footnote. A solid page: it is read.
- * @param {any} data @param {'ru' | 'en'} lang @param {number} from
- */
-function guide(data, lang, from) {
-  const t = T[lang];
-  const now = data.outingNow;
-  const story = now.story[lang];
-  const date = format.date(story.source.revision_date, lang);
-  return `<article class="tt-guide">
-    <figure class="tt-guide-photo">
-      <img src="${now.stop.photo.src}" alt="" />
-      <span class="tt-guide-chip lg lg-clear"><i>${now.stop.order}</i><b>${now.stop.arrive}</b>${t.stay(now.stop.leave)}</span>
-      <figcaption>${t.photo}: ${now.stop.photo.author} · ${now.stop.photo.licence}</figcaption>
-    </figure>
-    <div class="tt-guide-body">
-      <p class="tt-guide-kind">${kindIcon(now.stop.kind)}${now.stop.built[lang]} · ${t.seenOutside}</p>
-      <h1>${now.stop.name[lang]}</h1>
-      <div class="tt-reading">
-        <p class="tt-text">${storyText(story, from)}</p>
-        <i class="tt-rule" aria-hidden="true"></i>
-      </div>
-      <p class="tt-footnote"><sup>1</sup> ${t.source(story.source, date)}</p>
-      <p class="tt-made">${icons.shield}${t.made}</p>
-    </div>
-  </article>`;
-}
-
-/** The controls, in a capsule of glass over the page. @param {any} data @param {'ru' | 'en'} lang */
-function player(data, lang) {
-  const t = T[lang];
-  const now = data.outingNow;
-  return `<section class="tt-player lg">
-    ${voice(now.story[lang])}
-    <div class="tt-keys">
-      <button aria-label="Speed">1×</button>
-      <button aria-label="Back 10 seconds">${icons.back10}</button>
-      <button class="tt-key-main lg lg-tint" aria-label="Pause">${icons.pause}</button>
-      <button aria-label="Next">${icons.next}</button>
-      <button aria-label="Text">${icons.lines}</button>
-    </div>
-    <p class="tt-next"><i>${now.next.order}</i><span class="tt-next-body"><small>${t.next} · ${now.next.arrive}</small><span>${now.next.name[lang]}</span></span><span class="tt-next-far">${format.distance(now.next.legMetres, lang)} · ${format.duration(now.next.legMinutes, lang)}</span>${icons.chevronRight}</p>
-  </section>`;
-}
-
-/**
- * Whether one is on time, and under it the whole Outing as a strip to scale:
- * stations as dots, "now" as a light.
- * @param {any} data @param {'ru' | 'en'} lang @param {number} minute
- */
-function board(data, lang, minute) {
-  const t = T[lang];
-  const x = (/** @type {number} */ m) => `${((m / data.route.totalMinutes) * 100).toFixed(2)}%`;
-  const dots = data.stops
-    .map((/** @type {any} */ s) => {
-      const state = s.leaveMin <= minute ? 'is-done' : s.arriveMin <= minute ? 'is-current' : '';
-      return `<i class="tt-strip-dot ${state}" style="left:${x(s.arriveMin + 4)}"></i>`;
-    })
-    .join('');
-  return `<div class="tt-board lg">
-    <p class="tt-status"><i class="tt-lamp"></i><b>${t.onTime}</b><span>${t.backAt(data.route.finish)}</span></p>
-    <div class="tt-strip" aria-label="${data.route.start} – ${data.route.finish}">
-      <span>${data.route.start}</span>
-      <div class="tt-strip-line"><i class="tt-strip-done" style="width:${x(minute)}"></i>${dots}<i class="tt-strip-now" style="left:${x(minute)}"></i></div>
-      <span>${data.route.finish}</span>
-    </div>
-  </div>`;
-}
-
-/** @param {{ os: import('../shared/frames.js').Os, lang: 'ru' | 'en', data: any }} ctx */
-function outing({ os, lang, data }) {
+/** @param {Ctx} ctx */
+function outing({ os, theme, lang, data }) {
   const t = T[lang];
   const { width } = SIZES[os];
-  const android = os === 'android';
   const now = data.outingNow;
-  const story = now.story[lang];
-  // A few steps before the Place: the Story has begun on the approach.
-  const minute = now.stop.arriveMin - 0.6;
-  const here = positionAt(data, minute);
-  const mapHeight = 304;
-  const pin = (/** @type {any} */ s, extra = '') => ({
-    x: s.x,
-    y: s.y,
-    className: `tt-pin${extra}`,
-    html: `<span class="tt-pin-badge">${kindIcon(s.kind)}<b>${s.order}</b></span>`,
-  });
-  const map = pitchedMap(data, {
-    width,
-    height: mapHeight,
+  const map = walkMap(data, {
     lang,
-    layers: GROUND,
-    at: here,
-    bearing: bearingAt(data, minute),
-    u: 1.25,
-    near: 150,
-    pitch: 52,
-    walls: [3, 6, 9, 12, 15],
-    over: () =>
-      `${line(data, now.stop.order - 1)}<use href="#m-foot-${now.stop.order}" class="tt-foot"/>`,
-    standing: [
-      pin(now.stop, ' is-current'),
-      pin(now.next),
-      {
-        x: here.x,
-        y: here.y,
-        className: 'tt-me',
-        html: '<span class="tt-me-pulse"></span><span class="tt-me-dot"></span>',
-      },
-    ],
-    label: t.theLine,
+    theme,
+    width,
+    height: 304,
+    // A few steps before the Place: the Story has begun on the approach.
+    minute: now.stop.arriveMin - 0.6,
+    walkedLegs: now.stop.order - 1,
+    pins: [now.stop, now.next],
   });
   return {
     clock: now.clock,
     inner: `<div class="tt tt-outing">
       <div class="tt-under">${map}</div>
       <header class="tt-top">
-        <button class="tt-round lg lg-clear" aria-label="Back">${android ? icons.backAndroid : icons.backIos}</button>
+        ${back(os, t.say.back)}
         ${board(data, lang, now.stop.arriveMin + 1)}
-        <button class="tt-round lg lg-clear" aria-label="More">${android ? icons.moreAndroid : icons.moreIos}</button>
+        ${round(platformIcon('more', os), t.say.more)}
       </header>
       <span class="tt-osm tt-osm-outing">© OpenStreetMap</span>
-      ${guide(data, lang, story.current - 1)}
+      ${guide(data, lang, { theme, width })}
       ${player(data, lang)}
     </div>`,
   };
@@ -459,26 +89,23 @@ function outing({ os, lang, data }) {
 const webNav = (lang) => `<nav class="tt-webnav lg">
     <span class="tt-wordmark">Promenade</span>
     <span class="tt-langs"><b>${lang === 'ru' ? 'Рус' : 'Eng'}</b>${lang === 'ru' ? 'Eng' : 'Рус'}</span>
-    <button class="tt-open lg lg-tint">${T[lang].open}</button>
+    <button class="tt-action lg lg-tint">${T[lang].open}</button>
   </nav>`;
 
-/** @param {{ lang: 'ru' | 'en', data: any }} ctx */
-function webRoute({ lang, data }) {
+/** @param {Ctx} ctx */
+function webRoute({ theme, lang, data }) {
   const t = T[lang];
   const size = SIZES.web;
-  const view = fitView(
-    [
-      ...data.stops.map((/** @type {any} */ s) => ({ x: s.streetX, y: s.streetY })),
-      { x: data.map.start.street_x, y: data.map.start.street_y },
-    ],
-    size.width,
-    size.height - 44,
-    { top: 96, right: 90, bottom: 70, left: 530 },
-  );
+  const view = fitView(routePoints(data), size.width, size.height - 44, {
+    top: 96,
+    right: 90,
+    bottom: 70,
+    left: 530,
+  });
   const map = mapSvg(data, {
     view,
     lang,
-    layers: FLAT,
+    layers: layersOf(theme),
     labels: { max: 12, size: 11, clearOf: routeSamples(data) },
     over: (ctx) => overlay(data, lang, ctx),
     label: t.theLine,
@@ -499,8 +126,8 @@ function webRoute({ lang, data }) {
   };
 }
 
-/** @param {{ lang: 'ru' | 'en', data: any }} ctx */
-function webOuting({ lang, data }) {
+/** @param {Ctx} ctx */
+function webOuting({ theme, lang, data }) {
   const t = T[lang];
   const size = SIZES.web;
   const now = data.outingNow;
@@ -514,7 +141,7 @@ function webOuting({ lang, data }) {
   const map = mapSvg(data, {
     view,
     lang,
-    layers: FLAT,
+    layers: layersOf(theme),
     labels: { max: 6, size: 11, clearOf: routeSamples(data) },
     over: (ctx) => overlay(data, lang, ctx, { current: now.stop.order }),
     label: now.stop.name[lang],
@@ -525,7 +152,7 @@ function webOuting({ lang, data }) {
     inner: `<div class="tt tt-web tt-web-outing">
       <div class="tt-under">${map}<span class="tt-osm">© OpenStreetMap</span></div>
       ${webNav(lang)}
-      ${guide(data, lang, 0)}
+      ${guide(data, lang, { from: 0, theme, width: 490 })}
       ${player(data, lang)}
       <section class="tt-webchart lg">${chart(data, lang, { scale: 3.5, compact: true, selected: now.stop.order })}</section>
       <p class="tt-webnote lg">${t.webNote}</p>
@@ -537,77 +164,21 @@ function webOuting({ lang, data }) {
 function sample(
   /** @type {any} */ data,
   /** @type {'ru' | 'en'} */ lang,
-  /** @type {{ width: number, height: number }} */ { width, height },
-) {
-  const view = fitView(
-    [
-      ...data.stops.map((/** @type {any} */ s) => ({ x: s.streetX, y: s.streetY })),
-      { x: data.map.start.street_x, y: data.map.start.street_y },
-    ],
+  /** @type {{ width: number, height: number, theme?: 'light' | 'dark' | 'sun' }} */ {
     width,
     height,
-    { top: 44, right: 60, bottom: 44, left: 60 },
-  );
-  return mapSvg(data, {
-    view,
+    theme = 'light',
+  },
+) {
+  return planMap(data, {
     lang,
-    layers: FLAT,
-    labels: { max: 6, size: 10, clearOf: routeSamples(data) },
-    over: (ctx) => overlay(data, lang, ctx),
-    label: 'The line of the Outing',
+    theme,
+    width,
+    height,
+    padding: { top: 44, right: 60, bottom: 44, left: 60 },
+    labels: 6,
   });
 }
-
-/**
- * Puts the rule beside the sentence being spoken, and keeps the reading
- * window to whole lines.
- * @param {Element} root
- */
-function settle(root) {
-  for (const reading of root.querySelectorAll('.tt-reading')) {
-    const text = reading.querySelector('.tt-text');
-    const current = reading.querySelector('.is-current');
-    const rule = reading.querySelector('.tt-rule');
-    if (
-      !(reading instanceof HTMLElement) ||
-      !(text instanceof HTMLElement) ||
-      !(current instanceof HTMLElement) ||
-      !(rule instanceof HTMLElement)
-    ) {
-      continue;
-    }
-    const lineHeight = parseFloat(getComputedStyle(text).lineHeight);
-    text.style.maxHeight = '';
-    text.style.maxHeight = `${Math.floor(reading.clientHeight / lineHeight) * lineHeight}px`;
-    const rects = current.getClientRects();
-    if (rects.length === 0) continue;
-    const zoom = text.getBoundingClientRect().width / text.offsetWidth || 1;
-    const textTop = text.getBoundingClientRect().top;
-    rule.style.top = `${(rects[0].top - textTop) / zoom + 4}px`;
-    rule.style.height = `${(rects[rects.length - 1].bottom - rects[0].top) / zoom - 8}px`;
-  }
-}
-
-/**
- * Moves the reading to another sentence, as the text does when it follows the voice.
- * @param {Element} root @param {any} story @param {number} index
- */
-function follow(root, story, index) {
-  const text = root.querySelector('.tt-text');
-  if (!text) return;
-  const next = story.sentences[index + 1];
-  const startsAt = story.sentences[index].startsAt;
-  const moved = {
-    ...story,
-    current: index,
-    elapsed: startsAt + ((next ? next.startsAt : story.total) - startsAt) * 0.5,
-  };
-  text.innerHTML = storyText(moved, Math.max(0, index - 1));
-  const old = root.querySelector('.tt-voice');
-  if (old) old.outerHTML = voice(moved);
-  settle(root);
-}
-
 const sheet = {
   reason: [
     'The first thing a person asks of this product is a question about time: will I be back for my train, will the place still be open. The product’s first promise is that the answer has been checked (PRODUCT-SPEC §1.3, RTE-6). Railways built the visual language of time one can trust — the timetable, and the line with its stations — and the base of this direction speaks it: the Route is a chart drawn to time, and green means “on time”.',

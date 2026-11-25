@@ -1,0 +1,149 @@
+/*
+ * The same components on a wide screen: the map fills the window, the Route
+ * is a panel of glass at the left, the guide's page takes that place while one
+ * listens. The screens of the web are drawn in `D-04`; this is the layout the
+ * two reference screens use.
+ */
+
+.tt-web .tt-top {
+  display: none;
+}
+
+.tt-web .tt-sheet {
+  left: var(--space-16);
+  right: auto;
+  top: var(--space-16);
+  bottom: var(--space-16);
+  width: 440px;
+  padding: 22px var(--space-24) 0;
+  border-radius: var(--radius-card);
+}
+
+.tt-web .tt-head-title {
+  font: var(--type-title-l);
+  letter-spacing: var(--type-title-l-tracking);
+}
+
+.tt-web .tt-frame b {
+  font: var(--type-clock-xl);
+  letter-spacing: var(--type-clock-xl-tracking);
+}
+
+.tt-webnav {
+  position: absolute;
+  right: var(--space-16);
+  top: var(--space-16);
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  height: 54px;
+  padding: 0 var(--space-8) 0 22px;
+  border-radius: var(--radius-full);
+}
+
+.tt-wordmark {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  font: var(--type-wordmark);
+  letter-spacing: var(--type-wordmark-tracking);
+}
+
+.tt-wordmark svg {
+  width: 22px;
+  height: 22px;
+}
+
+.tt-langs {
+  display: flex;
+  gap: var(--space-10);
+  font: var(--type-label);
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.tt-langs b {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.screen .tt-webnav .tt-action {
+  flex: none;
+  min-height: 38px;
+  padding: 0 var(--space-16);
+  font: var(--type-label-strong);
+}
+
+.tt-webnote {
+  position: absolute;
+  right: var(--space-16);
+  bottom: var(--space-16);
+  z-index: 2;
+  max-width: 330px;
+  padding: var(--space-12) var(--space-16);
+  border-radius: var(--radius-m);
+  font: var(--type-label);
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.tt-web .tt-osm {
+  left: 50%;
+  right: auto;
+  bottom: var(--space-8);
+  transform: translateX(-50%);
+}
+
+.tt-webchart {
+  position: absolute;
+  right: var(--space-16);
+  top: 84px;
+  z-index: 2;
+  width: 292px;
+  padding: var(--space-8) 14px var(--space-4);
+  border-radius: 26px;
+  overflow: hidden;
+}
+
+.tt-web .tt-guide {
+  left: var(--space-16);
+  right: auto;
+  top: var(--space-16);
+  bottom: var(--space-16);
+  width: 490px;
+  border-radius: var(--radius-card);
+}
+
+.tt-web .tt-guide-photo {
+  height: 204px;
+  border-radius: 22px;
+}
+
+.tt-web .tt-guide-body {
+  padding: var(--space-16) 26px 18px var(--space-24);
+}
+
+.tt-web .tt-guide-name {
+  font: var(--type-guide-title-l);
+  letter-spacing: var(--type-guide-title-l-tracking);
+}
+
+.tt-web .tt-text {
+  font: var(--type-guide-body-l);
+}
+
+.tt-web .tt-player {
+  left: 524px;
+  right: auto;
+  bottom: var(--space-16);
+  width: 400px;
+}
+
+.tt-web-outing .tt-webnote {
+  left: 524px;
+  right: auto;
+  bottom: 196px;
+  width: 400px;
+  max-width: none;
+}

@@ -1,0 +1,585 @@
+/*
+ * Controls: what a person touches.
+ *
+ * Nothing that can be touched is smaller than `--target` — 44 pt on iOS,
+ * 48 dp on Android. Where the drawn shape is smaller than that (a chip, a
+ * switch), the control itself is the full target and the shape is drawn
+ * inside it. A state is never told by colour alone: a selected chip gains a
+ * tick, a switch moves, an error says what is wrong.
+ */
+
+/* ── Round controls over the map ───────────────────────────────────────── */
+
+.screen .tt-round {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: var(--size-control);
+  height: var(--size-control);
+  border-radius: var(--radius-full);
+}
+
+.tt-group {
+  flex: none;
+  display: flex;
+  height: var(--size-control);
+  border-radius: var(--radius-full);
+}
+
+.screen .tt-group button {
+  display: grid;
+  place-items: center;
+  width: var(--size-control);
+  height: var(--size-control);
+}
+
+/* A pill of words among the round controls: where one is. */
+.tt-title {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: var(--size-control);
+  padding: var(--space-4) var(--space-16);
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.tt-title b {
+  font: var(--type-label-strong);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tt-title span {
+  font: var(--type-caption);
+  font-weight: 500;
+  color: var(--ink-2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Actions ───────────────────────────────────────────────────────────── */
+
+/* The prominent action. There is one on a screen, and it is at the bottom,
+   where a thumb is. */
+.screen .tt-action {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-8);
+  min-height: var(--size-action);
+  padding: var(--space-8) var(--space-20);
+  border-radius: var(--radius-action);
+  font: var(--type-action);
+  letter-spacing: var(--type-action-tracking);
+  text-align: center;
+}
+
+.tt-action .icon {
+  width: 19px;
+  height: 19px;
+}
+
+/* What stands beside it: a second action, with a value under its name. */
+.screen .tt-action.is-second {
+  flex: none;
+  justify-content: flex-start;
+  padding: var(--space-8) var(--space-16) var(--space-8) var(--space-12);
+  font: var(--type-body);
+  text-align: left;
+}
+
+.tt-action.is-second .icon {
+  width: 24px;
+  height: 24px;
+}
+
+.tt-action.is-second b {
+  display: block;
+  font: var(--type-body-strong);
+  font-weight: 650;
+}
+
+.tt-action.is-second small {
+  display: block;
+  font: var(--type-caption);
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+/* An action that cannot be taken back: ending the Outing, removing a Route. */
+.screen .tt-action.is-danger {
+  background: var(--stop-fill);
+  color: var(--on-stop);
+  box-shadow: var(--lift-md-1);
+}
+
+/* A quiet action: words in the colour of "on time", no pane behind them. */
+.screen .tt-action.is-plain {
+  flex: none;
+  min-height: var(--size-control);
+  padding: var(--space-8) var(--space-12);
+  font: var(--type-body-strong);
+  color: var(--accent-ink);
+}
+
+.screen .tt-action.is-plain.is-danger {
+  background: none;
+  color: var(--stop);
+  box-shadow: none;
+}
+
+/* Busy: the icon turns, the label says what is being done. */
+.tt-spinner {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2.5px solid color-mix(in srgb, currentColor 28%, transparent);
+  border-top-color: currentColor;
+  animation: lg-turn 0.8s linear infinite;
+}
+
+/* The two actions that float over everything. */
+.tt-dock {
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  bottom: 38px;
+  z-index: 4;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-10);
+}
+
+.screen[data-os='android'] .tt-dock {
+  left: var(--space-16);
+  right: var(--space-16);
+  bottom: var(--space-32);
+}
+
+/* ── Chips ─────────────────────────────────────────────────────────────── */
+
+.tt-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--space-8);
+}
+
+/* The control is the full target; the chip is drawn inside it. */
+.screen .tt-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target);
+}
+
+.tt-chip > span {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-6);
+  min-height: 34px;
+  padding: var(--space-4) var(--space-12);
+  border-radius: var(--radius-chip);
+  background: var(--surface-2);
+  font: var(--type-label);
+  color: var(--ink);
+}
+
+.tt-chip .icon {
+  width: 15px;
+  height: 15px;
+  stroke-width: 2.6;
+}
+
+.screen[data-os='android'] .tt-chip > span {
+  background: none;
+  box-shadow: inset 0 0 0 1px var(--ink-3);
+}
+
+.tt-chip[aria-pressed='true'] > span {
+  background: var(--ink);
+  color: var(--surface);
+}
+
+.screen[data-os='android'] .tt-chip[aria-pressed='true'] > span {
+  background: var(--ink);
+  box-shadow: none;
+}
+
+/* ── A choice of a few: segments ───────────────────────────────────────── */
+
+.tt-seg {
+  display: flex;
+  padding: 3px;
+  border-radius: var(--radius-full);
+  background: var(--surface-2);
+}
+
+.screen .tt-seg button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-6);
+  min-width: var(--target);
+  min-height: var(--target);
+  padding: var(--space-4) var(--space-12);
+  border-radius: var(--radius-full);
+  font: var(--type-label);
+  color: var(--ink-2);
+}
+
+.tt-seg .icon {
+  width: 16px;
+  height: 16px;
+}
+
+.tt-seg button[aria-checked='true'] {
+  background: var(--surface);
+  color: var(--ink);
+  font-weight: 700;
+  box-shadow: var(--lift-thumb);
+}
+
+/* Android: the segmented buttons of Material 3, the chosen one ticked. */
+.screen[data-os='android'] .tt-seg {
+  padding: 0;
+  background: none;
+  box-shadow: inset 0 0 0 1px var(--ink-3);
+  overflow: hidden;
+}
+
+.screen[data-os='android'] .tt-seg button {
+  min-height: var(--target);
+  border-radius: 0;
+  box-shadow: inset -1px 0 0 var(--ink-3);
+}
+
+.screen[data-os='android'] .tt-seg button:last-child {
+  box-shadow: none;
+}
+
+.screen[data-os='android'] .tt-seg button[aria-checked='true'] {
+  background: var(--ok-tint);
+}
+
+.tt-seg .tt-seg-tick {
+  display: none;
+  stroke-width: 2.6;
+}
+
+.screen[data-os='android'] .tt-seg button[aria-checked='true'] .tt-seg-tick {
+  display: block;
+}
+
+/* ── A switch ──────────────────────────────────────────────────────────── */
+
+/* The whole row is the control: its name on the left, the switch on the right. */
+.screen .tt-switch {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  width: 100%;
+  min-height: var(--size-control);
+  text-align: left;
+}
+
+.tt-switch-name {
+  flex: 1;
+  min-width: 0;
+  font: var(--type-body);
+}
+
+.tt-switch-name small {
+  display: block;
+  font: var(--type-caption);
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.tt-switch-track {
+  flex: none;
+  position: relative;
+  width: 52px;
+  height: 32px;
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--ink-3) 46%, var(--surface));
+  transition: background var(--dur-fade) var(--ease-standard);
+}
+
+.tt-switch-track::after {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--marker);
+  box-shadow: 0 2px 5px rgb(0 0 0 / 0.28);
+  transition: transform var(--spring-glass-dur) var(--spring-glass);
+}
+
+.tt-switch[aria-checked='true'] .tt-switch-track {
+  background: var(--line);
+}
+
+.tt-switch[aria-checked='true'] .tt-switch-track::after {
+  transform: translateX(20px);
+}
+
+/* Android: the Material switch, whose thumb grows and takes a tick when on. */
+.screen[data-os='android'] .tt-switch-track {
+  background: var(--surface-2);
+  box-shadow: inset 0 0 0 2px var(--ink-3);
+}
+
+.screen[data-os='android'] .tt-switch-track::after {
+  left: 8px;
+  top: 8px;
+  width: 16px;
+  height: 16px;
+  background: var(--ink-3);
+  box-shadow: none;
+}
+
+.screen[data-os='android'] .tt-switch[aria-checked='true'] .tt-switch-track {
+  background: var(--line);
+  box-shadow: none;
+}
+
+.screen[data-os='android'] .tt-switch[aria-checked='true'] .tt-switch-track::after {
+  left: 4px;
+  top: 4px;
+  width: 24px;
+  height: 24px;
+  background: var(--marker);
+  transform: translateX(20px);
+}
+
+.screen[data-theme='sun'] .tt-switch-track {
+  box-shadow: inset 0 0 0 1.5px var(--ink);
+}
+
+/* ── A field ───────────────────────────────────────────────────────────── */
+
+.tt-field {
+  display: block;
+}
+
+.tt-field-name {
+  display: block;
+  margin-bottom: var(--space-6);
+  font: var(--type-label);
+  color: var(--ink-2);
+}
+
+.tt-field-well {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-8);
+  min-height: var(--size-control);
+  padding: var(--space-12) var(--space-12) var(--space-12) var(--space-16);
+  border-radius: var(--radius-s);
+  background: var(--surface-2);
+  font: var(--type-body);
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1px transparent;
+}
+
+.tt-field-well > span {
+  flex: 1;
+  min-width: 0;
+}
+
+.tt-field-well .icon {
+  width: 20px;
+  height: 20px;
+  color: var(--ink-2);
+}
+
+.tt-field.is-empty .tt-field-well > span {
+  color: var(--ink-2);
+}
+
+/* The caret of a field being written in. */
+.tt-field.is-active .tt-field-well > span::after {
+  content: '';
+  display: inline-block;
+  width: 2px;
+  height: 1.15em;
+  margin-left: 1px;
+  vertical-align: -0.2em;
+  background: var(--accent-ink);
+}
+
+.tt-field.is-active .tt-field-well {
+  box-shadow: inset 0 0 0 2px var(--ink);
+}
+
+.tt-field.is-wrong .tt-field-well {
+  box-shadow: inset 0 0 0 2px var(--stop);
+}
+
+.tt-field-note {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-6);
+  margin-top: var(--space-6);
+  font: var(--type-caption);
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.tt-field-note .icon {
+  width: 15px;
+  height: 15px;
+}
+
+.tt-field.is-wrong .tt-field-note {
+  color: var(--stop);
+  font-weight: 600;
+}
+
+/* Android: the filled field of Material 3, with its line at the foot. */
+.screen[data-os='android'] .tt-field-well {
+  border-radius: var(--radius-xs) var(--radius-xs) 0 0;
+  box-shadow: inset 0 -1px 0 var(--ink-2);
+}
+
+.screen[data-os='android'] .tt-field.is-active .tt-field-well {
+  box-shadow: inset 0 -2.5px 0 var(--accent-ink);
+}
+
+.screen[data-os='android'] .tt-field.is-wrong .tt-field-well {
+  box-shadow: inset 0 -2.5px 0 var(--stop);
+}
+
+/* ── A number that is stepped ──────────────────────────────────────────── */
+
+.tt-stepper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+}
+
+.tt-stepper-name {
+  flex: 1;
+  min-width: 0;
+  font: var(--type-body);
+}
+
+.tt-stepper-name small {
+  display: block;
+  font: var(--type-caption);
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.screen .tt-stepper button {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: var(--size-control);
+  height: var(--size-control);
+  border-radius: var(--radius-full);
+  background: var(--surface-2);
+}
+
+.tt-stepper output {
+  flex: none;
+  min-width: 3.4em;
+  font: var(--type-clock-m);
+  letter-spacing: var(--type-clock-m-tracking);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.screen[data-theme='sun'] .tt-stepper button,
+.screen[data-theme='sun'] .tt-chip > span,
+.screen[data-theme='sun'] .tt-field-well {
+  box-shadow: inset 0 0 0 1.5px var(--ink);
+}
+
+/* ── One of several: a list of options ─────────────────────────────────── */
+
+.screen .tt-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  width: 100%;
+  min-height: var(--size-control);
+  padding: var(--space-8) 0;
+  font: var(--type-body);
+  text-align: left;
+}
+
+.tt-option + .tt-option {
+  box-shadow: inset 0 0.5px 0 var(--rule);
+}
+
+.tt-option-name {
+  flex: 1;
+  min-width: 0;
+}
+
+.tt-option-name small {
+  display: block;
+  font: var(--type-caption);
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+/* iOS marks the chosen row with a tick at its end. */
+.tt-option-mark {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  color: var(--accent-ink);
+  visibility: hidden;
+}
+
+.tt-option-mark .icon {
+  width: 22px;
+  height: 22px;
+  stroke-width: 2.6;
+}
+
+.tt-option[aria-checked='true'] .tt-option-mark {
+  visibility: visible;
+}
+
+.tt-option[aria-checked='true'] .tt-option-name {
+  font-weight: 700;
+}
+
+/* Android puts a radio button at its start. */
+.screen[data-os='android'] .tt-option {
+  flex-direction: row-reverse;
+  min-height: 56px;
+}
+
+.screen[data-os='android'] .tt-option + .tt-option {
+  box-shadow: none;
+}
+
+.screen[data-os='android'] .tt-option-mark {
+  visibility: visible;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 2px var(--ink-2);
+}
+
+.screen[data-os='android'] .tt-option-mark .icon {
+  display: none;
+}
+
+.screen[data-os='android'] .tt-option[aria-checked='true'] .tt-option-mark {
+  box-shadow:
+    inset 0 0 0 2px var(--accent-ink),
+    inset 0 0 0 5.5px var(--surface),
+    inset 0 0 0 11px var(--accent-ink);
+}

@@ -1,0 +1,301 @@
+/*
+ * The states every screen needs: something is being made, there is nothing
+ * yet, there is no network, a thing cannot be used now, something went wrong.
+ *
+ * Each says in words what is happening and what can be done about it. None is
+ * a picture standing in for an explanation, and none hides what does not work:
+ * what needs a network is shown as unavailable, with the reason (OUT-15).
+ */
+
+/* ── A state that takes the place of content ───────────────────────────── */
+
+.tt-state {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: var(--space-24) var(--space-20);
+}
+
+.tt-state-icon {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: var(--space-16);
+  border-radius: var(--radius-m);
+  background: var(--surface-2);
+  color: var(--ink);
+}
+
+.tt-state-icon .icon {
+  width: 26px;
+  height: 26px;
+}
+
+.tt-state.is-error .tt-state-icon {
+  background: var(--stop-tint);
+  color: var(--stop);
+}
+
+.tt-state.is-off .tt-state-icon {
+  color: var(--ink-2);
+}
+
+.tt-state h2 {
+  font: var(--type-title);
+  letter-spacing: var(--type-title-tracking);
+  text-wrap: balance;
+}
+
+.tt-state p {
+  margin-top: var(--space-6);
+  max-width: 34em;
+  font: var(--type-body);
+  color: var(--ink-2);
+}
+
+.tt-state-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-8);
+  align-self: stretch;
+  margin-top: var(--space-20);
+}
+
+.screen .tt-state-actions .tt-action:not(.is-plain) {
+  flex: 1 1 auto;
+}
+
+/* ── Being made: the steps, said one by one ────────────────────────────── */
+
+.tt-steps {
+  align-self: stretch;
+  margin-top: var(--space-16);
+}
+
+.tt-steps li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-10);
+  min-height: 34px;
+  font: var(--type-body);
+  color: var(--ink-2);
+}
+
+.tt-steps li > i {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 2px var(--ink-3);
+}
+
+.tt-steps .is-done {
+  color: var(--ink);
+}
+
+.tt-steps .is-done > i {
+  background: var(--line);
+  color: var(--marker);
+  box-shadow: none;
+}
+
+.tt-steps .is-done .icon {
+  width: 14px;
+  height: 14px;
+  stroke-width: 3;
+}
+
+.tt-steps .is-now {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.tt-steps .is-now > i {
+  box-shadow: none;
+}
+
+/* What will be there, as shapes: the chart of a Route not yet built. */
+.tt-skel {
+  position: relative;
+  align-self: stretch;
+  margin-top: var(--space-20);
+  padding-left: 54px;
+}
+
+.tt-skel::before {
+  content: '';
+  position: absolute;
+  left: 22px;
+  top: 4px;
+  bottom: 4px;
+  width: 4px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--ink) 14%, transparent);
+}
+
+.tt-skel i {
+  position: relative;
+  display: block;
+  height: 44px;
+  margin-bottom: var(--space-12);
+  border-radius: var(--radius-s);
+  background: linear-gradient(
+    100deg,
+    var(--surface-2) 30%,
+    color-mix(in srgb, var(--surface-2) 40%, var(--surface)) 50%,
+    var(--surface-2) 70%
+  );
+  background-size: 200% 100%;
+  animation: lg-shimmer 1.6s linear infinite;
+}
+
+.tt-skel i::before {
+  content: '';
+  position: absolute;
+  left: -42px;
+  top: 10px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  box-shadow: 0 0 0 4px var(--surface);
+}
+
+.tt-skel i:nth-child(2) {
+  width: 78%;
+}
+
+.tt-skel i:nth-child(3) {
+  width: 90%;
+}
+
+/* ── No network: a band across the top that stays ──────────────────────── */
+
+.tt-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-10);
+  min-height: var(--size-control);
+  padding: var(--space-8) var(--space-16);
+  border-radius: var(--radius-m);
+  font: var(--type-label);
+  font-weight: 500;
+}
+
+.tt-banner > span {
+  flex: 1;
+  min-width: 0;
+}
+
+.tt-banner b {
+  display: block;
+  font: var(--type-label-strong);
+}
+
+.tt-banner > .icon {
+  width: 20px;
+  height: 20px;
+}
+
+.tt-banner.is-warn {
+  background: var(--warn-tint);
+}
+
+.tt-banner.is-warn > .icon {
+  color: var(--warn);
+}
+
+.tt-banner.is-stop {
+  background: var(--stop-tint);
+}
+
+.tt-banner.is-stop > .icon {
+  color: var(--stop);
+}
+
+.screen[data-theme='sun'] .tt-banner {
+  box-shadow: inset 0 0 0 1.5px var(--ink);
+}
+
+/* ── The Route Pack: one plain status at a time ────────────────────────── */
+
+.tt-pack {
+  padding: var(--space-12) var(--space-16);
+  border-radius: var(--radius-card);
+  background: var(--surface-2);
+}
+
+.screen[data-theme='sun'] .tt-pack {
+  box-shadow: inset 0 0 0 1.5px var(--ink);
+}
+
+.tt-pack-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-10);
+  min-height: var(--target);
+}
+
+.tt-pack-head > .icon {
+  width: 22px;
+  height: 22px;
+}
+
+.tt-pack-head > span {
+  flex: 1;
+  min-width: 0;
+  font: var(--type-body-strong);
+  font-weight: 650;
+}
+
+.tt-pack-head small {
+  display: block;
+  font: var(--type-caption);
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.screen .tt-pack-head button {
+  flex: none;
+  display: grid;
+  place-items: center;
+  min-width: var(--target);
+  min-height: var(--target);
+  padding: 0 var(--space-12);
+  border-radius: var(--radius-full);
+  font: var(--type-label-strong);
+  color: var(--accent-ink);
+}
+
+.tt-pack-bar {
+  position: relative;
+  height: 6px;
+  margin: var(--space-4) 0 var(--space-6);
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--ink) 16%, transparent);
+  overflow: hidden;
+}
+
+.tt-pack-bar i {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: 3px;
+  background: var(--line);
+}
+
+.tt-pack.is-ready .tt-pack-head > .icon {
+  color: var(--accent-ink);
+}
+
+.tt-pack.is-failed .tt-pack-head > .icon {
+  color: var(--stop);
+}
+
+.tt-pack.is-failed .tt-pack-head small {
+  color: var(--stop);
+  font-weight: 600;
+}

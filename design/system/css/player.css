@@ -1,0 +1,239 @@
+/*
+ * The player of a Story: the voice as bars, five keys, the next Place.
+ *
+ * It is a capsule of glass over the guide's page on iOS and a raised Material
+ * surface on Android. The bars can be dragged; the two keys beside "pause"
+ * do the same without dragging (WCAG 2.2, criterion 2.5.7).
+ */
+
+.tt-player {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 26px;
+  z-index: 3;
+  padding: var(--space-12) var(--space-16) var(--space-10);
+  border-radius: var(--radius-card);
+}
+
+.screen[data-os='android'] .tt-player {
+  left: var(--space-12);
+  right: var(--space-12);
+  bottom: 30px;
+  background: var(--md-surface-high);
+}
+
+/* The bars are 28 high; the control that moves the Story is a full target,
+   which reaches above and below them without pushing anything away. */
+.tt-voice {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--space-10);
+  padding-block: calc((var(--target) - 28px) / 2);
+  margin-block: calc((28px - var(--target)) / 2);
+  font: var(--type-caption);
+  color: var(--ink-2);
+}
+
+.tt-bars {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 28px;
+}
+
+.tt-bars i {
+  flex: 1;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--ink) 22%, transparent);
+}
+
+.screen[data-theme='sun'] .tt-bars i {
+  background: var(--ink-3);
+}
+
+.tt-bars .is-played {
+  background: var(--line);
+}
+
+.tt-bars .is-live {
+  background: var(--accent);
+  box-shadow: 0 0 0 1px var(--line);
+  animation: lg-voice var(--dur-voice) ease-in-out infinite;
+}
+
+/* Paused: the bar under the playhead stands still. */
+.tt-player.is-paused .tt-bars .is-live {
+  animation: none;
+}
+
+.tt-keys {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto 1fr 1fr;
+  align-items: center;
+  justify-items: center;
+  margin-top: var(--space-6);
+}
+
+.screen .tt-keys button {
+  display: grid;
+  place-items: center;
+  width: var(--size-key);
+  height: var(--size-key);
+  border-radius: var(--radius-full);
+  font: var(--type-body-strong);
+}
+
+.screen .tt-keys .tt-key-main {
+  width: var(--size-key-main);
+  height: var(--size-key-main);
+}
+
+.tt-key-main .icon {
+  width: 28px;
+  height: 28px;
+}
+
+/* The Place after this one. The row is a control: it opens that Place. */
+.screen .tt-next {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  min-height: var(--target);
+  margin-top: var(--space-4);
+  padding-top: var(--space-6);
+  border-top: 0.5px solid var(--rule);
+  text-align: left;
+}
+
+.tt-next i {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  color: var(--ink);
+  font: var(--type-numeral);
+  line-height: 24px;
+  font-style: normal;
+  text-align: center;
+  box-shadow: inset 0 0 0 2px var(--line);
+}
+
+.tt-next-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.tt-next-body small {
+  font: var(--type-micro);
+  color: var(--ink-2);
+}
+
+.tt-next-body span {
+  overflow: hidden;
+  font: var(--type-body);
+  font-weight: 650;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.tt-next-far {
+  flex: none;
+  font: var(--type-label);
+  font-weight: 500;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+.tt-next .icon {
+  width: 15px;
+  height: 15px;
+  color: var(--ink-2);
+}
+
+/* A message in place of the bars: why nothing is playing. */
+.tt-player-note {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  min-height: 28px;
+  font: var(--type-label);
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.tt-player-note b {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.tt-player-note .icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* ── The player folded to one row ──────────────────────────────────────── */
+
+.tt-mini {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 26px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: var(--space-10);
+  min-height: 64px;
+  padding: var(--space-8) var(--space-8) var(--space-8) var(--space-16);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.screen[data-os='android'] .tt-mini {
+  left: var(--space-12);
+  right: var(--space-12);
+  border-radius: var(--radius-card);
+  background: var(--md-surface-high);
+}
+
+.tt-mini-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.tt-mini-body small {
+  display: block;
+  font: var(--type-micro);
+  color: var(--ink-2);
+}
+
+.tt-mini-body span {
+  display: block;
+  overflow: hidden;
+  font: var(--type-body);
+  font-weight: 650;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.screen .tt-mini button {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: var(--size-key);
+  height: var(--size-key);
+  border-radius: var(--radius-full);
+}
+
+/* How far the Story has got, along the bottom edge of the row. */
+.tt-mini-played {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  background: var(--line);
+}

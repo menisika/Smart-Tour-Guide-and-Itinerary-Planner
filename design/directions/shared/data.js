@@ -60,6 +60,8 @@ export const format = {
     ];
     return `${d}${NBSP}${months[m - 1]} ${y}`;
   },
+  /** A clock time some minutes later. @param {string} clock "14:00" @param {number} minutes */
+  clockPlus: (clock, minutes) => addMinutes(clock, minutes),
   NBSP,
   NNBSP,
 };
@@ -139,12 +141,60 @@ function photoOf(photos, order) {
   };
 }
 
+/**
+ * The Route as it becomes when one Place is skipped (OUT-9): the way around
+ * it was found on the pedestrian graph and is kept in the map data; the
+ * times follow from it at the walking speed of the measurement.
+ * @param {any} outing @param {any} map @param {any[]} stops @param {any} route
+ */
+function recalculate(outing, map, stops, route) {
+  const detour = map.detour;
+  if (!detour) return undefined;
+  const skipped = stops[detour.skip - 1];
+  const after = stops[detour.skip];
+  const metresPerMinute = (outing.assumptions.walking_kmh * 1000) / 60;
+  const newLegMinutes = Math.round(detour.metres / metresPerMinute);
+  // What is saved: the visit, and the two legs replaced by one.
+  const saved = route.visitMinutes + skipped.legMinutes + after.legMinutes - newLegMinutes;
+  const kept = stops
+    .filter((s) => s.order !== detour.skip)
+    .map((s) => {
+      if (s.order < detour.skip) return s;
+      const arriveMin = s.arriveMin - saved;
+      const leaveMin = s.leaveMin - saved;
+      return {
+        ...s,
+        arriveMin,
+        leaveMin,
+        arrive: addMinutes(route.start, arriveMin),
+        leave: addMinutes(route.start, leaveMin),
+        ...(s.order === after.order ? { legMetres: detour.metres, legMinutes: newLegMinutes } : {}),
+      };
+    });
+  const total = route.totalMinutes - saved;
+  return {
+    skipped,
+    savedMinutes: saved,
+    stops: kept,
+    leg: detour,
+    route: {
+      ...route,
+      totalMinutes: total,
+      finish: addMinutes(route.start, total),
+      reserveMinutes: route.budgetMinutes - total,
+      walkingMetres: route.walkingMetres - skipped.legMetres - after.legMetres + detour.metres,
+      stopCount: route.stopCount - 1,
+    },
+  };
+}
+
 export async function loadData() {
-  const [outing, story, map, photos] = await Promise.all([
+  const [outing, story, map, photos, tokens] = await Promise.all([
     read('outing'),
     read('story'),
     read('map'),
     read('photos'),
+    fetch(new URL('../../system/tokens.json', import.meta.url)).then((r) => r.json()),
   ]);
   const start = outing.request.start_clock;
   const visit = outing.assumptions.visit_minutes;
@@ -180,6 +230,7 @@ export async function loadData() {
   const route = {
     wish: outing.request.wish,
     startName: outing.start_finish.name,
+    startShort: outing.start_finish.short,
     start,
     finish: addMinutes(start, total),
     deadline: addMinutes(start, outing.request.budget_min),
@@ -229,5 +280,12 @@ export async function loadData() {
     story: { ru: passage('ru'), en: passage('en') },
   };
 
-  return { route, stops, outingNow, map };
+  return {
+    route,
+    stops,
+    outingNow,
+    map,
+    tokens,
+    recalculated: recalculate(outing, map, stops, route),
+  };
 }

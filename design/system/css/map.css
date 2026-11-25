@@ -1,0 +1,429 @@
+/*
+ * The map as the mockups draw it, and what stands on it.
+ *
+ * The drawing is an SVG of real OpenStreetMap geometry (design/data/map.json);
+ * the application draws the same thing with the MapLibre styles generated from
+ * the same tokens (design/system/map/). Nothing here goes beyond what such a
+ * style can express: fills, lines with widths, casings and dashes, symbols,
+ * text along a line, extruded buildings.
+ */
+
+/* ── The base ──────────────────────────────────────────────────────────── */
+
+.screen .m-ground {
+  fill: var(--m-ground);
+}
+
+.screen .m-green {
+  fill: var(--m-green);
+}
+
+.screen .m-water {
+  fill: var(--m-water);
+}
+
+.screen .m-roads_minor,
+.screen .m-roads_mid,
+.screen .m-roads_major,
+.screen .m-roads_minor-edge,
+.screen .m-roads_mid-edge,
+.screen .m-roads_major-edge {
+  fill: none;
+  stroke: var(--m-street);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.screen .m-roads_minor {
+  stroke-width: 9px;
+}
+
+.screen .m-roads_mid {
+  stroke-width: 22px;
+}
+
+.screen .m-roads_major {
+  stroke-width: 46px;
+}
+
+/* The edge of a street: it differs from the ground only in the sun theme. */
+.screen .m-roads_minor-edge,
+.screen .m-roads_mid-edge,
+.screen .m-roads_major-edge {
+  stroke: var(--m-street-edge);
+}
+
+.screen .m-roads_minor-edge {
+  stroke-width: calc(9px + var(--u) * 2px);
+}
+
+.screen .m-roads_mid-edge {
+  stroke-width: calc(22px + var(--u) * 2px);
+}
+
+.screen .m-roads_major-edge {
+  stroke-width: calc(46px + var(--u) * 2px);
+}
+
+.screen .m-buildings {
+  fill: var(--m-building);
+}
+
+.screen[data-theme='sun'] .m-buildings {
+  stroke: var(--m-wall);
+  stroke-width: calc(var(--u) * 0.8px);
+}
+
+.screen .m-wall {
+  fill: var(--m-wall);
+}
+
+.screen .m-roof {
+  fill: var(--m-roof);
+  stroke: var(--m-wall);
+  stroke-width: calc(var(--u) * 0.6px);
+}
+
+.screen .m-rail,
+.screen .m-rail-ties {
+  fill: none;
+}
+
+.screen .m-rail {
+  stroke: var(--m-rail);
+  stroke-width: calc(var(--u) * 2.4px);
+}
+
+.screen .m-rail-ties {
+  stroke: var(--m-ground);
+  stroke-width: calc(var(--u) * 1.2px);
+  stroke-dasharray: calc(var(--u) * 5px) calc(var(--u) * 5px);
+}
+
+.screen .m-label {
+  font-family: var(--font-text);
+  font-weight: 600;
+  fill: var(--ink-2);
+  stroke: var(--m-street);
+  stroke-width: calc(var(--u) * 3px);
+}
+
+.screen[data-theme='sun'] .m-label {
+  fill: var(--ink);
+  font-weight: 700;
+}
+
+/* ── The line of the Route ─────────────────────────────────────────────── */
+
+.tt-line,
+.tt-line-case,
+.tt-line-glow,
+.tt-line-march,
+.tt-line-walked,
+.tt-line-old,
+.tt-line-new {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.tt-line-glow {
+  stroke: var(--accent);
+  stroke-width: calc(var(--u) * var(--line-glow-width) * 1px);
+  opacity: 0.3;
+}
+
+.tt-line-case {
+  stroke: var(--line-case);
+  stroke-width: calc(var(--u) * var(--line-case-width) * 1px);
+}
+
+.tt-line {
+  stroke: var(--line);
+  stroke-width: calc(var(--u) * var(--line-width) * 1px);
+}
+
+/* The way ahead moves towards the next Place. */
+.tt-line-march {
+  stroke: rgb(255 255 255 / 0.8);
+  stroke-width: calc(var(--u) * 1.6px);
+  stroke-dasharray: calc(var(--u) * 4px) calc(var(--u) * 10px);
+  animation: lg-march var(--dur-march) linear infinite;
+}
+
+.tt-line-walked {
+  stroke: var(--ink-3);
+  stroke-width: calc(var(--u) * var(--line-walked-width) * 1px);
+  opacity: 0.75;
+}
+
+/* The footprint of a Place of the Route: the very walls a Story is about. */
+.tt-foot {
+  fill: var(--m-place);
+}
+
+/* ── What lies on the flat map ─────────────────────────────────────────── */
+
+.tt-station circle {
+  fill: var(--marker);
+  stroke: var(--line);
+  stroke-width: 2.5px;
+}
+
+.tt-station .tt-station-shade {
+  fill: rgb(0 0 0 / 0.2);
+  stroke: none;
+}
+
+.tt-station text {
+  font: var(--type-numeral);
+  font-weight: 600;
+  fill: var(--on-marker);
+}
+
+.tt-station.is-current circle:not(.tt-station-shade) {
+  fill: var(--accent);
+  stroke: var(--marker);
+}
+
+.tt-station.is-done circle:not(.tt-station-shade) {
+  fill: var(--line);
+  stroke: var(--marker);
+}
+
+.tt-station.is-done text {
+  fill: var(--marker);
+}
+
+/* A Place that has been skipped stays on the map, struck out, so that the
+   change can be seen and taken back. */
+.tt-station.is-skipped circle:not(.tt-station-shade) {
+  fill: var(--surface);
+  stroke: var(--ink-3);
+  stroke-dasharray: 3 3;
+}
+
+.tt-station.is-skipped text {
+  fill: var(--ink-2);
+  text-decoration: line-through;
+}
+
+.screen[data-theme='sun'] .tt-station circle:not(.tt-station-shade) {
+  stroke: var(--ink);
+}
+
+.tt-mark rect {
+  fill: var(--mark);
+  stroke: var(--rule);
+  stroke-width: 1px;
+}
+
+.tt-mark text {
+  font-family: var(--font-text);
+  font-size: 10.5px;
+  font-weight: 700;
+  fill: var(--ink);
+}
+
+.tt-terminus-mark {
+  fill: var(--ink);
+  stroke: var(--m-street);
+  stroke-width: 2px;
+}
+
+.tt-terminus text {
+  font-family: var(--font-text);
+  font-size: 12px;
+  font-weight: 700;
+  fill: var(--ink);
+  stroke: var(--m-ground);
+  stroke-width: 3.5px;
+  paint-order: stroke fill;
+}
+
+/* A Break: time without a Place. */
+.tt-break rect {
+  fill: var(--marker);
+  stroke: var(--ink);
+  stroke-width: 2px;
+}
+
+.tt-break .icon {
+  color: var(--on-marker);
+}
+
+/* ── What stands on the tilted map ─────────────────────────────────────── */
+
+.tt-pin-badge {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  height: 32px;
+  padding: 0 10px 0 8px;
+  border-radius: var(--radius-full);
+  background: var(--marker);
+  color: var(--on-marker);
+  font: var(--type-numeral);
+  box-shadow: var(--lift-marker);
+}
+
+.tt-pin-badge::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -5px;
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  border-radius: 2px;
+  background: inherit;
+  transform: rotate(45deg);
+  z-index: -1;
+}
+
+.tt-pin-badge .icon {
+  width: 17px;
+  height: 17px;
+}
+
+.tt-pin.is-current .tt-pin-badge {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.tt-pin.is-done .tt-pin-badge {
+  background: var(--line);
+  color: var(--marker);
+}
+
+/* ── The person ────────────────────────────────────────────────────────── */
+
+.map3d-pin.tt-me {
+  transform: translate(-50%, -50%);
+}
+
+.tt-me {
+  position: relative;
+  width: 24px;
+  height: 24px;
+}
+
+/* A white ring lifts the dot off the line; a darker ring lifts it off the
+   ground, which the accent alone would not do. */
+.tt-me-dot {
+  position: relative;
+  display: block;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3.5px solid var(--marker);
+  box-shadow:
+    0 0 0 1.5px var(--line),
+    0 3px 9px rgb(0 0 0 / 0.4);
+}
+
+.screen[data-theme='sun'] .tt-me-dot {
+  box-shadow: 0 0 0 2px var(--ink);
+}
+
+.tt-me-pulse {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: lg-pulse var(--dur-breath) ease-out infinite;
+}
+
+/* Where the person faces: a wedge of light ahead of the dot. */
+.tt-me-heading {
+  position: absolute;
+  left: 50%;
+  bottom: 50%;
+  width: 56px;
+  height: 46px;
+  margin-left: -28px;
+  background: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--accent) 55%, transparent),
+    transparent
+  );
+  clip-path: polygon(50% 100%, 0 0, 100% 0);
+  transform-origin: 50% 100%;
+}
+
+/* The position is uncertain: no pulse and no heading, a wide pale ring, and
+   the application asks "Are you at…?" instead of starting a Story (OUT-4). */
+.tt-me.is-unsure .tt-me-pulse,
+.tt-me.is-unsure .tt-me-heading {
+  display: none;
+}
+
+.tt-me.is-unsure::before {
+  content: '';
+  position: absolute;
+  inset: -26px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--ink-3) 22%, transparent);
+  border: 1.5px dashed var(--ink-3);
+}
+
+.tt-me.is-unsure .tt-me-dot {
+  background: var(--ink-3);
+  box-shadow:
+    0 0 0 1.5px var(--ink-2),
+    0 3px 9px rgb(0 0 0 / 0.3);
+}
+
+/* ── A Place without a photograph: its plan ────────────────────────────── */
+
+.tt-plate {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: var(--m-ground);
+}
+
+.tt-plate .map {
+  position: absolute;
+  inset: 0;
+}
+
+.tt-plate .tt-foot {
+  fill: var(--line);
+  opacity: 0.9;
+}
+
+.tt-plate-kind {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin: -22px 0 0 -22px;
+  border-radius: 50%;
+  background: var(--marker);
+  color: var(--on-marker);
+  box-shadow: var(--lift-marker);
+}
+
+.tt-plate-kind .icon {
+  width: 24px;
+  height: 24px;
+}
+
+/* A thumbnail of the same: the kind of the Place on a tile of the map's ground. */
+.tt-thumb-plan {
+  display: grid;
+  place-items: center;
+  background: var(--m-building);
+  color: var(--ink-2);
+}
+
+.tt-thumb-plan .icon {
+  width: 22px;
+  height: 22px;
+}

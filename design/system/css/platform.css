@@ -1,0 +1,487 @@
+/*
+ * Where the two systems differ by rule: the bar of destinations, and the
+ * Outing on a locked phone. Everything here is the system's own surface; the
+ * product supplies its words, its numbers and its accent.
+ */
+
+/* ── The bar of destinations ───────────────────────────────────────────── */
+
+/* iOS: a capsule of glass that floats over the content. */
+.tt-tabs {
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  bottom: 26px;
+  z-index: 4;
+  display: flex;
+  padding: var(--space-4);
+  border-radius: var(--radius-full);
+}
+
+.screen .tt-tabs button {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  min-height: 54px;
+  border-radius: var(--radius-full);
+  font: var(--type-tab);
+  color: var(--ink-2);
+}
+
+.tt-tabs button[aria-current='page'] {
+  background: color-mix(in srgb, var(--ink) 9%, transparent);
+  color: var(--ink);
+  font-weight: 700;
+}
+
+/* Android: the navigation bar of Material 3, attached to the bottom edge,
+   the chosen destination in a pill behind its icon. */
+.screen[data-os='android'] .tt-tabs {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: var(--space-12) var(--space-8) var(--space-32);
+  border-radius: 0;
+  background: var(--md-surface-high);
+  box-shadow: none;
+}
+
+.screen[data-os='android'] .tt-tabs button {
+  gap: var(--space-4);
+  min-height: 56px;
+  border-radius: 0;
+}
+
+.screen[data-os='android'] .tt-tabs button[aria-current='page'] {
+  background: none;
+}
+
+.tt-tabs-icon {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 32px;
+  border-radius: 16px;
+}
+
+.screen[data-os='ios'] .tt-tabs-icon {
+  height: 26px;
+}
+
+.screen[data-os='android'] .tt-tabs button[aria-current='page'] .tt-tabs-icon {
+  background: var(--ok-tint);
+}
+
+/* ── The locked phone ──────────────────────────────────────────────────── */
+
+/* The wallpaper is the person's own; a plain dark ground stands for it. */
+.tt-lock {
+  position: absolute;
+  inset: 0;
+  background: #101216;
+  color: #ffffff;
+  font-family: var(--ui);
+}
+
+.tt-lock-clock {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 96px;
+  text-align: center;
+}
+
+.tt-lock-clock small {
+  display: block;
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+.tt-lock-clock b {
+  display: block;
+  font-size: 92px;
+  line-height: 96px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+.screen[data-os='android'] .tt-lock-clock {
+  top: 84px;
+  padding-left: 28px;
+  text-align: left;
+}
+
+.screen[data-os='android'] .tt-lock-clock b {
+  font-size: 76px;
+  line-height: 80px;
+  font-weight: 400;
+}
+
+.tt-lock-stack {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 96px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.screen[data-os='android'] .tt-lock-stack {
+  left: var(--space-12);
+  right: var(--space-12);
+  top: 232px;
+  bottom: auto;
+}
+
+/* iOS: the Live Activity of the Outing. Its layout is ours; the system gives
+   it the ground. */
+.tt-live {
+  padding: 14px var(--space-16);
+  border-radius: 26px;
+  background: rgb(38 40 46 / 0.92);
+  font-family: var(--font-text);
+}
+
+.tt-live-top {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  font: var(--type-label);
+  font-weight: 500;
+  color: rgb(255 255 255 / 0.72);
+}
+
+.tt-live-top b {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.tt-live-top .tt-lamp {
+  background: #2fe57f;
+  box-shadow: 0 0 0 4px rgb(47 229 127 / 0.3);
+}
+
+.tt-live-top span:last-child {
+  margin-left: auto;
+  font-family: var(--font-num);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: rgb(255 255 255 / 0.72);
+}
+
+.tt-live-next {
+  display: flex;
+  align-items: center;
+  gap: var(--space-10);
+  margin-top: var(--space-10);
+}
+
+.tt-live-next i {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #2fe57f;
+  color: #03210f;
+  font: var(--type-numeral);
+  font-size: 12px;
+  line-height: 32px;
+  font-style: normal;
+  text-align: center;
+}
+
+.tt-live-next span {
+  flex: 1;
+  min-width: 0;
+}
+
+.tt-live-next small {
+  display: block;
+  font: var(--type-caption);
+  font-weight: 500;
+  color: rgb(255 255 255 / 0.72);
+}
+
+.tt-live-next b {
+  display: block;
+  overflow: hidden;
+  font: var(--type-row);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.tt-live-far {
+  flex: none;
+  text-align: right;
+  font: var(--type-clock-m);
+  letter-spacing: var(--type-clock-m-tracking);
+}
+
+.tt-live-far small {
+  font: var(--type-caption);
+  font-weight: 500;
+}
+
+.tt-live .tt-strip {
+  margin-top: var(--space-10);
+  color: rgb(255 255 255 / 0.72);
+}
+
+.tt-live .tt-strip-line::before {
+  background: rgb(255 255 255 / 0.24);
+}
+
+.tt-live .tt-strip-done,
+.tt-live .tt-strip-dot.is-done {
+  background: #2fe57f;
+}
+
+.tt-live .tt-strip-dot {
+  background: #26282e;
+  box-shadow: inset 0 0 0 2.5px rgb(255 255 255 / 0.5);
+}
+
+.tt-live .tt-strip-dot.is-current,
+.tt-live .tt-strip-now {
+  background: #2fe57f;
+  box-shadow: none;
+}
+
+.tt-live .tt-strip-now {
+  border-color: #ffffff;
+}
+
+/* iOS: the system's own "now playing". Only the words and the picture are ours. */
+.tt-playing {
+  padding: 14px var(--space-16) var(--space-12);
+  border-radius: 26px;
+  background: rgb(38 40 46 / 0.92);
+}
+
+.tt-playing-top {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+}
+
+.tt-playing-top img,
+.tt-playing-top .tt-thumb-plan {
+  flex: none;
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.tt-playing-top span {
+  flex: 1;
+  min-width: 0;
+}
+
+.tt-playing-top b {
+  display: block;
+  overflow: hidden;
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.tt-playing-top small {
+  display: block;
+  font-size: 13px;
+  line-height: 17px;
+  color: rgb(255 255 255 / 0.66);
+}
+
+.tt-playing-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  margin-top: var(--space-10);
+  font-size: 11px;
+  font-weight: 500;
+  color: rgb(255 255 255 / 0.66);
+}
+
+.tt-playing-bar i {
+  position: relative;
+  flex: 1;
+  height: 5px;
+  border-radius: 3px;
+  background: rgb(255 255 255 / 0.26);
+  overflow: hidden;
+}
+
+.tt-playing-bar i::after {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--played, 50%);
+  border-radius: 3px;
+  background: #ffffff;
+}
+
+.tt-playing-keys {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-24);
+  margin-top: var(--space-4);
+}
+
+.tt-playing-keys span {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+}
+
+.tt-playing-keys .icon {
+  width: 28px;
+  height: 28px;
+}
+
+.tt-playing-keys span:nth-child(2) .icon {
+  width: 34px;
+  height: 34px;
+}
+
+/* Android: a notification of the system's own template. Nothing in it is a
+   custom view: a title, a line of text, a bar of progress with points. */
+.tt-notice {
+  padding: var(--space-16);
+  border-radius: 28px;
+  background: #24262c;
+}
+
+.tt-notice-app {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  font-size: 12px;
+  line-height: 16px;
+  color: rgb(255 255 255 / 0.7);
+}
+
+.tt-notice-app i {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #2fe57f;
+  color: #03210f;
+}
+
+.tt-notice-app .icon {
+  width: 13px;
+  height: 13px;
+}
+
+.tt-notice b {
+  display: block;
+  margin-top: var(--space-8);
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 600;
+}
+
+.tt-notice p {
+  font-size: 14px;
+  line-height: 20px;
+  color: rgb(255 255 255 / 0.74);
+}
+
+.tt-notice-bar {
+  display: flex;
+  gap: 3px;
+  margin-top: var(--space-12);
+}
+
+.tt-notice-bar i {
+  flex: var(--share);
+  height: 6px;
+  border-radius: 3px;
+  background: rgb(255 255 255 / 0.24);
+}
+
+.tt-notice-bar i.is-done {
+  background: #2fe57f;
+}
+
+.tt-notice-bar i.is-now {
+  background: linear-gradient(to right, #2fe57f var(--within, 50%), rgb(255 255 255 / 0.24) 0);
+}
+
+.tt-notice .tt-playing-top {
+  margin-top: 0;
+}
+
+.tt-notice .tt-playing-keys {
+  justify-content: flex-start;
+  gap: var(--space-8);
+  margin-top: var(--space-8);
+}
+
+.tt-notice .tt-playing-keys span {
+  border-radius: 24px;
+  background: rgb(255 255 255 / 0.12);
+}
+
+.tt-notice .tt-playing-keys span:nth-child(2) {
+  width: 72px;
+  background: #2fe57f;
+  color: #03210f;
+}
+
+.tt-notice .tt-playing-keys .icon,
+.tt-notice .tt-playing-keys span:nth-child(2) .icon {
+  width: 22px;
+  height: 22px;
+}
+
+/* The Dynamic Island, grown to hold the same Outing. */
+.tt-island {
+  position: absolute;
+  top: 11px;
+  left: 50%;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  width: 236px;
+  height: 36px;
+  margin-left: -118px;
+  padding: 0 10px;
+  border-radius: 18px;
+  background: #000000;
+  color: #ffffff;
+  font: var(--type-caption);
+}
+
+.tt-island i {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #2fe57f;
+  color: #03210f;
+  font: var(--type-numeral);
+  line-height: 22px;
+  font-style: normal;
+  text-align: center;
+}
+
+.tt-island span {
+  margin-left: auto;
+  color: #2fe57f;
+  font-weight: 700;
+}
