@@ -49,11 +49,12 @@ export function voice(story) {
  * The page of the guide: the photograph of the Place with its author, the
  * name, the Story as prose, its source in a footnote. A solid page: it is read.
  * @param {any} data @param {Lang} lang
- * @param {{ from?: number, full?: boolean, photo?: boolean, theme?: Theme, width?: number, story?: any, picked?: number, after?: string }} [options]
+ * @param {{ from?: number, full?: boolean, photo?: boolean, theme?: Theme, width?: number, story?: any, picked?: number, after?: string, verified?: boolean }} [options]
  *   `photo: false` draws the Place as one that has no free photograph;
  *   `story` is the Story at another moment: with `current: -1` nothing is being spoken yet;
  *   `picked` is a sentence chosen by a tap: the page shows it marked, and nothing as spoken;
- *   `after` stands at the foot of the page, under the source
+ *   `after` stands at the foot of the page, under the source;
+ *   `verified: false` says that no Curator has looked at the Story yet (KNW-15)
  */
 export function guide(data, lang, options = {}) {
   const { full = false, photo = true, theme = 'light', width = 393 } = options;
@@ -82,7 +83,7 @@ export function guide(data, lang, options = {}) {
         <i class="tt-rule" aria-hidden="true"></i>
       </div>
       <p class="tt-footnote"><sup>1</sup> ${t.source(story.source, date)}</p>
-      <p class="tt-made">${icons.shield}${t.made}</p>
+      <p class="tt-made">${options.verified === false ? `${icons.info}${t.madeDraft}` : `${icons.shield}${t.made}`}</p>
       ${options.after ?? ''}
     </div>
   </article>`;
@@ -265,9 +266,17 @@ export function source(lang, { quote, source: from, actions = '' }) {
     <blockquote>${quote}</blockquote>
     <dl>
       <div><dt>${t.sourceWork}</dt><dd>${from.work}, ${lang === 'ru' ? `«${from.article}»` : `“${from.article}”`}</dd></div>
-      <div><dt>${t.sourceRevision}</dt><dd>${format.date(from.revision_date, lang)} · № ${from.revision}</dd></div>
+      <div><dt>${t.sourceRevision}</dt><dd>${format.date(from.revision_date, lang)} · ${lang === 'ru' ? '№' : 'No.'} ${from.revision}</dd></div>
       <div><dt>${t.sourceLicence}</dt><dd>${from.licence}</dd></div>
     </dl>
     ${actions ? `<div class="tt-source-actions">${actions}</div>` : ''}
   </div>`;
 }
+
+/**
+ * A "More" block of a Story (KNW-10): a theme the listener likes is added
+ * to the Story by itself; the others are one tap away.
+ * @param {{ title: string, text: string, others: string, themes: string[] }} block
+ */
+export const more = ({ title, text, others, themes }) =>
+  `<section class="tt-more"><h2>${icons.plus}${title}</h2><p class="tt-text">${text}</p><p class="tt-more-others">${others}</p><div class="tt-chips">${themes.map((theme) => `<button class="tt-chip" aria-pressed="false"><span>${theme}</span></button>`).join('')}</div></section>`;

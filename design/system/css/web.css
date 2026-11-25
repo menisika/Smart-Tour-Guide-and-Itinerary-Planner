@@ -538,3 +538,129 @@
 .tt-panel-note {
   flex-basis: 100%;
 }
+
+/* ── A letter the product sends ────────────────────────────────────────── */
+
+.tt-letter {
+  position: absolute;
+  inset: 0;
+  padding: 62px var(--space-20) var(--space-24);
+  background: var(--surface);
+  font-family: var(--ui);
+}
+
+.screen[data-os='android'] .tt-letter {
+  padding-top: 56px;
+}
+
+.tt-letter > header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-10);
+  padding-bottom: var(--space-12);
+  box-shadow: inset 0 -0.5px 0 var(--rule);
+}
+
+.tt-letter > header b,
+.tt-letter > header small {
+  display: block;
+  font: var(--type-label-strong);
+  font-family: var(--ui);
+}
+
+.tt-letter > header small {
+  font-weight: 400;
+  color: var(--ink-2);
+}
+
+.tt-letter > h1 {
+  margin: var(--space-16) 0;
+  font: var(--type-title);
+  font-family: var(--ui);
+}
+
+/* The letter itself: ours, so it is set in the product's faces. */
+.tt-letter-body {
+  padding: var(--space-24) var(--space-20);
+  border-radius: var(--radius-card);
+  background: var(--surface-2);
+  font: var(--type-body);
+}
+
+.tt-letter-body > img {
+  display: block;
+  height: 22px;
+  margin-bottom: var(--space-20);
+}
+
+.tt-letter-body p + p,
+.tt-letter-body .tt-code + p {
+  margin-top: var(--space-12);
+}
+
+.tt-letter-body .tt-code {
+  margin-top: var(--space-16);
+}
+
+.tt-letter-body small {
+  display: block;
+  margin-top: var(--space-16);
+  font: var(--type-caption);
+  color: var(--ink-2);
+}
+
+/* ── A page of the application in a browser's window at a desk ─────────── */
+
+.tt-webpage {
+  position: absolute;
+  left: var(--space-16);
+  top: var(--space-16);
+  bottom: var(--space-16);
+  z-index: 2;
+  width: 440px;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  background: var(--surface);
+  box-shadow: var(--lift-page);
+}
+
+.tt-webpage .tt-bar,
+.tt-webpage .tt-top {
+  top: var(--space-10);
+}
+
+.tt-webpage .tt-page-body,
+.tt-webpage .tt-page.is-root .tt-page-body {
+  top: 62px;
+}
+
+.tt-webpage .tt-page.is-root .tt-page-body,
+.screen[data-face='webphone'] .tt-page.is-root .tt-page-body {
+  top: var(--space-24);
+}
+
+/* The destinations of the application are in the bar of the web. */
+.tt-webpage .tt-tabs,
+.screen[data-face='webphone'] .tt-tabs {
+  display: none;
+}
+
+.tt-webpage .tt-page.has-tabs .tt-page-body,
+.screen[data-face='webphone'] .tt-page.has-tabs .tt-page-body {
+  bottom: 0;
+}
+
+/* "Did you like the Story?" on the web stands above the player. */
+.tt-web-outing .tt-ask {
+  left: 524px;
+  right: auto;
+  bottom: 252px;
+  width: 400px;
+}
+
+.tt-web-outing.tt-webphone .tt-ask {
+  left: var(--space-10);
+  right: var(--space-10);
+  bottom: 236px;
+  width: auto;
+}

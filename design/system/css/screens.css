@@ -27,6 +27,17 @@
   top: 208px;
 }
 
+/* The chart runs on under the two actions: there it dissolves into the
+   sheet, so that no line of it is read between them. */
+.tt-route > .tt-dock::before {
+  content: '';
+  position: absolute;
+  inset: -36px -22px -38px;
+  z-index: -1;
+  background: linear-gradient(to bottom, transparent, var(--surface) 46%);
+  pointer-events: none;
+}
+
 .tt-route .tt-sheet .tt-head-title {
   margin-top: var(--space-2);
 }
@@ -189,4 +200,42 @@
 
 .tt-sheet.has-foot-stack {
   padding-bottom: 158px;
+}
+
+/* ── What the walk through the packages of stage S1 added ──────────────── */
+
+/* A prompt on the way stands above the Place ahead. */
+.tt-prompts .tt-ask {
+  bottom: 214px;
+}
+
+.screen[data-os='android'] .tt-prompts .tt-ask {
+  bottom: 200px;
+  left: var(--space-12);
+  right: var(--space-12);
+}
+
+/* The fields of the request scroll; the action that sends it stays. */
+.tt-request .tt-sheet.is-column > .tt-action {
+  flex: none;
+  margin-top: var(--space-12);
+}
+
+/* A choice between two values of one field: what is on the device, what is
+   in the account. */
+.tt-versus {
+  padding: var(--space-8) 0;
+}
+
+.tt-versus + .tt-versus {
+  box-shadow: inset 0 0.5px 0 var(--rule);
+}
+
+/* A sheet that waits over the page of a Place covers that page too. */
+.tt-place-screen .tt-guide ~ .tt-scrim {
+  z-index: 8;
+}
+
+.tt-place-screen .tt-over {
+  z-index: 9;
 }

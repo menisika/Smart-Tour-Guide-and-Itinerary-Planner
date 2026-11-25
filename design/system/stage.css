@@ -144,3 +144,9 @@
 .stage .tt-composer {
   bottom: 14px;
 }
+
+/* A letter in a stage has no system bar to clear. */
+.stage .tt-letter,
+.screen[data-os='android'].stage .tt-letter {
+  padding-top: var(--space-16);
+}

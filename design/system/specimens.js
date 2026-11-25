@@ -56,8 +56,16 @@ import {
 } from './parts/route.js';
 import { ask, dialog, menu, sheet, toast } from './parts/sheets.js';
 import { banner, checks, pack, skeleton, state, steps } from './parts/states.js';
-import { guide, mini, placePage, player, source } from './parts/story.js';
-import { linkPicture, linkPreview, messenger, panel, webCard, webNav } from './parts/web.js';
+import { guide, mini, more, placePage, player, source } from './parts/story.js';
+import {
+  letter,
+  linkPicture,
+  linkPreview,
+  messenger,
+  panel,
+  webCard,
+  webNav,
+} from './parts/web.js';
 import { consoleSpecimens } from './specimens/console.js';
 import { partySpecimens } from './specimens/party.js';
 import { T } from './strings.js';
@@ -87,6 +95,10 @@ import { T } from './strings.js';
  * @property {{ id: string, label: string }[]} [variants] states of the same component, one stage each
  * @property {(ctx: Ctx, variant: string) => string} render
  */
+
+/** The name of the product with its sign, for a letter. */
+const lockupOf = (/** @type {string} */ theme) =>
+  new URL(`./mark/${theme === 'dark' ? 'lockup-on-dark' : 'lockup'}.svg`, import.meta.url).pathname;
 
 /** The sign of the product, for the bar of the web. */
 const sign = new URL('./mark/sign.svg', import.meta.url).pathname;
@@ -438,8 +450,28 @@ export const specimens = [
       const told = data.outingNow.story[lang];
       return `<div class="tt-under tt-under-page"></div>${over(
         `${sheetHead(t.sourceWork)}${source(lang, { quote: told.sentences[told.current].text, source: told.source, actions: action(t.remove, { kind: 'plain', icon: icons.flag }) })}`,
-        { lang, solid: true },
+        { lang },
       )}`;
+    },
+  },
+  {
+    id: 'story-more',
+    group: 'Sheets',
+    title: 'A “More” block of a Story',
+    note: 'A theme the listener likes is added to the Story by itself; the others are one tap away (KNW-10). It is the guide speaking, so it is set as the Story is. The text is a sentence of the cited passage.',
+    height: 230,
+    grows: true,
+    render: ({ data, lang }) => {
+      const t = T[lang];
+      const told = data.outingNow.story[lang];
+      return page(
+        more({
+          title: t.themes[0],
+          text: told.sentences[told.sentences.length - 1].text,
+          others: t.settings,
+          themes: [t.themes[1], t.themes[2]],
+        }),
+      );
     },
   },
   {
@@ -1047,6 +1079,23 @@ export const specimens = [
             }),
           },
         ],
+      });
+    },
+  },
+  {
+    id: 'letter',
+    group: 'Web',
+    title: 'A letter the product sends',
+    note: 'The frame is the mail application’s and is drawn plainly; the letter is ours: the name of the product, one sentence, the code in the cells of the field it is typed into, and what to do if it was not asked for. The digits are a sample.',
+    height: 380,
+    render: ({ lang, theme }) => {
+      const t = T[lang];
+      return letter({
+        from: 'Promenade',
+        address: 'no-reply@promenade.example',
+        subject: t.codeName,
+        mark: lockupOf(theme),
+        body: `<p>${t.codeName}</p>${code(t.codeName, '482913')}`,
       });
     },
   },

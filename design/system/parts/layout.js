@@ -104,8 +104,9 @@ export const sheetHead = (title, { note = '', trailing = '' } = {}) =>
 
 /**
  * A sheet that rises over a screen and waits: the screen behind it is dimmed
- * and cannot be touched until the sheet is answered or closed.
- * @param {string} inner @param {{ lang: Lang, solid?: boolean }} options `solid` for a sheet that is read
+ * and cannot be touched until the sheet is answered or closed. What it holds
+ * is read — a question, an explanation, a list — so it is solid, never glass.
+ * @param {string} inner @param {{ lang: Lang }} options
  */
-export const over = (inner, { lang, solid = false }) =>
-  `<i class="tt-scrim"></i><section class="tt-over${solid ? ' is-solid' : ' lg'}" role="dialog"><button class="tt-grab" aria-label="${T[lang].say.close}"></button>${inner}</section>`;
+export const over = (inner, { lang }) =>
+  `<i class="tt-scrim"></i><section class="tt-over" role="dialog"><button class="tt-grab" aria-label="${T[lang].say.close}"></button>${inner}</section>`;
