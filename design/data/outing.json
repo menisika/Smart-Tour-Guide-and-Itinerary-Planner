@@ -4,7 +4,8 @@
     "report": "docs/research/06-minsk-city-data.md#81-reference-outing-for-sc-1",
     "file": "spikes/minsk-city-data/out/08-material.json",
     "openstreetmap_extract": "2026-11-22",
-    "licence": "Names, coordinates and footprints © OpenStreetMap contributors, ODbL 1.0; labels marked name_from_wikidata are Wikidata labels, CC0."
+    "licence": "Names, coordinates and footprints © OpenStreetMap contributors, ODbL 1.0; labels marked name_from_wikidata are Wikidata labels, CC0.",
+    "kinds": "kind is read from Wikidata's \"instance of\": church building, theatre building, building complex, building. CC0."
   },
   "request": {
     "about": "The request of SC-1. The clock times are a choice made for the mockups; the durations are measured.",
@@ -54,6 +55,7 @@
       "arrive_min": 13,
       "heritage": true,
       "experienced": "outside",
+      "kind": "building",
       "wikidata": "Q29642243",
       "osm": "way/25435141"
     },
@@ -74,6 +76,7 @@
       "arrive_min": 28,
       "heritage": true,
       "experienced": "outside",
+      "kind": "church",
       "wikidata": "Q1742825",
       "osm": "way/100418249"
     },
@@ -94,6 +97,7 @@
       "arrive_min": 38,
       "heritage": true,
       "experienced": "outside",
+      "kind": "building",
       "wikidata": "Q15472005",
       "osm": "way/25387578"
     },
@@ -114,6 +118,7 @@
       "arrive_min": 48,
       "heritage": true,
       "experienced": "outside",
+      "kind": "building",
       "wikidata": "Q15472375",
       "osm": "way/35996170"
     },
@@ -134,6 +139,7 @@
       "arrive_min": 60,
       "heritage": false,
       "experienced": "outside",
+      "kind": "theatre",
       "wikidata": "Q4314968",
       "osm": "way/25387470"
     },
@@ -154,6 +160,7 @@
       "arrive_min": 70,
       "heritage": true,
       "experienced": "outside",
+      "kind": "building",
       "wikidata": "Q13030665",
       "osm": "way/38809287"
     },
@@ -174,6 +181,7 @@
       "arrive_min": 94,
       "heritage": true,
       "experienced": "outside",
+      "kind": "building",
       "wikidata": "Q64518136",
       "osm": "way/25327580"
     },
@@ -194,6 +202,7 @@
       "arrive_min": 107,
       "heritage": false,
       "experienced": "outside",
+      "kind": "theatre",
       "wikidata": "Q1429567",
       "osm": "way/25327619"
     },
@@ -214,6 +223,7 @@
       "arrive_min": 127,
       "heritage": true,
       "experienced": "outside",
+      "kind": "building",
       "wikidata": "Q64518139",
       "osm": "way/35996172"
     },
@@ -234,6 +244,7 @@
       "arrive_min": 137,
       "heritage": true,
       "experienced": "outside",
+      "kind": "building",
       "wikidata": "Q13030666",
       "osm": "way/25434700"
     },
@@ -254,6 +265,7 @@
       "arrive_min": 152,
       "heritage": false,
       "experienced": "outside",
+      "kind": "ensemble",
       "wikidata": "Q17611440",
       "osm": "relation/9383682"
     }
