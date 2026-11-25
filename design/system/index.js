@@ -233,6 +233,7 @@ function typeSection(tokens, data) {
       ru: `${T.ru.photo}: ${place.photo.author} · ${place.photo.licence}`,
       en: '© OpenStreetMap',
     },
+    tab: { ru: T.ru.tabs.join(' · '), en: T.en.tabs.join(' · ') },
     'guide-title-l': { ru: place.name.ru, en: place.name.en },
     'guide-title': { ru: place.name.ru, en: place.name.en },
     'guide-body-l': { ru: story.ru.sentences[5].text, en: story.en.sentences[2].text },
@@ -252,7 +253,8 @@ function typeSection(tokens, data) {
   const roles = Object.entries(tokens.type)
     .filter(([name]) => name !== 'about')
     .map(([name, t]) => {
-      const s = sample[name];
+      // A role added to the tokens is shown at once, with words that fit any role.
+      const s = sample[name] ?? { ru: T.ru.onTime, en: T.en.onTime };
       const style = `font:var(--type-${name});letter-spacing:var(--type-${name}-tracking)`;
       return `<div class="sys-type">
         <dt><b>${name}</b>${tokens.font[t.font].family} ${t.weight}${t.style ? ` ${t.style}` : ''} · ${t.size}/${t.line}${t.tracking ? ` · ${t.tracking} em` : ''}<br />${t.use}<br />grows: ${t.scales === 'full' ? 'to 200 %' : t.scales === 'capped' ? 'to 130 %' : 'no, it is part of a graphic'}</dt>
@@ -734,14 +736,24 @@ function wire(data) {
   });
   const start = document.getElementById('live-start');
   start?.addEventListener('click', async () => {
+    const place = /** @type {HTMLElement} */ (document.getElementById('live-map'));
     start.textContent = 'Loading…';
-    const { liveMap } = await import('./live-map.js');
-    await liveMap(/** @type {HTMLElement} */ (document.getElementById('live-map')), {
-      data,
-      theme: /** @type {any} */ (state.theme),
-      lang: /** @type {any} */ (state.lang),
-    });
-    start.remove();
+    try {
+      const { liveMap } = await import('./live-map.js');
+      await liveMap(place, {
+        data,
+        theme: /** @type {any} */ (state.theme),
+        lang: /** @type {any} */ (state.lang),
+      });
+      start.remove();
+    } catch (error) {
+      // MapLibre draws with WebGL 2; a browser without it gets the reason, not an empty box.
+      start.remove();
+      place.insertAdjacentHTML(
+        'beforeend',
+        `<p class="sys-live-failed">The live map could not be drawn here: ${error instanceof Error ? error.message.split('.')[0] : 'unknown reason'}. MapLibre needs WebGL 2 — open this page in a current Chrome, Safari or Firefox. The three drawings above show the same style.</p>`,
+      );
+    }
   });
 }
 

@@ -729,6 +729,19 @@ code {
   border-radius: 26px;
 }
 
+.sys-live-failed {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  padding: 80px 12% 40px;
+  background: var(--surface-2);
+  font: 400 16px/1.5 var(--font-serif);
+  color: var(--ink-2);
+  text-align: center;
+}
+
 .sys-live-note {
   position: absolute;
   right: 12px;
