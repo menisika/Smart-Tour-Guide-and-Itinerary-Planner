@@ -14,19 +14,19 @@ Then open <http://localhost:4310/>. To hold a mockup in the hand, serve it to th
 pnpm design --lan
 ```
 
-| Page                                                    | What it is                                                                                                                                                                   |
-| ------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `/directions/`                                          | The directions side by side: one screen, system, theme and language at a time, chosen with the switches. The choice is kept in the address, so a view can be sent as a link. |
-| `/directions/timetable.html`, `guidebook.html`          | The sheet of a direction: its reasons, type, colours with their contrast, map, motion, and all twenty-four drawings.                                                         |
-| `/directions/one.html#d=…&screen=…&os=…&theme=…&lang=…` | One screen at its real size. On a phone the outline of the device is dropped and the screen fills the width.                                                                 |
-| `/directions/check.html`                                | Draws every variant of every screen and reports a control, a title or a line of text that leaves its screen or is cut.                                                       |
+| Page                                                    | What it is                                                                                                                                                                                      |
+| ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/directions/`                                          | The chosen direction: its two screens side by side, for one system, theme and language at a time, chosen with the switches. The choice is kept in the address, so a view can be sent as a link. |
+| `/directions/timetable.html`                            | The sheet of the direction: its reasons, type, colours with their contrast, map, motion, and all twenty-four drawings.                                                                          |
+| `/directions/one.html#d=…&screen=…&os=…&theme=…&lang=…` | One screen at its real size. On a phone the outline of the device is dropped and the screen fills the width.                                                                                    |
+| `/directions/check.html`                                | Draws every variant of every screen and reports a control, a title or a line of text that leaves its screen or is cut.                                                                          |
 
 The server is `serve.mjs`: a hundred lines over Node's `http`, no dependency. Any static server pointed at this folder does the same.
 
 ## What is here
 
 ```
-brief.md             who the design is for, what it must never look like, the directions, licences, the owner's choice
+brief.md             who the design is for, what it must never look like, the chosen direction and the rounds before it, licences
 data/
   outing.json        the reference Outing of scenario SC-1: every name, time and distance on the screens
   story.json         the passages shown while "a Story plays", quoted and cited
@@ -37,8 +37,7 @@ assets/
   photos/            the photographs, scaled and without metadata
 directions/
   shared/            the page around the mockups, device outlines, icons, the map, Liquid Glass, the loading of data
-  timetable/         the direction "Timetable"
-  guidebook/         the direction "Guidebook"
+  timetable/         the chosen direction, "Timetable with a guide"
   index.html, one.html, check.html, <direction>.html and their scripts
 tools/build-map.mjs  builds data/map.json from OpenStreetMap data
 serve.mjs            the static server behind `pnpm design`
