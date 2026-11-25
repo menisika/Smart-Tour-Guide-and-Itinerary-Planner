@@ -41,7 +41,7 @@ flowchart LR
   classDef todo fill:#f1f3f5,stroke:#868e96,color:#000
   classDef outside fill:#ffffff,stroke:#868e96,stroke-dasharray:4 3,color:#000
   subgraph ZERO["Stage zero — the design, approved by the owner"]
-    D["<b>D</b> · Design, stage zero<br/>0 of 9 done"]:::todo
+    D["<b>D</b> · Design, stage zero<br/>0 of 9 done"]:::progress
   end
   subgraph ONE["Stage S1 — a solo Outing on foot"]
     direction TB
@@ -72,11 +72,11 @@ Generated from the packages; change a status in its package, never here.
 
 <!-- generated:board -->
 <!-- prettier-ignore-start -->
-182 work packages: 180 todo · 1 in progress · 0 blocked · 1 done · 0 dropped.
+182 work packages: 179 todo · 2 in progress · 0 blocked · 1 done · 0 dropped.
 
 | Package | Title | Status | Depends on |
 |---|---|---|---|
-| D-01 | Design brief and three directions | todo | F-01 |
+| D-01 | Design brief and three directions | **in progress** | F-01 |
 | D-02 | Design system | todo | D-01 |
 | D-03 | Screens of the solo Outing on iOS and Android | todo | D-02 |
 | D-04 | Screens of the web and of the console | todo | D-02 |
@@ -276,7 +276,7 @@ flowchart LR
   classDef blocked fill:#ffe3e3,stroke:#c92a2a,color:#000
   classDef todo fill:#f1f3f5,stroke:#868e96,color:#000
   classDef outside fill:#ffffff,stroke:#868e96,stroke-dasharray:4 3,color:#000
-  D_01["<b>D-01</b><br/>Design brief and three directions"]:::todo
+  D_01["<b>D-01</b><br/>Design brief and three directions"]:::progress
   D_02["<b>D-02</b><br/>Design system"]:::todo
   D_03["<b>D-03</b><br/>Screens of the solo Outing on iOS and Android"]:::todo
   D_04["<b>D-04</b><br/>Screens of the web and of the console"]:::todo
@@ -303,7 +303,7 @@ flowchart LR
 
 ### D-01 · Design brief and three directions
 
-- **Status:** todo
+- **Status:** in progress
 - **Depends on:** F-01
 - **Requirements:** —
 - **Decisions:** ADR-0005, ADR-0007, ADR-0008
