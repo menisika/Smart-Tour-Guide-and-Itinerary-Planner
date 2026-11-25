@@ -51,9 +51,13 @@ import {
   text,
   quiet,
   strong,
+  input,
+  shareCell,
+  statement,
+  stepper,
+  mapTools,
 } from '../../system/parts/console.js';
-import { source } from '../../system/parts/story.js';
-import { count, day, empty, frame, money, nameOf, percent, who, words } from './kit.js';
+import { count, day, decimal, empty, frame, money, nameOf, percent, who, words } from './kit.js';
 
 /** @typedef {import('./kit.js').Ctx} Ctx */
 
@@ -135,7 +139,7 @@ function queue(ctx) {
   const board = table({
     name: c.queueTitle,
     columns: [
-      { label: '№', sort: 'ascending', width: '64px' },
+      { label: c.numberSign, sort: 'ascending', width: '72px' },
       { label: c.place },
       { label: c.views, sort: 'none', end: true, width: '100px' },
       { label: c.sensitivity, sort: 'none', width: '142px' },
@@ -257,8 +261,18 @@ function dossier(ctx) {
   const cite = sourceLine({
     work: from.work,
     article: quoted,
-    revision: `№ ${from.revision} · ${day(from.revision_date, lang)}`,
+    revision: `${c.number(from.revision)} · ${day(from.revision_date, lang)}`,
     licence: from.licence,
+    name: c.openSource,
+  });
+  const scores = is === 'scores';
+  const clash = k.dossier.contradiction[lang];
+  const other = data.outingNow.story[lang === 'ru' ? 'en' : 'ru'].source;
+  const citeOther = sourceLine({
+    work: other.work,
+    article: lang === 'ru' ? `«${other.article}»` : `“${other.article}”`,
+    revision: `${c.number(other.revision)} · ${day(other.revision_date, lang)}`,
+    licence: other.licence,
     name: c.openSource,
   });
 
@@ -267,6 +281,16 @@ function dossier(ctx) {
       .map((/** @type {number} */ t) => tag(c.themes[t]))
       .join('');
     const keys = `${iconButton(icons.edit, `${c.editFact} ${i + 1}`)}${iconButton(icons.flag, `${c.markSensitive} ${i + 1}`, { on: false })}${iconButton(icons.trash, `${c.removeFact} ${i + 1}`)}`;
+    if (scores && i === clash)
+      return fact({
+        n: i + 1,
+        text: s.text,
+        sources: [cite, citeOther],
+        is: 'flagged',
+        note: c.contradictionNote,
+        tags: tag(c.contradiction, { is: 'warn' }),
+        tools: `${button(c.keepWithNote, { kind: 'second' })}${button(c.removeFactShort, { kind: 'quiet', icon: icons.trash })}`,
+      });
     if (removed && i === doubt)
       return fact({
         n: i + 1,
@@ -382,53 +406,103 @@ function dossier(ctx) {
       : { is: 'info', lead: c.checkSensitive, rest: c.checkSensitiveRest },
   ]);
 
-  const right = nostory
-    ? pane({
-        title: c.storyPreview,
-        note: c.storyPreviewNote,
-        body: empty({
-          icon: icons.lock,
-          title: c.noStory,
-          text: c.noStoryNote,
-        }),
-      })
-    : pane({
-        title: c.storyPreview,
-        note: c.storyPreviewNote,
-        tools: `${button(c.regenStory, { kind: 'second', icon: icons.reload, busy: false })}`,
-        is: 'flush',
-        body: `${tabs(
-          c.storyForms,
-          [{ label: c.formPlace }, { label: c.formMore, count: 2 }, { label: c.formBridge }],
-          0,
-        )}${padded(
-          `${
-            is === 'fixed'
-              ? `${block('', notice({ is: 'ok', lead: c.regenDone }))}`
-              : listening
-                ? `${block('', notice({ is: 'ok', lead: c.regenWithout(doubt + 1), rest: '' }))}`
-                : ''
-          }${block(c.textIn(c.languages[lang]), story(told, lang), {
-            tools: `${tag(c.madeAuto, { is: 'info' })}${
-              verified
-                ? tag(c.storyVerified, { is: 'ok', icon: icons.shield })
-                : tag(c.storyNotVerified, { is: 'quiet' })
-            }`,
-          })}${block(
-            '',
-            audio({
-              title: c.narrationIn(c.languages[lang]),
-              seconds,
-              played: listening ? 0.38 : 0,
-              playing: listening,
-              say: listening ? c.pause : c.play,
-              seed: removed ? 3 : 0,
-              tags: tag(c.transcriptOk, { is: 'ok' }),
-              tools: iconButton(icons.reload, c.regenNarration),
+  const shownScores = sample.scores
+    .map((/** @type {number} */ score, /** @type {number} */ t) => ({ score, t }))
+    .filter((/** @type {any} */ x) => x.score > 0)
+    .sort((/** @type {any} */ a, /** @type {any} */ b) => b.score - a.score);
+  const forms = (/** @type {number} */ chosen) =>
+    tabs(
+      c.storyForms,
+      [
+        { label: c.formPlace },
+        { label: c.formMore, count: 2 },
+        { label: c.formBridge },
+        { label: c.themesAndNames },
+      ],
+      chosen,
+    );
+  const themesPane = pane({
+    title: c.storyPreview,
+    note: c.storyPreviewNote,
+    tools: button(c.save, { kind: 'second' }),
+    is: 'flush',
+    body: `${forms(3)}${padded(
+      `${block(
+        c.themeScores,
+        form(
+          shownScores.map((/** @type {any} */ x) =>
+            formRow({
+              label: c.themes[x.t],
+              control: `${shareCell(x.score, decimal(x.score, lang))}${stepper({ name: `${c.themeScores}: ${c.themes[x.t]}`, value: decimal(x.score, lang), less: c.less, more: c.more })}`,
+              from: sample.scores_set_by_curator.includes(x.t) ? c.setByCurator : c.byModel,
             }),
-          )}${block(c.beforeVerify, checks)}`,
-        )}`,
-      });
+          ),
+        ),
+        { note: c.themeScoresNote(sample.scores.length - shownScores.length) },
+      )}${block(
+        c.names,
+        form([
+          formRow({
+            label: c.languages.ru,
+            control: input({ name: `${c.name}, ${c.languageCodes.ru}`, value: stop.name.ru }),
+            from: c.nameMarks.source,
+          }),
+          formRow({
+            label: c.languages.en,
+            control: input({ name: `${c.name}, ${c.languageCodes.en}`, value: stop.name.en }),
+            from: c.nameMarks.source,
+          }),
+        ]),
+        { note: c.namesNote },
+      )}`,
+    )}`,
+  });
+
+  const right = scores
+    ? themesPane
+    : nostory
+      ? pane({
+          title: c.storyPreview,
+          note: c.storyPreviewNote,
+          body: empty({
+            icon: icons.lock,
+            title: c.noStory,
+            text: c.noStoryNote,
+          }),
+        })
+      : pane({
+          title: c.storyPreview,
+          note: c.storyPreviewNote,
+          tools: `${button(c.regenStory, { kind: 'second', icon: icons.reload, busy: false })}`,
+          is: 'flush',
+          body: `${forms(0)}${padded(
+            `${
+              is === 'fixed'
+                ? `${block('', notice({ is: 'ok', lead: c.regenDone }))}`
+                : listening
+                  ? `${block('', notice({ is: 'ok', lead: c.regenWithout(doubt + 1), rest: '' }))}`
+                  : ''
+            }${block(c.textIn(c.languages[lang]), story(told, lang), {
+              tools: `${tag(c.madeAuto, { is: 'info' })}${
+                verified
+                  ? tag(c.storyVerified, { is: 'ok', icon: icons.shield })
+                  : tag(c.storyNotVerified, { is: 'quiet' })
+              }`,
+            })}${block(
+              '',
+              audio({
+                title: c.narrationIn(c.languages[lang]),
+                seconds,
+                played: listening ? 0.38 : 0,
+                playing: listening,
+                say: listening ? c.pause : c.play,
+                seed: removed ? 3 : 0,
+                tags: tag(c.transcriptOk, { is: 'ok' }),
+                tools: iconButton(icons.reload, c.regenNarration),
+              }),
+            )}${block(c.beforeVerify, checks)}`,
+          )}`,
+        });
 
   return frame(ctx, {
     at: 'queue',
@@ -468,7 +542,9 @@ function pronunciation(ctx) {
   const said = (e) => (e.lang === 'en' ? e.text : accented(e.stressed ?? capital(e.word)));
 
   const rows = entries.map((/** @type {any} */ e) => ({
-    is: /** @type {'chosen' | undefined} */ (e === chosen ? 'chosen' : undefined),
+    is: /** @type {'chosen' | undefined} */ (
+      e === chosen && is !== 'override' ? 'chosen' : undefined
+    ),
     cells: [
       nameCell({ name: said(e), note: e.lang === 'en' ? c.readingAsWritten : e.text }),
       c.languageCodes[e.lang],
@@ -571,6 +647,47 @@ function pronunciation(ctx) {
       : `${text(c.saveNote)}${button(c.saveAndRedo, { kind: 'main', disabled: unknown })}`,
   });
 
+  const override = is === 'override';
+  const ov = k.override;
+  const ruStory = data.outingNow.story.ru;
+  const where = ruStory.sentences[ov.sentence].text;
+  const overridePane = pane({
+    title: capital(ov.word),
+    note: `${data.stops[data.console.dossier.stop_order - 1].name[lang]} · ${c.storyIn(c.languages.ru)}`,
+    tools: tag(c.onlyThisStory, { is: 'info' }),
+    is: 'quiet',
+    body: `${block(
+      c.inStory,
+      story([{ text: where.replace(ov.word, accented(ov.stressed)), is: 'picked' }], 'ru'),
+      { note: c.sentenceN(ov.sentence + 1) },
+    )}${block(
+      c.stress,
+      `${stress({ name: `${c.stress}: ${ov.word}`, word: ov.stressed, say: letter })}${notice({ is: 'info', lead: c.overrideLead, rest: c.overrideRest })}`,
+      { note: c.stressHint },
+    )}${block(
+      c.change,
+      diff({
+        old: accented(ov.guess),
+        next: accented(ov.stressed),
+        oldNote: c.voiceGuess,
+        nextNote: c.setByCurator,
+        say: { old: c.was, next: c.proposed },
+      }),
+    )}${block(
+      c.listen,
+      audio({
+        title: c.audioPreview,
+        note: c.sentenceN(ov.sentence + 1),
+        seconds: where.length / 15,
+        say: c.play,
+        seed: 7,
+        tags: tag(c.countsOnBudget, { icon: icons.coin }),
+      }),
+      { note: c.listenNote },
+    )}`,
+    foot: `${text(c.overrideFoot)}${button(c.saveAndRedoOne, { kind: 'main' })}`,
+  });
+
   const body = `${pageHead({
     title: c.navPronunciation,
     note: c.pronunciationNote,
@@ -579,13 +696,17 @@ function pronunciation(ctx) {
     name: c.filter,
     search: { name: c.findWord, hint: c.findWord },
     chips: [
-      { label: c.all, on: true, count: entries.length },
+      { label: c.all, on: !override, count: entries.length },
       { label: c.needAttention, on: false, count: attention },
+      { label: c.wordsInStories, on: override, count: 1 },
       { label: c.languages.ru, on: false },
       { label: c.languages.en, on: false },
     ],
     summary: c.dictionarySource,
-  })}${split([pane({ is: 'flush', body: board }), editor], 'minmax(0, 1fr) 460px')}`;
+  })}${split(
+    [pane({ is: 'flush', body: board }), override ? overridePane : editor],
+    'minmax(0, 1fr) 460px',
+  )}`;
   return frame(ctx, {
     at: 'pronunciation',
     crumbs: [c.navPronunciation],
@@ -652,7 +773,23 @@ function corrections(ctx) {
     tools: tag(c.correctionIs[first.status], tone[first.status]),
     body: `${stack(
       [
-        block(c.statement, source(lang, { quote: sentence.text, source: passage.source })),
+        block(
+          c.statement,
+          statement({
+            quote: sentence.text,
+            rows: [
+              {
+                label: c.source,
+                value: `${passage.source.work}, ${lang === 'ru' ? `«${passage.source.article}»` : `“${passage.source.article}”`}`,
+              },
+              {
+                label: c.revisionWord,
+                value: `${day(passage.source.revision_date, lang)} · ${c.number(passage.source.revision)}`,
+              },
+              { label: c.licence, value: passage.source.licence },
+            ],
+          }),
+        ),
         `${column(
           block(
             c.claim,
@@ -686,7 +823,7 @@ function corrections(ctx) {
     }`,
     foot: fixed
       ? `${text(c.closedBy(who(data, lang).name))}${button(c.openDossier, { icon: icons.dossier })}`
-      : `${text(c.correctionHint)}${button(c.decline, { kind: 'danger' })}${button(c.openFact, { kind: 'main', icon: icons.dossier })}`,
+      : `${text(c.correctionHint)}${button(c.decline, { kind: 'danger' })}${button(c.acceptAsIs, { kind: 'second', icon: icons.check })}${button(c.openFact, { kind: 'main', icon: icons.dossier })}`,
   });
 
   const head = pageHead({
@@ -942,7 +1079,7 @@ function preparation(ctx) {
         { label: c.total, end: true, sort: /** @type {const} */ ('none'), width: '84px' },
         { label: '', say: c.retry, width: '56px', end: true },
       ],
-      rows: rows.slice(0, failed || budget ? 6 : 7),
+      rows: rows.slice(0, failed || budget ? 5 : 6),
       foot: {
         label: c.runTotal(done),
         span: 3,
@@ -955,19 +1092,100 @@ function preparation(ctx) {
     })}`,
   });
 
-  const body = `${pageHead({ title: c.navPreparation, note: c.preparationNote })}${split(
+  const areas = is === 'areas';
+  const a = k.areas;
+  const opener = who(data, lang, a.opened.by);
+  const areasPane = pane({
+    title: c.areasTitle,
+    note: c.areasNote,
+    is: 'flush',
+    body: `${table({
+      name: c.areasTitle,
+      is: 'tall',
+      columns: [
+        { label: c.area },
+        { label: c.navPlacesList, end: true, width: '112px' },
+        { label: c.status, width: '196px' },
+        { label: c.openedBy, width: '164px' },
+        { label: '', say: c.openArea, width: '116px', end: true },
+      ],
+      rows: a.items.map((/** @type {any} */ item) => ({
+        is: /** @type {'chosen' | undefined} */ (item.opened ? 'chosen' : undefined),
+        cells: [
+          nameCell({ name: c.areaNames[item.id], note: c.areaWhat[item.id], go: false }),
+          num(count(item.places, lang)),
+          item.opened
+            ? tag(c.areaOpened, { is: 'ok' })
+            : tag(c.reviewedByNobody, { icon: icons.eyeOff }),
+          item.opened ? `${opener.name} · ${day(a.opened.on, lang)}` : quiet(c.no),
+          item.opened
+            ? button(c.closeArea, { kind: 'danger' })
+            : button(c.openArea, { kind: 'second' }),
+        ],
+      })),
+    })}${padded(
+      `${block(
+        c.whatOpeningDoes,
+        checklist([
+          { is: 'info', lead: c.openingMatches, rest: c.openingMatchesRest },
+          { is: 'info', lead: c.openingSites, rest: c.openingSitesRest },
+          { is: 'info', lead: c.openingChanges, rest: c.openingChangesRest },
+          { is: 'info', lead: c.openingPreparation, rest: c.openingPreparationRest },
+        ]),
+      )}${block('', notice({ is: 'warn', lead: c.openingCost, rest: c.openingCostRest }))}`,
+    )}`,
+  });
+  const areasMap = mapPane({
+    map: workMap(data, {
+      lang,
+      theme,
+      width: 440,
+      height: 704,
+      label: c.areaNames.centre,
+      boundary: p.area.boundary,
+      handles: true,
+      margin: 28,
+      labels: 4,
+    }),
+    tools: mapTools([
+      [
+        { icon: icons.boundary, name: c.drawArea, on: true },
+        { icon: icons.pin, name: c.pickArea, on: false },
+      ],
+      [
+        { icon: icons.plus, name: c.zoomIn },
+        { icon: icons.minus, name: c.zoomOut },
+      ],
+    ]),
+    legend: [{ mark: 'edge', label: `${c.areaNames.centre} · ${c.areaOpened.toLowerCase()}` }],
+    credit: c.osm,
+  });
+
+  const sections = tabs(
+    c.navPreparation,
     [
-      starter,
-      start
-        ? pane({
-            title: c.runs,
-            note: c.runsNote,
-            body: empty({ icon: icons.download, title: c.noRun, text: c.noRunNote }),
-          })
-        : runPane,
+      { label: c.runs },
+      { label: c.areasTab, count: a.items.filter((/** @type {any} */ i) => i.opened).length },
     ],
-    '380px minmax(0, 1fr)',
-  )}`;
+    areas ? 1 : 0,
+  );
+  const body = `${pageHead({ title: c.navPreparation, note: c.preparationNote })}${sections}${
+    areas
+      ? split([areasMap, areasPane], '440px minmax(0, 1fr)')
+      : split(
+          [
+            starter,
+            start
+              ? pane({
+                  title: c.runs,
+                  note: c.runsNote,
+                  body: empty({ icon: icons.download, title: c.noRun, text: c.noRunNote }),
+                })
+              : runPane,
+          ],
+          '380px minmax(0, 1fr)',
+        )
+  }`;
   return frame(ctx, { at: 'preparation', crumbs: [c.navPreparation], body, path: 'preparation' });
 }
 

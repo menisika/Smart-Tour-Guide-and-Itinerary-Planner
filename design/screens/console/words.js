@@ -988,7 +988,6 @@ export const C = {
     massEditRest: (share) =>
       `В ноябре 2024 года за месяц была затронута пятая часть объектов: ${share}.`,
     discardRun: 'Отбросить запуск',
-    lookThrough: 'Просмотреть правки',
     releaseRun: 'Выпустить запуск',
     /** @param {string} name */
     runsOf: (name) => `Запуски: ${name}`,
@@ -1159,6 +1158,7 @@ export const C = {
     territoriesNoEntrance: 'Территорий без Входа',
     openOnAllSides: 'считаются открытыми со всех сторон',
     keyOnly: 'Ключевые',
+    keyShort: 'Ключевое',
     flaggedOnly: 'С флагом',
     wholeCity: 'Весь город',
     anyStatus: 'Любой статус',
@@ -1222,6 +1222,8 @@ export const C = {
     lastRunsNote: 'Что запускает единственный часовой вызов',
     job: 'Задание',
     took: 'Длилось',
+    /** @param {string} value as the data has it: "2 min", "40 s" */
+    tookText: (value) => value.replace('min', 'мин').replace(/ s$/, ' с'),
     jobs: {
       backup: 'Резервная копия',
       rehearsal: 'Репетиция восстановления',
@@ -2255,7 +2257,6 @@ export const C = {
     /** @param {string} share */
     massEditRest: (share) => `In November 2024 one month touched a fifth of the objects: ${share}.`,
     discardRun: 'Discard the run',
-    lookThrough: 'Look through it',
     releaseRun: 'Release the run',
     /** @param {string} name */
     runsOf: (name) => `Runs: ${name}`,
@@ -2423,6 +2424,7 @@ export const C = {
     territoriesNoEntrance: 'Territories with no entrance',
     openOnAllSides: 'treated as open on all sides',
     keyOnly: 'Key places',
+    keyShort: 'Key',
     flaggedOnly: 'Flagged',
     wholeCity: 'The whole city',
     anyStatus: 'Any status',
@@ -2440,7 +2442,7 @@ export const C = {
       curator: 'Added by a curator',
     },
     inCentre: 'Centre',
-    outOfCentre: 'outside the centre',
+    outOfCentre: 'elsewhere',
     hoursUnknownShort: 'unknown',
     /** @param {number} nested @param {number} entrances */
     nestedCount: (nested, entrances) =>
@@ -2485,6 +2487,8 @@ export const C = {
     lastRunsNote: 'What the single hourly call starts',
     job: 'Job',
     took: 'Took',
+    /** @param {string} value as the data has it: "2 min", "40 s" */
+    tookText: (value) => value,
     jobs: {
       backup: 'Backup',
       rehearsal: 'Restore rehearsal',
