@@ -1,0 +1,23 @@
+# Everything the image build does not need. The build context is the
+# repository root, so this list is what keeps it small.
+**/node_modules
+**/dist
+**/.expo
+**/coverage
+**/*.tsbuildinfo
+.git
+.github
+docs
+spikes
+infra
+docker
+scripts
+CONCEPT.md
+GLOSSARY.md
+README.md
+compose.yaml
+Dockerfile
+.dockerignore
+**/.env
+**/.env.*
+!**/.env.example

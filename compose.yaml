@@ -1,0 +1,183 @@
+# The whole system on one machine: `docker compose up --build --wait` (ADR-0002, point 3; NFR-33).
+#
+# The application image is the same one the cloud runs. Next to it stand local
+# stand-ins for the managed services:
+#
+#   postgres        Postgres with PostGIS     stands in for Neon (ADR-0010)
+#   firebase-auth   Authentication emulator   stands in for Firebase Authentication (ADR-0019)
+#   object-storage  S3-compatible storage     stands in for Cloudflare R2 (ADR-0010)
+#   mail            mail catcher              stands in for the e-mail provider (ADR-0020)
+#
+# Language models and speech have no container: adapters inside the application
+# replay recorded responses (ADR-0004, ADR-0014).
+#
+# Every password and key in this file is a local constant with no value
+# anywhere else. Ports are published on 127.0.0.1 only; each can be moved with
+# the PROMENADE_*_PORT variable next to it.
+
+name: promenade
+
+x-app: &app
+  image: promenade-app:local
+  environment: &app-environment
+    PORT: '8080'
+    # Locally the pooled and the direct address are the same server.
+    DATABASE_URL: postgres://promenade:promenade@postgres:5432/promenade
+    DATABASE_URL_DIRECT: postgres://promenade:promenade@postgres:5432/promenade
+    LANGUAGE_MODEL_ADAPTER: replay
+    SPEECH_SYNTHESIS_ADAPTER: replay
+    SPEECH_RECOGNITION_ADAPTER: replay
+    # Addresses of the stand-ins. The skeleton does not read them yet; they are
+    # here so that the first module that needs one finds it under a known name.
+    FIREBASE_PROJECT_ID: demo-promenade
+    FIREBASE_AUTH_EMULATOR_HOST: firebase-auth:9099
+    OBJECT_STORE_ENDPOINT: http://object-storage:8333
+    OBJECT_STORE_REGION: auto
+    OBJECT_STORE_ACCESS_KEY_ID: promenade-local
+    OBJECT_STORE_SECRET_ACCESS_KEY: promenade-local-secret
+    OBJECT_STORE_PUBLIC_BUCKET: promenade-public
+    OBJECT_STORE_PRIVATE_BUCKET: promenade-private
+    OBJECT_STORE_PUBLIC_BASE_URL: http://localhost:${PROMENADE_OBJECT_STORAGE_PORT:-8333}/promenade-public
+    SMTP_URL: smtp://mail:1025
+
+services:
+  postgres:
+    # Postgres 18 with PostGIS 3.6: the managed service offers PostGIS 3.5–3.6.
+    image: postgis/postgis:18-3.6
+    environment:
+      POSTGRES_USER: promenade
+      POSTGRES_PASSWORD: promenade
+      # The image enables PostGIS in this database. Ours is created empty by
+      # docker/postgres/init, and gets PostGIS from the first migration.
+      POSTGRES_DB: postgres
+    ports:
+      - 127.0.0.1:${PROMENADE_POSTGRES_PORT:-5433}:5432
+    volumes:
+      - postgres-data:/var/lib/postgresql
+      - ./docker/postgres/init/20_create-database.sql:/docker-entrypoint-initdb.d/20_create-database.sql:ro
+    healthcheck:
+      # Over TCP on purpose: during first initialisation the server listens on
+      # its socket only, and must not look ready yet.
+      test:
+        ['CMD', 'psql', '-h', '127.0.0.1', '-U', 'promenade', '-d', 'promenade', '-c', 'select 1']
+      interval: 2s
+      timeout: 5s
+      retries: 60
+
+  firebase-auth:
+    build:
+      context: docker/firebase-emulator
+    image: promenade-firebase-emulator:local
+    ports:
+      - 127.0.0.1:${PROMENADE_FIREBASE_AUTH_PORT:-9099}:9099
+      - 127.0.0.1:${PROMENADE_FIREBASE_UI_PORT:-4000}:4000
+      - 127.0.0.1:4400:4400
+      - 127.0.0.1:4500:4500
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:9099/').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"
+      interval: 2s
+      timeout: 5s
+      retries: 60
+
+  object-storage:
+    # SeaweedFS in its single-process mode. Why this one: README, "Local services".
+    image: chrislusf/seaweedfs:4.50
+    command:
+      - mini
+      - -dir=/data
+      # Two buckets (ADR-0010, point 3). Who may read which is in s3.json:
+      # anyone reads the public one; the private one needs a signature.
+      - -bucket=promenade-public,promenade-private
+      - -s3.config=/etc/seaweedfs/s3.json
+      - -webdav=false
+      - -admin.ui=false
+    ports:
+      - 127.0.0.1:${PROMENADE_OBJECT_STORAGE_PORT:-8333}:8333
+    volumes:
+      - object-storage-data:/data
+      - ./docker/object-storage/s3.json:/etc/seaweedfs/s3.json:ro
+    healthcheck:
+      # Ready when the S3 port answers and both buckets exist.
+      test:
+        - CMD-SHELL
+        - >-
+          nc -z 127.0.0.1 8333
+          && wget -q -O /dev/null http://127.0.0.1:8888/buckets/promenade-public/
+          && wget -q -O /dev/null http://127.0.0.1:8888/buckets/promenade-private/
+      interval: 2s
+      timeout: 5s
+      retries: 60
+
+  mail:
+    image: axllent/mailpit:v1.34.0
+    ports:
+      - 127.0.0.1:${PROMENADE_MAIL_UI_PORT:-8025}:8025
+      - 127.0.0.1:${PROMENADE_MAIL_SMTP_PORT:-1025}:1025
+
+  # Applies pending schema migrations and exits; the API starts after it (ADR-0026, point 7).
+  migrate:
+    <<: *app
+    build:
+      context: .
+    command: ['migrate']
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  api:
+    <<: *app
+    pull_policy: never
+    command: ['api']
+    ports:
+      - 127.0.0.1:${PROMENADE_API_PORT:-8080}:8080
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      firebase-auth:
+        condition: service_healthy
+      object-storage:
+        condition: service_healthy
+      mail:
+        condition: service_healthy
+    healthcheck:
+      # The liveness path does not query the database (ADR-0024, rule 1).
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:8080/health/live').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"
+      interval: 2s
+      timeout: 5s
+      retries: 60
+
+  # The worker and the batch jobs are started on purpose and exit when done,
+  # so `docker compose up` leaves them alone:
+  #
+  #   docker compose run --rm worker
+  #   docker compose run --rm job environment-report
+  worker:
+    <<: *app
+    pull_policy: never
+    profiles: ['jobs']
+    command: ['worker']
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  job:
+    <<: *app
+    pull_policy: never
+    profiles: ['jobs']
+    entrypoint: ['node', 'dist/entrypoint.js', 'job']
+    command: ['environment-report']
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+volumes:
+  postgres-data:
+  object-storage-data:

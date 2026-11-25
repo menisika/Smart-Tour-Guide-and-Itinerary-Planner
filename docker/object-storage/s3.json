@@ -1,0 +1,18 @@
+{
+  "identities": [
+    {
+      "name": "anonymous",
+      "actions": ["Read:promenade-public"]
+    },
+    {
+      "name": "promenade-local",
+      "credentials": [
+        {
+          "accessKey": "promenade-local",
+          "secretKey": "promenade-local-secret"
+        }
+      ],
+      "actions": ["Admin", "Read", "Write", "List", "Tagging"]
+    }
+  ]
+}
