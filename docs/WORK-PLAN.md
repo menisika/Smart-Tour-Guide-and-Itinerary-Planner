@@ -410,10 +410,10 @@ flowchart LR
 
 **Tasks**
 
-- [ ] Stage S2, the Party: creating an Outing with an Invitation; the Invitation page and its answer; the options with what is in each for whom; voting; the Chat; the Meeting Point and who is on the way.
-- [ ] Stage S3, the Catalog: the Catalog with its filters; a published Route with its Reviews; the Recap; the personal map of Visits.
-- [ ] Draw each for the phone on both systems and, where the web has it, for the web.
-- [ ] Note on every screen the requirement IDs it shows.
+- [x] Stage S2, the Party: creating an Outing with an Invitation; the Invitation page and its answer; the options with what is in each for whom; voting; the Chat; the Meeting Point and who is on the way.
+- [x] Stage S3, the Catalog: the Catalog with its filters; a published Route with its Reviews; the Recap; the personal map of Visits.
+- [x] Draw each for the phone on both systems and, where the web has it, for the web.
+- [x] Note on every screen the requirement IDs it shows.
 
 **Done when**
 
@@ -5904,6 +5904,9 @@ What was made better than a package asked for. One line each; the pull request h
 | D-04    | The console has measures of its own among the tokens, held by `pnpm lint:design`, and its components stand on the system's page and under its check at the width of a desk                                                                                                         | the pull request of D-04 |
 | D-04    | Every page of the public web is one function drawn at two widths, and the picture a link carries into a messenger is composed as the real one is, at half of 1200 × 630                                                                                                            | the pull request of D-04 |
 | D-04    | Two walks of the public web beside the scenarios: a Route opened from a messenger, and an Invitation answered in a minute                                                                                                                                                          | the pull request of D-04 |
+| D-09    | A screen that the web has too is one function: a sheet over the map on a phone, a page in a browser — options, voting, the Chat, the Catalog and a published Route are drawn for both phones and at both widths of the web                                                         | the pull request of D-09 |
+| D-09    | The shared Outing with Visits ticking off is drawn too, so that SC-2 runs to its last step, through the Invitation pages of `D-04`                                                                                                                                                 | the pull request of D-09 |
+| D-09    | The Party's Routes are those of the reference Outing, so the line on what is in a Route for whom is written from what is really there — and says who gets least                                                                                                                    | the pull request of D-09 |
 
 ## Plan change log
 
