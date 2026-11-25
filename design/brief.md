@@ -17,13 +17,13 @@ The requirements come from the [specification](../docs/PRODUCT-SPEC.md), the wor
 
 ## The owner's choice
 
-**Chosen on 25 November 2026: Timetable as the base, with the guide of Guidebook.** The merged direction is drawn ([section 6](#6-the-directions)); `D-01` is closed when the owner has looked at it.
+**Chosen and accepted on 25 November 2026: Timetable as the base, with the guide of Guidebook.** The owner looked at the joined direction ([section 6](#6-the-directions)) and accepted it; `D-01` is closed. The design system (`D-02`) starts from it.
 
 | Round | What the owner saw                                                        | What the owner said                                                                                                                                                                                                                                                                           |
 | ----- | ------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 1     | Three directions: Guidebook, Timetable, Playbill                          | Playbill is rejected. The choice is between Timetable and Guidebook, but both look "too much like AI: boring, standard". Wanted: modernism, Liquid Glass, Apple as the model. Asked what exactly was missing, the owner named visual effects and icons, depth, and the colours and typefaces. |
 | 2     | Timetable and Guidebook, redrawn with Liquid Glass, photographs and icons | "Let us make something like a union of these two: Timetable as the base, plus the guide's details from Guidebook."                                                                                                                                                                            |
-| 3     | One direction: Timetable with a guide                                     | —                                                                                                                                                                                                                                                                                             |
+| 3     | One direction: Timetable with a guide                                     | Accepted.                                                                                                                                                                                                                                                                                     |
 
 Three decisions of the owner shaped rounds two and three:
 
