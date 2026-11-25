@@ -25,6 +25,7 @@ import {
 } from '../parts/map.js';
 import { chart, verdict } from '../parts/route.js';
 import { toast } from '../parts/sheets.js';
+import { settle } from '../parts/story.js';
 import { T } from '../strings.js';
 import { study } from './study.js';
 
@@ -220,6 +221,7 @@ void study({
     // Once it has closed, the chart is the one of the new Route: the same rows, their new times.
     t.then(CLOSE + t.dur('move') + 40, () => {
       before.replaceChildren(after.cloneNode(true));
+      settle(before);
     });
     t.move(before, [{ opacity: 1 }, { opacity: 0.55 }, { opacity: 1 }], {
       at: CLOSE + t.dur('move'),
