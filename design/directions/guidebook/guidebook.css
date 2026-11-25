@@ -1,0 +1,1019 @@
+/*
+ * Direction 1 — Guidebook.
+ * One family, Literata, for everything; paper, ink and one rubric red.
+ */
+
+.d-guidebook {
+  --paper: #f8f7f3;
+  --paper-2: #efede7;
+  --ink: #1a1917;
+  --ink-2: #57544d;
+  --rule: #ccc8be;
+  --rubric: #b3201a;
+  --on-rubric: #fffaf5;
+  --m-ground: #eae7df;
+  --m-street: #fdfcfa;
+  --m-building: #c8c3b7;
+  --m-green: #e0e2d2;
+  --m-water: #d9e1e2;
+  --m-line: #6b665c;
+  --sys-ink: var(--ink);
+  --icon-weight: 1.5;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Literata', Georgia, 'Times New Roman', serif;
+  font-optical-sizing: auto;
+  font-variant-numeric: lining-nums;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.d-guidebook[data-theme='dark'] {
+  --paper: #181613;
+  --paper-2: #211e1a;
+  --ink: #ede6d9;
+  --ink-2: #aaa192;
+  --rule: #3d372f;
+  --rubric: #ff7a5f;
+  --on-rubric: #1d0d08;
+  --m-ground: #23201b;
+  --m-street: #12110e;
+  --m-building: #4d463b;
+  --m-green: #262a20;
+  --m-water: #182022;
+  --m-line: #91887a;
+}
+
+.d-guidebook :where(button) {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.d-guidebook :where(h1, h2, h3, p, ol, dl, dd, figure) {
+  margin: 0;
+  padding: 0;
+}
+
+.gb {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.gb-over {
+  font-size: 11px;
+  line-height: 15px;
+  font-weight: 650;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.gb h1 {
+  font-size: 28px;
+  line-height: 31px;
+  font-weight: 480;
+  letter-spacing: -0.012em;
+  text-wrap: balance;
+}
+
+.gb-nowrap {
+  white-space: nowrap;
+}
+
+.gb-num {
+  flex: none;
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border: 1.25px solid var(--rubric);
+  border-radius: 50%;
+  color: var(--rubric);
+  font-size: 12.5px;
+  font-weight: 650;
+  line-height: 21.5px;
+  text-align: center;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+/* ── The plan ──────────────────────────────────────────────────────────── */
+
+.d-guidebook .m-ground {
+  fill: var(--m-ground);
+}
+
+.d-guidebook .m-green {
+  fill: var(--m-green);
+}
+
+.d-guidebook .m-water {
+  fill: var(--m-water);
+  stroke: var(--m-line);
+  stroke-width: calc(var(--u) * 0.7px);
+}
+
+.d-guidebook .gb-texture {
+  stroke: none;
+}
+
+.d-guidebook .gb-hatch {
+  fill: none;
+  stroke: var(--m-line);
+  stroke-width: calc(var(--u) * 0.6px);
+  opacity: 0.55;
+}
+
+.d-guidebook .gb-stipple {
+  fill: var(--m-line);
+  opacity: 0.5;
+}
+
+/* Streets keep their true width: the numbers are metres times two. */
+.d-guidebook .m-roads_minor,
+.d-guidebook .m-roads_mid,
+.d-guidebook .m-roads_major {
+  fill: none;
+  stroke: var(--m-street);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.d-guidebook .m-roads_minor {
+  stroke-width: 9px;
+}
+
+.d-guidebook .m-roads_mid {
+  stroke-width: 24px;
+}
+
+.d-guidebook .m-roads_major {
+  stroke-width: 48px;
+}
+
+.d-guidebook .m-buildings {
+  fill: var(--m-building);
+}
+
+.d-guidebook .m-rail_side,
+.d-guidebook .m-rail,
+.d-guidebook .m-rail-ties {
+  fill: none;
+}
+
+.d-guidebook .m-rail_side {
+  stroke: var(--m-line);
+  stroke-width: calc(var(--u) * 0.7px);
+}
+
+.d-guidebook .m-rail {
+  stroke: var(--m-line);
+  stroke-width: calc(var(--u) * 2.6px);
+}
+
+.d-guidebook .m-rail-ties {
+  stroke: var(--m-ground);
+  stroke-width: calc(var(--u) * 1.3px);
+  stroke-dasharray: calc(var(--u) * 5px) calc(var(--u) * 5px);
+}
+
+.d-guidebook .m-label {
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  fill: var(--ink-2);
+  stroke: var(--m-street);
+  stroke-width: calc(var(--u) * 2.6px);
+}
+
+.gb-foot {
+  fill: var(--rubric);
+}
+
+.gb-route,
+.gb-route-case,
+.gb-route-walked {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.gb-route-case {
+  stroke: var(--m-street);
+  stroke-width: calc(var(--u) * 6px);
+}
+
+.gb-route {
+  stroke: var(--rubric);
+  stroke-width: calc(var(--u) * 2.6px);
+}
+
+.gb-route-walked {
+  stroke: var(--rubric);
+  stroke-width: calc(var(--u) * 2.2px);
+  stroke-dasharray: calc(var(--u) * 0.1px) calc(var(--u) * 5px);
+}
+
+.gb-stop circle {
+  fill: var(--paper);
+  stroke: var(--rubric);
+  stroke-width: 1.6px;
+}
+
+.gb-stop text {
+  fill: var(--rubric);
+  font-size: 12.5px;
+  font-weight: 650;
+  font-variant-numeric: lining-nums;
+}
+
+.gb-stop.is-current circle {
+  fill: var(--rubric);
+}
+
+.gb-stop.is-current text {
+  fill: var(--on-rubric);
+}
+
+.gb-stop.is-done circle {
+  stroke: var(--ink-2);
+}
+
+.gb-stop.is-done text {
+  fill: var(--ink-2);
+}
+
+.gb-start rect {
+  fill: var(--ink);
+  stroke: var(--paper);
+  stroke-width: 1.5px;
+}
+
+.gb-start-label {
+  font-size: 12px;
+  font-style: italic;
+  font-weight: 600;
+  fill: var(--ink);
+  stroke: var(--m-ground);
+  stroke-width: 3px;
+  paint-order: stroke fill;
+}
+
+.gb-me-halo {
+  fill: var(--ink);
+  opacity: 0.16;
+}
+
+.gb-me {
+  fill: var(--ink);
+  stroke: var(--paper);
+  stroke-width: 2.5px;
+}
+
+.gb-plate {
+  position: relative;
+  flex: none;
+  border-bottom: 2px solid var(--ink);
+  box-shadow:
+    0 3px 0 var(--paper),
+    0 4px 0 var(--ink);
+  margin-bottom: 4px;
+}
+
+.gb-plate-foot {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 9px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.gb-osm {
+  font-size: 9.5px;
+  line-height: 12px;
+  padding: 1px 5px;
+  background: var(--m-street);
+  color: var(--ink-2);
+}
+
+.gb-scale {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  width: var(--scale);
+  padding-top: 6px;
+  font-size: 9.5px;
+  line-height: 12px;
+  font-variant-numeric: tabular-nums lining-nums;
+  color: var(--ink);
+  white-space: nowrap;
+  text-shadow:
+    0 0 2px var(--m-ground),
+    0 0 2px var(--m-ground);
+}
+
+.gb-scale i {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  border: 1px solid var(--ink);
+  background: linear-gradient(90deg, var(--ink) 50%, var(--m-street) 50%);
+}
+
+.gb-scale span:last-child {
+  transform: translateX(45%);
+}
+
+/* ── The Route ─────────────────────────────────────────────────────────── */
+
+.gb-float {
+  position: absolute;
+  top: 58px;
+  left: 14px;
+  right: 14px;
+  display: flex;
+  gap: 8px;
+}
+
+.gb-float span {
+  flex: 1;
+}
+
+.d-guidebook .gb-round {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+}
+
+.d-guidebook .gb-round .icon {
+  width: 22px;
+  height: 22px;
+}
+
+.gb-appbar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  height: 64px;
+  margin-top: 44px;
+  padding: 0 4px;
+}
+
+.gb-appbar h2 {
+  flex: 1;
+  font-size: 21px;
+  font-weight: 500;
+  padding-left: 4px;
+}
+
+.d-guidebook .gb-icon {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+}
+
+.gb-page {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  padding: 15px 22px 0;
+}
+
+.gb-page h1 {
+  margin-top: 6px;
+}
+
+.gb-sub {
+  margin-top: 5px;
+  font-style: italic;
+  font-size: 15.5px;
+  line-height: 21px;
+  color: var(--ink-2);
+}
+
+.gb-facts {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  gap: 0 26px;
+  margin-top: 12px;
+  padding: 9px 0 8px;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--rule);
+}
+
+.gb-facts dt {
+  font-size: 10px;
+  line-height: 13px;
+  font-weight: 650;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.gb-facts dd {
+  font-size: 24px;
+  line-height: 29px;
+  font-weight: 500;
+  font-variant-numeric: lining-nums tabular-nums;
+  white-space: nowrap;
+}
+
+.gb-facts small {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.gb-verdict {
+  margin-top: 9px;
+  font-size: 14.5px;
+  line-height: 21px;
+}
+
+.gb-runin {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--rubric);
+}
+
+.gb-key-head {
+  margin-top: 11px;
+  padding-top: 9px;
+  border-top: 1px solid var(--rule);
+}
+
+.gb-key {
+  list-style: none;
+  margin-top: 2px;
+}
+
+.gb-leg {
+  margin-left: 11.5px;
+  padding: 5px 0 6px 24px;
+  border-left: 1.5px dotted var(--rubric);
+  font-size: 12.5px;
+  line-height: 16px;
+  font-style: italic;
+  color: var(--ink-2);
+}
+
+.gb-entry {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 12px;
+  align-items: start;
+}
+
+.gb-entry-line {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+}
+
+.gb-entry-name {
+  font-size: 16.5px;
+  line-height: 21px;
+  font-weight: 600;
+}
+
+.gb-leader {
+  flex: 1;
+  min-width: 14px;
+  border-bottom: 1.5px dotted var(--ink-2);
+  transform: translateY(-4px);
+  opacity: 0.7;
+}
+
+.gb-entry-time {
+  font-size: 15.5px;
+  font-weight: 500;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.gb-entry-why {
+  display: block;
+  margin-top: 1px;
+  font-size: 13.5px;
+  line-height: 18px;
+  font-style: italic;
+  color: var(--ink-2);
+}
+
+.gb-actions {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px 44px;
+  background: var(--paper);
+  border-top: 1px solid var(--ink);
+}
+
+.d-guidebook[data-os='android'] .gb-actions {
+  padding-bottom: 34px;
+}
+
+.d-guidebook .gb-pack {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  min-height: 48px;
+}
+
+.gb-pack b {
+  display: block;
+  font-size: 14.5px;
+  line-height: 18px;
+  font-weight: 600;
+}
+
+.gb-pack small {
+  display: block;
+  font-size: 12px;
+  line-height: 15px;
+  color: var(--ink-2);
+}
+
+.d-guidebook .gb-primary {
+  flex: none;
+  height: 52px;
+  padding: 0 24px;
+  border-radius: 26px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.d-guidebook .gb-fab {
+  flex: none;
+  height: 56px;
+  padding: 0 20px 0 16px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* ── The Outing while a Story plays ────────────────────────────────────── */
+
+.gb-runhead {
+  flex: none;
+  display: flex;
+  align-items: center;
+  height: 48px;
+  margin-top: 54px;
+  padding: 0 4px;
+}
+
+.d-guidebook[data-os='android'] .gb-runhead {
+  margin-top: 44px;
+  height: 56px;
+}
+
+.gb-runhead p {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.gb-ticks {
+  display: flex;
+  gap: 3px;
+}
+
+.gb-ticks i {
+  width: 15px;
+  height: 2px;
+  background: var(--rule);
+}
+
+.gb-ticks .is-done {
+  background: var(--ink);
+}
+
+.gb-ticks .is-current {
+  background: var(--rubric);
+  height: 4px;
+  margin-top: -1px;
+}
+
+.gb-band {
+  position: relative;
+  flex: none;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+.gb-band-tag {
+  position: absolute;
+  left: 12px;
+  bottom: 10px;
+  padding: 2px 8px 3px;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  font-size: 12px;
+  line-height: 16px;
+  font-style: italic;
+}
+
+.gb-chapter {
+  flex: none;
+  padding: 16px 24px 0;
+}
+
+.gb-chapter h1 {
+  margin-top: 6px;
+  font-size: 25px;
+  line-height: 29px;
+  font-weight: 500;
+}
+
+.gb-reading {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  margin: 12px 22px 0 24px;
+  padding-left: 14px;
+}
+
+.gb-text {
+  font-size: 18.5px;
+  line-height: 27px;
+  overflow: hidden;
+}
+
+.gb-sentence {
+  color: var(--ink-2);
+}
+
+.gb-sentence.is-current {
+  color: var(--ink);
+}
+
+.gb-ref {
+  margin-left: 1px;
+  font-size: 0.62em;
+  font-weight: 700;
+  line-height: 0;
+  color: var(--rubric);
+}
+
+.gb-rule {
+  position: absolute;
+  left: 0;
+  width: 2.5px;
+  background: var(--rubric);
+  transition:
+    top 420ms cubic-bezier(0.3, 0.1, 0.2, 1),
+    height 420ms cubic-bezier(0.3, 0.1, 0.2, 1);
+}
+
+.gb-track b {
+  transition: width 420ms linear;
+}
+
+.gb-under {
+  flex: none;
+  padding: 9px 22px 10px 38px;
+}
+
+.gb-footnote {
+  position: relative;
+  padding-top: 7px;
+  font-size: 11.5px;
+  line-height: 15px;
+  color: var(--ink-2);
+}
+
+.gb-footnote::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 56px;
+  border-top: 1px solid var(--ink-2);
+}
+
+.gb-footnote sup {
+  font-size: 0.75em;
+  font-weight: 700;
+  color: var(--rubric);
+  line-height: 0;
+}
+
+.gb-made {
+  margin-top: 4px;
+  font-size: 9.5px;
+  line-height: 13px;
+  font-weight: 650;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.gb-player {
+  flex: none;
+  padding: 12px 20px 42px;
+  background: var(--paper-2);
+  border-top: 1px solid var(--ink);
+}
+
+.d-guidebook[data-os='android'] .gb-player {
+  padding-bottom: 32px;
+}
+
+.gb-timeline {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  font-size: 12.5px;
+  line-height: 16px;
+  font-variant-numeric: lining-nums tabular-nums;
+  color: var(--ink-2);
+}
+
+.gb-track {
+  position: relative;
+  height: 16px;
+}
+
+.gb-track::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 7.5px;
+  border-top: 1px solid var(--ink-2);
+}
+
+.gb-track i {
+  position: absolute;
+  top: 4px;
+  width: 1px;
+  height: 8px;
+  background: var(--ink-2);
+}
+
+.gb-track b {
+  position: absolute;
+  left: 0;
+  top: 6.5px;
+  width: var(--played);
+  height: 3px;
+  background: var(--ink);
+}
+
+.gb-track b::after {
+  content: '';
+  position: absolute;
+  right: -5px;
+  top: -3.5px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--ink);
+}
+
+.gb-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto 1fr 1fr;
+  align-items: center;
+  justify-items: center;
+  margin-top: 4px;
+}
+
+.d-guidebook .gb-ctl {
+  min-width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+}
+
+.d-guidebook .gb-ctl .icon {
+  width: 26px;
+  height: 26px;
+}
+
+.d-guidebook .gb-ctl-text {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.d-guidebook .gb-ctl-main {
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.d-guidebook .gb-ctl-main .icon {
+  width: 28px;
+  height: 28px;
+}
+
+.gb-next {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--rule);
+  font-size: 14.5px;
+  line-height: 20px;
+}
+
+.gb-next-name {
+  flex: 1;
+  min-width: 0;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gb-next-far {
+  flex: none;
+  color: var(--ink-2);
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+/* ── The web ───────────────────────────────────────────────────────────── */
+
+.gb-webhead {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  padding: 0 40px 0 24px;
+  border-bottom: 1px solid var(--ink);
+}
+
+.gb-wordmark {
+  font-size: 23px;
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.gb-webhead nav {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  font-size: 13.5px;
+}
+
+.gb-langs {
+  color: var(--ink-2);
+}
+
+.gb-langs b {
+  color: var(--ink);
+  font-weight: 650;
+}
+
+.d-guidebook .gb-outline {
+  height: 36px;
+  padding: 0 16px;
+  border: 1px solid var(--ink);
+  border-radius: 18px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.gb-spread {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 760px 1fr;
+}
+
+.gb-webplate {
+  padding: 22px 24px 0;
+}
+
+.gb-neat {
+  width: 712px;
+  height: 612px;
+  border: 1px solid var(--ink);
+  outline: 1px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.gb-webplate figcaption {
+  display: flex;
+  align-items: flex-end;
+  gap: 26px;
+  margin-top: 15px;
+  font-size: 13px;
+  line-height: 16px;
+  font-style: italic;
+}
+
+.gb-webplate figcaption > span:first-child {
+  flex: 1;
+}
+
+.gb-webplate .gb-scale {
+  font-style: normal;
+  text-shadow: none;
+}
+
+.gb-webplate .gb-osm {
+  background: none;
+  padding: 0;
+  font-size: 11px;
+  font-style: normal;
+}
+
+.gb-web .gb-page {
+  padding: 30px 48px 0 30px;
+  border-left: 1px solid var(--rule);
+}
+
+.gb-web .gb-page h1 {
+  font-size: 38px;
+  line-height: 42px;
+}
+
+.gb-web .gb-sub {
+  font-size: 17px;
+  line-height: 24px;
+}
+
+.gb-web .gb-verdict {
+  font-size: 15.5px;
+  line-height: 23px;
+}
+
+.gb-web-outing .gb-page {
+  display: flex;
+  flex-direction: column;
+}
+
+.gb-web-outing .gb-page h1 {
+  font-size: 32px;
+  line-height: 36px;
+}
+
+.gb-web-outing .gb-reading {
+  flex: none;
+  height: 248px;
+  margin: 18px 0 0;
+}
+
+.gb-web-outing .gb-text {
+  font-size: 19.5px;
+  line-height: 31px;
+}
+
+.gb-web-outing .gb-footnote {
+  margin-top: 12px;
+  margin-left: 14px;
+}
+
+.gb-web-outing .gb-made {
+  margin-left: 14px;
+}
+
+.gb-web-outing .gb-player {
+  margin-top: 16px;
+  padding: 14px 0 0;
+  background: none;
+}
+
+.gb-webnote {
+  margin-top: 14px;
+  font-size: 13px;
+  line-height: 18px;
+  font-style: italic;
+  color: var(--ink-2);
+}

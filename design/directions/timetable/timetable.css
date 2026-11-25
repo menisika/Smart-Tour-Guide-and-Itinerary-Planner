@@ -1,0 +1,1288 @@
+/*
+ * Direction 2 — Timetable.
+ * Sofia Sans in three widths; black, white, and colour only for the verdict.
+ */
+
+.d-timetable {
+  --bg: #ffffff;
+  --panel: #f1f1f2;
+  --ink: #0b0b0c;
+  --ink-2: #55565c;
+  --mute: #b9b9bf;
+  --line: #d9d9dd;
+  --go: #0b7d3e;
+  --on-go: #ffffff;
+  --warn: #9a5200;
+  --stop: #c2261c;
+  --m-road: #dedee2;
+  --m-road-minor: #ebebee;
+  --m-green: #eef0ea;
+  --m-water: #dfe9ef;
+  --sys-ink: var(--ink);
+  --icon-weight: 2;
+  --text: 'Sofia Sans', 'Helvetica Neue', Arial, sans-serif;
+  --cond: 'Sofia Sans Condensed', 'Arial Narrow', sans-serif;
+  --xcond: 'Sofia Sans Extra Condensed', 'Arial Narrow', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--text);
+  font-size: 15px;
+  line-height: 1.35;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.d-timetable[data-theme='dark'] {
+  --bg: #0b0b0c;
+  --panel: #161618;
+  --ink: #f4f4f5;
+  --ink-2: #a4a5ad;
+  --mute: #55565c;
+  --line: #2e2e33;
+  --go: #3bd47f;
+  --on-go: #03190c;
+  --warn: #ffb224;
+  --stop: #ff5a4d;
+  --m-road: #2c2c31;
+  --m-road-minor: #1d1d20;
+  --m-green: #111411;
+  --m-water: #101a21;
+}
+
+.d-timetable :where(button) {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.d-timetable :where(h1, p, ol, li) {
+  margin: 0;
+  padding: 0;
+}
+
+.tt {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.tt-nowrap {
+  white-space: nowrap;
+}
+
+.tt-cap {
+  font-family: var(--cond);
+  font-size: 11px;
+  line-height: 14px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.tt-lamp {
+  flex: none;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--go);
+}
+
+/* ── The map ───────────────────────────────────────────────────────────── */
+
+.d-timetable .m-ground {
+  fill: var(--bg);
+}
+
+.d-timetable .m-green {
+  fill: var(--m-green);
+}
+
+.d-timetable .m-water {
+  fill: var(--m-water);
+}
+
+.d-timetable .m-roads_minor,
+.d-timetable .m-roads_mid,
+.d-timetable .m-roads_major {
+  fill: none;
+  stroke: var(--m-road);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.d-timetable .m-roads_minor {
+  stroke: var(--m-road-minor);
+  stroke-width: 8px;
+}
+
+.d-timetable .m-roads_mid {
+  stroke-width: 18px;
+}
+
+.d-timetable .m-roads_major {
+  stroke-width: 40px;
+}
+
+.d-timetable .m-rail,
+.d-timetable .m-rail-ties {
+  fill: none;
+  stroke: var(--ink-2);
+}
+
+.d-timetable .m-rail {
+  stroke-width: calc(var(--u) * 1px);
+}
+
+.d-timetable .m-rail-ties {
+  stroke-width: calc(var(--u) * 4.5px);
+  stroke-dasharray: calc(var(--u) * 1px) calc(var(--u) * 5px);
+}
+
+.d-timetable .m-label {
+  font-family: var(--cond);
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  fill: var(--ink-2);
+  stroke: var(--bg);
+  stroke-width: calc(var(--u) * 3px);
+}
+
+.tt-line,
+.tt-line-case,
+.tt-line-walked {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.tt-line-case {
+  stroke: var(--bg);
+  stroke-width: calc(var(--u) * 8px);
+}
+
+.tt-line {
+  stroke: var(--ink);
+  stroke-width: calc(var(--u) * 4px);
+}
+
+.tt-line-walked {
+  stroke: var(--ink);
+  stroke-width: calc(var(--u) * 1.5px);
+}
+
+.tt-mark path {
+  stroke: var(--ink);
+  stroke-width: 2px;
+  fill: none;
+}
+
+.tt-mark text {
+  font-family: var(--cond);
+  font-size: 11px;
+  font-weight: 800;
+  fill: var(--ink);
+  stroke: var(--bg);
+  stroke-width: 3px;
+  paint-order: stroke fill;
+}
+
+.tt-station circle {
+  fill: var(--bg);
+  stroke: var(--ink);
+  stroke-width: 3px;
+}
+
+.tt-station text {
+  font-family: var(--cond);
+  font-size: 12px;
+  font-weight: 800;
+  fill: var(--ink);
+}
+
+.tt-station.is-current circle,
+.tt-station.is-done circle {
+  fill: var(--ink);
+}
+
+.tt-station.is-current text,
+.tt-station.is-done text {
+  fill: var(--bg);
+}
+
+.tt-terminus rect {
+  fill: var(--ink);
+  stroke: var(--bg);
+  stroke-width: 2px;
+}
+
+.tt-terminus text {
+  font-family: var(--cond);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  fill: var(--ink);
+  stroke: var(--bg);
+  stroke-width: 3px;
+  paint-order: stroke fill;
+}
+
+.tt-me-ring {
+  fill: var(--go);
+  opacity: 0.25;
+}
+
+.tt-me {
+  fill: var(--go);
+  stroke: var(--bg);
+  stroke-width: 3px;
+}
+
+.tt-map {
+  position: relative;
+  flex: none;
+  border-top: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+}
+
+.tt-osm {
+  position: absolute;
+  right: 6px;
+  bottom: 5px;
+  padding: 1px 4px;
+  font-size: 9.5px;
+  line-height: 12px;
+  background: var(--bg);
+  color: var(--ink-2);
+}
+
+/* ── Bars and the hero ─────────────────────────────────────────────────── */
+
+.tt-bar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  height: 44px;
+  margin-top: 54px;
+  padding: 0 4px;
+}
+
+.d-timetable[data-os='android'] .tt-bar {
+  height: 56px;
+  margin-top: 44px;
+}
+
+.tt-bar > p {
+  flex: 1;
+  min-width: 0;
+  padding: 0 6px;
+  font-family: var(--cond);
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.tt-bar > p b {
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.d-timetable .tt-icon {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+}
+
+.d-timetable[data-os='android'] .tt-icon {
+  width: 48px;
+  height: 48px;
+}
+
+.tt-hero {
+  flex: none;
+  padding: 2px 18px 12px;
+}
+
+.tt-times {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: end;
+  gap: 12px;
+}
+
+.tt-times p {
+  display: flex;
+  flex-direction: column;
+}
+
+.tt-times b {
+  font-family: var(--xcond);
+  font-size: 68px;
+  line-height: 58px;
+  font-weight: 700;
+  letter-spacing: 0.005em;
+}
+
+.tt-times p:last-child {
+  text-align: right;
+}
+
+.tt-span {
+  align-items: center;
+  padding-bottom: 14px;
+  white-space: nowrap;
+  font-family: var(--cond);
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 700;
+}
+
+.tt-span i {
+  position: relative;
+  width: 100%;
+  height: 3px;
+  margin-top: 4px;
+  background: var(--ink);
+}
+
+.tt-span i::after {
+  content: '';
+  position: absolute;
+  right: -1px;
+  top: -4.5px;
+  border-left: 10px solid var(--ink);
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+}
+
+.tt-hero h1 {
+  margin-top: 12px;
+  font-size: 17px;
+  line-height: 21px;
+  font-weight: 650;
+}
+
+.tt-verdict {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 7px 0;
+  border-top: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+  font-size: 13.5px;
+  line-height: 18px;
+}
+
+.tt-verdict b {
+  font-family: var(--cond);
+  font-size: 14.5px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.tt-verdict small {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+.tt-facts {
+  margin-top: 8px;
+  font-size: 13.5px;
+  line-height: 18px;
+  color: var(--ink-2);
+}
+
+/* ── The chart ─────────────────────────────────────────────────────────── */
+
+.tt-table {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  padding: 0 14px;
+}
+
+.tt-colhead {
+  display: grid;
+  grid-template-columns: 52px 34px 1fr;
+  padding: 8px 0 5px;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--cond);
+  font-size: 10.5px;
+  line-height: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.tt-colhead span:first-child {
+  text-align: right;
+  padding-right: 8px;
+}
+
+.tt-colhead span:last-child {
+  grid-column: 3;
+  padding-left: 8px;
+}
+
+.tt-chart {
+  --tcol: 52px;
+  --scol: 34px;
+  position: relative;
+}
+
+/* A quarter-hour is a tick beside the line, not a rule across the names. */
+.tt-grid {
+  position: absolute;
+  left: 0;
+  width: calc(var(--tcol) + var(--scol) / 2);
+  height: 0;
+}
+
+.tt-grid::after {
+  content: '';
+  position: absolute;
+  right: 4px;
+  top: 0;
+  width: 7px;
+  border-top: 1.5px solid var(--mute);
+}
+
+.tt-grid span {
+  position: absolute;
+  left: 0;
+  top: -8px;
+  width: var(--tcol);
+  padding-right: 8px;
+  text-align: right;
+  font-family: var(--cond);
+  font-size: 11.5px;
+  line-height: 15px;
+  font-style: normal;
+  font-weight: 500;
+  color: var(--ink-2);
+  padding-right: 14px;
+}
+
+.tt-spine {
+  position: absolute;
+  left: calc(var(--tcol) + var(--scol) / 2 - 1.5px);
+  width: 3px;
+  background: var(--ink);
+}
+
+.tt-chart:has(.tt-now) .tt-spine {
+  background: var(--mute);
+}
+
+.tt-chart:has(.tt-now) .tt-spine.is-done {
+  background: var(--ink);
+}
+
+.tt-row {
+  position: absolute;
+  left: 0;
+  right: 0;
+  display: grid;
+  grid-template-columns: var(--tcol) var(--scol) 1fr;
+  align-items: start;
+}
+
+.tt-row > b {
+  padding-right: 8px;
+  text-align: right;
+  font-family: var(--cond);
+  font-size: 16.5px;
+  line-height: 18px;
+  font-weight: 700;
+  background: var(--bg);
+}
+
+.tt-dwell {
+  justify-self: center;
+  width: 22px;
+  height: 100%;
+  border: 3px solid var(--ink);
+  border-radius: 11px;
+  background: var(--bg);
+  font-style: normal;
+  text-align: center;
+}
+
+.tt-dwell span {
+  display: block;
+  font-family: var(--cond);
+  font-size: 12px;
+  line-height: 15px;
+  font-weight: 800;
+}
+
+.tt-stop.is-done .tt-dwell,
+.tt-stop.is-current .tt-dwell {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.tt-chart:has(.tt-now) .tt-stop:not(.is-done, .is-current) .tt-dwell {
+  border-color: var(--mute);
+  color: var(--ink-2);
+}
+
+.tt-chart:has(.tt-now) .tt-stop:not(.is-done, .is-current) > b {
+  color: var(--ink-2);
+  font-weight: 500;
+}
+
+.tt-row-body {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-width: 0;
+  padding-left: 8px;
+  overflow: hidden;
+}
+
+.tt-row-name {
+  flex: none;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  font-family: var(--cond);
+  font-size: 18.5px;
+  line-height: 20px;
+  font-weight: 700;
+}
+
+.tt-row-why {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  font-size: 12.5px;
+  line-height: 15px;
+  color: var(--ink-2);
+}
+
+.tt-row-end {
+  height: 18px;
+}
+
+.tt-square {
+  justify-self: center;
+  width: 14px;
+  height: 14px;
+  margin-top: 2px;
+  background: var(--ink);
+}
+
+.tt-row-end .tt-row-name {
+  display: block;
+  padding-left: 8px;
+  font-size: 15px;
+  line-height: 18px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.tt-row-end small {
+  margin-left: 7px;
+  font-family: var(--text);
+  font-size: 12.5px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-2);
+}
+
+.tt-leg {
+  position: absolute;
+  left: calc(var(--tcol) + var(--scol) + 8px);
+  display: flex;
+  align-items: center;
+  font-size: 12.5px;
+  line-height: 14px;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+.tt-leg.is-short {
+  font-size: 11px;
+  line-height: 11px;
+}
+
+.tt-now {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 0;
+  z-index: 2;
+}
+
+.tt-now b {
+  position: absolute;
+  left: 0;
+  top: -9px;
+  width: calc(var(--tcol) - 4px);
+  font-family: var(--cond);
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 800;
+  text-align: center;
+  background: var(--go);
+  color: var(--on-go);
+}
+
+.tt-now i {
+  position: absolute;
+  left: calc(var(--tcol) - 4px);
+  right: 0;
+  top: -1px;
+  border-top: 2px solid var(--go);
+}
+
+.tt-now i::after {
+  content: '';
+  position: absolute;
+  left: calc(4px + var(--scol) / 2 - 8px);
+  top: -9px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--go);
+  box-shadow: 0 0 0 3px var(--bg);
+}
+
+.tt-chart.is-compact {
+  --tcol: 44px;
+  --scol: 24px;
+}
+
+.tt-chart.is-compact .tt-row > b {
+  padding-right: 6px;
+  font-size: 13px;
+  line-height: 16px;
+}
+
+.tt-chart.is-compact .tt-dwell {
+  width: 18px;
+  border-width: 2.5px;
+  border-radius: 9px;
+}
+
+.tt-chart.is-compact .tt-dwell span {
+  font-size: 11px;
+  line-height: 13px;
+}
+
+.tt-chart.is-compact .tt-square {
+  width: 12px;
+  height: 12px;
+}
+
+.tt-chart.is-compact .tt-grid span {
+  font-size: 10.5px;
+  padding-right: 12px;
+}
+
+/* ── The Route: actions ────────────────────────────────────────────────── */
+
+.tt-actions {
+  flex: none;
+  display: flex;
+  gap: 8px;
+  padding: 10px 14px 42px;
+  border-top: 2px solid var(--ink);
+  background: var(--bg);
+}
+
+.d-timetable[data-os='android'] .tt-actions {
+  padding-bottom: 34px;
+}
+
+.d-timetable .tt-pack {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 52px;
+  padding: 0 12px 0 10px;
+  border: 2px solid var(--ink);
+  border-radius: 4px;
+  text-align: left;
+}
+
+.tt-pack b {
+  display: block;
+  font-family: var(--cond);
+  font-size: 14.5px;
+  line-height: 17px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.tt-pack small {
+  display: block;
+  font-size: 11.5px;
+  line-height: 14px;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+.d-timetable .tt-go {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 52px;
+  border-radius: 4px;
+  background: var(--ink);
+  color: var(--bg);
+  font-family: var(--cond);
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* ── The Outing while a Story plays ────────────────────────────────────── */
+
+.tt-status {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 0 4px;
+  font-size: 13.5px;
+  line-height: 18px;
+  white-space: nowrap;
+}
+
+.tt-status b {
+  font-family: var(--cond);
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.tt-status span {
+  color: var(--ink-2);
+}
+
+.tt-split {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 74px minmax(0, 1fr);
+  border-top: 2px solid var(--ink);
+}
+
+.tt-rail {
+  overflow: hidden;
+  padding: 8px 0 0 2px;
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+}
+
+.tt-rail .tt-row-body,
+.tt-rail .tt-row-end .tt-row-name,
+.tt-rail .tt-leg,
+.tt-rail .tt-grid span {
+  display: none;
+}
+
+.tt-rail .tt-row > b {
+  background: none;
+}
+
+.tt-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.tt-station-head {
+  flex: none;
+  padding: 12px 14px 12px;
+  border-bottom: 2px solid var(--ink);
+}
+
+.tt-station-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  line-height: 16px;
+  color: var(--ink-2);
+}
+
+.tt-station-meta i,
+.tt-next i {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border: 3px solid var(--ink);
+  border-radius: 50%;
+  font-family: var(--cond);
+  font-size: 12.5px;
+  line-height: 18px;
+  font-style: normal;
+  font-weight: 800;
+  text-align: center;
+  color: var(--ink);
+}
+
+.tt-station-meta i {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.tt-station-meta b {
+  font-family: var(--cond);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.tt-station-head h1 {
+  margin-top: 8px;
+  font-family: var(--cond);
+  font-size: 28px;
+  line-height: 29px;
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+.tt-transcript {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  list-style: none;
+}
+
+.tt-transcript li {
+  display: grid;
+  grid-template-columns: 38px 1fr;
+  padding: 9px 14px 10px 0;
+  border-bottom: 1px solid var(--line);
+  border-left: 5px solid transparent;
+}
+
+.tt-transcript time {
+  padding-top: 2px;
+  font-family: var(--cond);
+  font-size: 12.5px;
+  line-height: 16px;
+  font-weight: 600;
+  text-align: right;
+  padding-right: 8px;
+  color: var(--ink-2);
+}
+
+.tt-transcript span {
+  font-size: 14.5px;
+  line-height: 19px;
+  color: var(--ink-2);
+}
+
+.tt-transcript .is-current {
+  border-left-color: var(--ink);
+}
+
+.tt-transcript .is-current time {
+  padding-top: 5px;
+  color: var(--ink);
+  font-weight: 800;
+}
+
+.tt-transcript .is-current span {
+  font-size: 21px;
+  line-height: 26px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.tt-transcript sup {
+  margin-left: 2px;
+  font-family: var(--cond);
+  font-size: 0.55em;
+  font-weight: 800;
+  line-height: 0;
+}
+
+.tt-foot {
+  flex: none;
+  padding: 8px 14px 9px;
+  border-top: 1px solid var(--line);
+  margin-top: -1px;
+  background: var(--bg);
+}
+
+.tt-source {
+  font-size: 11.5px;
+  line-height: 15px;
+  color: var(--ink-2);
+}
+
+.tt-source b,
+.tt-made {
+  font-family: var(--cond);
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.tt-source b {
+  margin-right: 4px;
+  color: var(--ink);
+}
+
+.tt-made {
+  margin-top: 3px;
+  line-height: 14px;
+  color: var(--ink-2);
+}
+
+.tt-player {
+  flex: none;
+  padding: 10px 14px 38px;
+  border-top: 2px solid var(--ink);
+  background: var(--bg);
+}
+
+.d-timetable[data-os='android'] .tt-player {
+  padding-bottom: 30px;
+}
+
+.tt-progress {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--cond);
+  font-size: 13px;
+  line-height: 16px;
+  font-weight: 700;
+}
+
+.tt-progress i {
+  position: relative;
+  height: 6px;
+  background: var(--line);
+}
+
+.tt-progress i::after {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--played);
+  background: var(--ink);
+  transition: width 160ms linear;
+}
+
+.tt-controls {
+  display: grid;
+  grid-template-columns: 46px 46px 1fr 46px 46px;
+  gap: 6px;
+  margin-top: 9px;
+}
+
+.d-timetable .tt-key {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 50px;
+  border: 2px solid var(--ink);
+  border-radius: 4px;
+  font-family: var(--cond);
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.d-timetable .tt-key-main {
+  background: var(--ink);
+  color: var(--bg);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.tt-next {
+  display: grid;
+  grid-template-columns: auto auto 24px minmax(0, 1fr);
+  align-items: center;
+  gap: 7px;
+  margin-top: 10px;
+  padding-top: 9px;
+  border-top: 1px solid var(--line);
+}
+
+.tt-next b {
+  font-family: var(--cond);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.tt-next-name {
+  overflow: hidden;
+  font-family: var(--cond);
+  font-size: 16.5px;
+  line-height: 20px;
+  font-weight: 700;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.tt-next-far {
+  grid-column: 2 / -1;
+  margin-top: -4px;
+  font-size: 12.5px;
+  line-height: 15px;
+  color: var(--ink-2);
+}
+
+/* ── The web ───────────────────────────────────────────────────────────── */
+
+.tt-webhead {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+  padding: 0 24px;
+  border-bottom: 2px solid var(--ink);
+}
+
+.tt-wordmark {
+  font-family: var(--xcond);
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.tt-webhead nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.tt-langs {
+  display: flex;
+  gap: 10px;
+  font-family: var(--cond);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--ink-2);
+}
+
+.tt-langs b {
+  color: var(--ink);
+  font-weight: 800;
+  box-shadow: 0 2px 0 var(--ink);
+}
+
+.d-timetable .tt-outline {
+  height: 34px;
+  padding: 0 14px;
+  border: 2px solid var(--ink);
+  border-radius: 4px;
+  font-family: var(--cond);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.tt-cols {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 330px 430px 520px;
+}
+
+.tt-web-outing .tt-cols {
+  grid-template-columns: 286px 474px 520px;
+}
+
+.tt-col-info {
+  padding: 26px 24px 0;
+}
+
+.tt-col-info .tt-hero {
+  padding: 14px 0 0;
+}
+
+.tt-col-info .tt-times {
+  gap: 8px;
+}
+
+.tt-col-info .tt-times b {
+  font-size: 62px;
+  line-height: 54px;
+}
+
+.tt-col-info .tt-hero h1 {
+  margin-top: 18px;
+  font-size: 22px;
+  line-height: 27px;
+}
+
+.tt-col-info .tt-verdict {
+  flex-wrap: wrap;
+  margin-top: 16px;
+  padding: 10px 0;
+}
+
+.tt-col-info .tt-verdict small {
+  flex-basis: 100%;
+  margin-left: 19px;
+}
+
+.tt-col-info .tt-facts {
+  margin-top: 12px;
+  font-size: 15px;
+}
+
+.tt-col-info .tt-actions {
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 22px;
+  padding: 0;
+  border-top: 0;
+}
+
+.tt-col-info .tt-go {
+  flex: none;
+}
+
+.tt-webnote {
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--ink-2);
+}
+
+.tt-col-chart {
+  overflow: hidden;
+  padding: 0 18px;
+  border-left: 1px solid var(--line);
+  border-right: 2px solid var(--ink);
+}
+
+.tt-web .tt-colhead {
+  padding-top: 12px;
+}
+
+.tt-web .tt-row-name {
+  font-size: 16.5px;
+  line-height: 15.5px;
+}
+
+.tt-web .tt-row-why {
+  display: none;
+}
+
+.tt-web .tt-chart.is-compact .tt-colhead,
+.tt-web-outing .tt-colhead {
+  grid-template-columns: 44px 24px 1fr;
+}
+
+.tt-web .tt-chart.is-compact .tt-row-name {
+  font-size: 14.5px;
+  line-height: 15px;
+  font-weight: 600;
+}
+
+.tt-web .tt-chart.is-compact .tt-stop.is-current .tt-row-name {
+  font-weight: 800;
+}
+
+.tt-web .tt-chart.is-compact .tt-row-end .tt-row-name {
+  font-size: 13px;
+  line-height: 16px;
+}
+
+/* The narrow chart has no room for "leave" and "back" beside the name. */
+.tt-web .tt-chart.is-compact .tt-row-end small {
+  display: none;
+}
+
+.tt-web .tt-chart.is-compact .tt-leg {
+  font-size: 11.5px;
+}
+
+.tt-col-map {
+  position: relative;
+}
+
+.tt-col-story {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.tt-col-story .tt-station-head {
+  padding: 22px 24px 16px;
+}
+
+.tt-col-story .tt-station-head h1 {
+  font-size: 36px;
+  line-height: 37px;
+}
+
+.tt-col-story .tt-transcript li {
+  grid-template-columns: 50px 1fr;
+  padding-right: 24px;
+}
+
+.tt-col-story .tt-transcript span {
+  font-size: 15px;
+  line-height: 20px;
+}
+
+.tt-col-story .tt-transcript .is-current span {
+  font-size: 23px;
+  line-height: 29px;
+}
+
+.tt-col-story .tt-foot {
+  padding: 10px 24px;
+}
+
+.tt-col-story .tt-player {
+  padding: 12px 24px 0;
+}
+
+.tt-col-story .tt-webnote {
+  padding: 12px 24px 16px;
+}
+
+.tt-col-story .tt-next {
+  grid-template-columns: auto auto 24px minmax(0, 1fr) auto;
+  padding-bottom: 2px;
+}
+
+.tt-col-story .tt-next-far {
+  grid-column: auto;
+  margin-top: 0;
+}

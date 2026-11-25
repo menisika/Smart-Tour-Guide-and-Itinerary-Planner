@@ -1,0 +1,497 @@
+/*
+ * The table the three directions lie on: the page around the mockups, the
+ * outlines of the devices and the system's own bars. It has no style of its
+ * own to speak of, so that it cannot be taken for a fourth direction.
+ */
+
+@import url('fonts.css');
+
+:root {
+  color-scheme: light dark;
+  --table: #ecebe8;
+  --table-ink: #17171a;
+  --table-ink-2: #5d5d66;
+  --table-line: #cfcdc8;
+  --table-panel: #f7f6f3;
+  --table-accent: #17171a;
+  --ui: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --table: #18181b;
+    --table-ink: #ececee;
+    --table-ink-2: #a3a3ad;
+    --table-line: #34343a;
+    --table-panel: #212125;
+    --table-accent: #ececee;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--table);
+  color: var(--table-ink);
+  font: 15px/1.5 var(--ui);
+}
+
+a {
+  color: inherit;
+  text-underline-offset: 0.18em;
+}
+
+/* ── The page around the mockups ───────────────────────────────────────── */
+
+.table-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 24px;
+  padding: 20px clamp(16px, 3vw, 40px) 0;
+}
+
+.table-head h1 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.table-head p {
+  margin: 0;
+  color: var(--table-ink-2);
+  max-width: 78ch;
+}
+
+.table-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+  margin-left: auto;
+}
+
+.table-nav a[aria-current='page'] {
+  text-decoration: none;
+  font-weight: 650;
+}
+
+.switches {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  padding: 12px clamp(16px, 3vw, 40px);
+  background: color-mix(in srgb, var(--table) 92%, transparent);
+  border-bottom: 1px solid var(--table-line);
+}
+
+.switch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+.switch legend {
+  float: left;
+  padding: 0;
+  margin-right: 8px;
+  font-size: 12px;
+  color: var(--table-ink-2);
+}
+
+.switch-options {
+  display: flex;
+  border: 1px solid var(--table-line);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--table-panel);
+}
+
+.switch label {
+  position: relative;
+  display: block;
+  cursor: pointer;
+}
+
+.switch input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.switch label span {
+  display: block;
+  padding: 7px 12px;
+  font-size: 13px;
+  line-height: 18px;
+  white-space: nowrap;
+  border-left: 1px solid var(--table-line);
+}
+
+.switch label:first-child span {
+  border-left: 0;
+}
+
+.switch input:checked + span {
+  background: var(--table-accent);
+  color: var(--table);
+}
+
+.switch input:focus-visible + span {
+  outline: 2px solid var(--table-accent);
+  outline-offset: -4px;
+}
+
+.trio {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(16px, 2.4vw, 40px);
+  padding: 28px clamp(16px, 3vw, 40px) 48px;
+  align-items: start;
+}
+
+.trio[data-os='web'] {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 1380px;
+  margin: 0 auto;
+}
+
+.trio-item {
+  min-width: 0;
+}
+
+.trio-item header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.trio-item h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 650;
+}
+
+.trio-item h2 small {
+  font-weight: 400;
+  color: var(--table-ink-2);
+  font-size: 13px;
+  margin-left: 6px;
+}
+
+.trio-item .idea {
+  margin: 14px 0 0;
+  color: var(--table-ink-2);
+  font-size: 13.5px;
+  max-width: 46ch;
+}
+
+.device-slot {
+  display: flex;
+  justify-content: center;
+  /* Room for the outline of the device, which is drawn as a shadow. */
+  padding: 12px;
+}
+
+.note {
+  padding: 0 clamp(16px, 3vw, 40px) 40px;
+  color: var(--table-ink-2);
+  font-size: 13px;
+  max-width: 100ch;
+}
+
+@media (max-width: 860px) {
+  .trio,
+  .trio[data-os='web'] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .trio:not([data-os='web']) .device-slot {
+    max-width: 440px;
+    margin: 0 auto;
+  }
+
+  .table-nav {
+    margin-left: 0;
+  }
+
+  /* Four rows of switches would cover the screen they switch. */
+  .switches {
+    position: static;
+  }
+}
+
+/* ── Devices ───────────────────────────────────────────────────────────── */
+
+.device {
+  --z: 1;
+  position: relative;
+  flex: none;
+  width: calc(var(--w) * var(--z) * 1px);
+  height: calc(var(--h) * var(--z) * 1px);
+}
+
+.device-zoom {
+  zoom: var(--z);
+  width: calc(var(--w) * 1px);
+  height: calc(var(--h) * 1px);
+}
+
+.screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  isolation: isolate;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+.device-ios .screen {
+  border-radius: 54px;
+  box-shadow:
+    0 0 0 9px #0e0e10,
+    0 0 0 10px #3a3a40;
+}
+
+.device-android .screen {
+  border-radius: 38px;
+  box-shadow:
+    0 0 0 8px #0e0e10,
+    0 0 0 9px #3a3a40;
+}
+
+.device-web .screen {
+  border-radius: 10px;
+  box-shadow:
+    0 0 0 1px #8c8c95,
+    0 18px 40px -22px rgb(0 0 0 / 0.45);
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  stroke-width: var(--icon-weight, 1.75);
+  flex: none;
+}
+
+.icon-solid {
+  stroke-width: 0;
+}
+
+/* The system's bars take their colour from the screen under them. */
+.sys {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  color: var(--sys-ink, currentColor);
+  font-family: var(--ui);
+  pointer-events: none;
+}
+
+.sys svg {
+  fill: currentColor;
+}
+
+.sys-ios-status {
+  top: 0;
+  height: 54px;
+}
+
+.sys-ios-status .sys-clock {
+  position: absolute;
+  left: 0;
+  width: 132px;
+  top: 19px;
+  text-align: center;
+  padding-left: 14px;
+  font-size: 16.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 20px;
+  font-variant-numeric: tabular-nums;
+}
+
+.sys-island {
+  position: absolute;
+  top: 11px;
+  left: 50%;
+  width: 124px;
+  height: 36px;
+  margin-left: -62px;
+  border-radius: 18px;
+  background: #000;
+}
+
+.sys-ios-status .sys-right {
+  position: absolute;
+  right: 0;
+  width: 132px;
+  top: 22px;
+  padding-right: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+}
+
+.sys-ios-home {
+  bottom: 8px;
+  left: 50%;
+  right: auto;
+  width: 138px;
+  height: 5px;
+  margin-left: -69px;
+  border-radius: 3px;
+  background: var(--sys-ink, currentColor);
+}
+
+.sys-android-status {
+  top: 0;
+  height: 44px;
+}
+
+.sys-android-status .sys-clock {
+  position: absolute;
+  left: 26px;
+  top: 14px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 18px;
+  letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums;
+}
+
+.sys-camera {
+  position: absolute;
+  top: 13px;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin-left: -10px;
+  border-radius: 50%;
+  background: #000;
+}
+
+.sys-android-status .sys-right {
+  position: absolute;
+  right: 24px;
+  top: 15px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.sys-android-nav {
+  bottom: 9px;
+  left: 50%;
+  right: auto;
+  width: 108px;
+  height: 4px;
+  margin-left: -54px;
+  border-radius: 2px;
+  background: var(--sys-ink, currentColor);
+}
+
+/* A browser is the system's, not the product's: it stays grey in every direction. */
+.sys-browser {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr minmax(0, 560px) 1fr;
+  align-items: center;
+  height: 44px;
+  padding: 0 14px;
+  background: #e7e6e3;
+  color: #3b3b42;
+  border-bottom: 1px solid #c9c8c4;
+  font-size: 13px;
+}
+
+.screen[data-theme='dark'] .sys-browser {
+  background: #2b2b30;
+  color: #c9c9d1;
+  border-bottom-color: #3d3d44;
+}
+
+.sys-browser svg {
+  fill: none;
+}
+
+.sys-browser .icon {
+  width: 17px;
+  height: 17px;
+}
+
+.sys-browser-nav {
+  display: flex;
+  gap: 14px;
+  opacity: 0.75;
+}
+
+.sys-browser-address {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 28px;
+  border-radius: 14px;
+  background: #f6f5f3;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.screen[data-theme='dark'] .sys-browser-address {
+  background: #1c1c20;
+}
+
+.sys-browser-address .icon {
+  width: 12px;
+  height: 12px;
+  opacity: 0.7;
+}
+
+.device-web .page {
+  position: relative;
+  height: calc(100% - 44px);
+  overflow: hidden;
+}
+
+/* ── Things every direction's map shares ───────────────────────────────── */
+
+.map {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.map use,
+.map path,
+.map circle,
+.map rect,
+.map line {
+  vector-effect: none;
+}
+
+.map .m-label {
+  paint-order: stroke fill;
+  stroke-linejoin: round;
+}
