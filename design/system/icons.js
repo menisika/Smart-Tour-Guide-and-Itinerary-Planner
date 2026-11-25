@@ -220,6 +220,39 @@ export const icons = {
   speaker: stroke(
     '<path d="M4.5 9.5v5H8l5 4v-13l-5 4H4.5ZM16.5 9a4 4 0 0 1 0 6M18.8 6.5a7.5 7.5 0 0 1 0 11"/>',
   ),
+  // ── What the internal console added ─────────────────────────────────────
+  funnel: stroke('<path d="M4 5.5h16l-6.2 7.3V19l-3.6-1.8v-4.4L4 5.5Z"/>'),
+  sort: stroke('<path d="M8 4.5v15M4.5 8 8 4.5 11.5 8M16 19.5v-15M12.5 16l3.5 3.5 3.5-3.5"/>'),
+  undo: stroke('<path d="M8.5 5.5 4.5 9.5l4 4M4.5 9.5H14a5 5 0 0 1 0 10h-3.5"/>'),
+  merge: stroke('<path d="M5.5 4v3.5a6 6 0 0 0 6 6h1a6 6 0 0 0 6-6V4M12 13.5V20M9 17l3 3 3-3"/>'),
+  split: stroke(
+    '<path d="M12 4v6.5M5.5 20v-3.5a6 6 0 0 1 6-6h1a6 6 0 0 1 6 6V20M3 17.5 5.5 20 8 17.5M16 17.5l2.5 2.5 2.5-2.5"/>',
+  ),
+  eyeOff: stroke(
+    '<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="2.8"/><path d="m4.5 4 15 16"/>',
+  ),
+  tray: stroke(
+    '<path d="M3.5 13.5 6 5.5h12l2.5 8v4a1.5 1.5 0 0 1-1.5 1.5H5a1.5 1.5 0 0 1-1.5-1.5v-4ZM3.5 13.5h5a3.5 3.5 0 0 0 7 0h5"/>',
+  ),
+  bars: stroke('<path d="M5.5 20v-8.5M12 20V4.5M18.5 20v-5.5M3.5 20h17"/>'),
+  coin: stroke(
+    '<circle cx="12" cy="12" r="8.5"/><path d="M14.8 9.6c-.5-1-1.5-1.5-2.8-1.5-1.7 0-2.8.8-2.8 2 0 2.8 5.6 1.2 5.6 4 0 1.2-1.1 2-2.8 2-1.4 0-2.4-.6-2.9-1.5M12 6.3v1.8M12 16.1v1.6"/>',
+  ),
+  door: stroke(
+    `<path d="M6.5 20.5V5A1.5 1.5 0 0 1 8 3.5h8A1.5 1.5 0 0 1 17.5 5v15.5M4 20.5h16"/>${dot('M14.3 12.3h.01')}`,
+  ),
+  dossier: stroke(
+    '<path d="M4 6.5A1.5 1.5 0 0 1 5.5 5h4l2 2.5h7A1.5 1.5 0 0 1 20 9v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18V6.5ZM8 12h8M8 15.5h5"/>',
+  ),
+  boundary: stroke(
+    `<path d="M5 8.5 13 4.5l6.5 6-3 8.5H7L5 8.5Z"/>${dot('M5 8.5h.01')}${dot('M13 4.5h.01')}${dot('M19.5 10.5h.01')}${dot('M16.5 19h.01')}${dot('M7 19h.01')}`,
+  ),
+  radius: stroke(
+    `<circle cx="12" cy="12" r="8.5" stroke-dasharray="2.4 3.2"/><path d="M12 12h8.5"/>${dot('M12 12h.01')}`,
+  ),
+  key: stroke(
+    '<circle cx="8" cy="15.5" r="4"/><path d="M11 12.5 19.5 4M16.5 7l2.5 2.5M13.8 9.7l2 2"/>',
+  ),
 };
 
 /** @typedef {keyof typeof icons} IconName */
@@ -328,4 +361,18 @@ export const ICON_NAMES = {
   history: { ru: 'Версии', en: 'Versions' },
   link: { ru: 'Ссылка', en: 'Link' },
   speaker: { ru: 'Звук', en: 'Sound' },
+  funnel: { ru: 'Отбор', en: 'Filter' },
+  sort: { ru: 'Порядок', en: 'Sort' },
+  undo: { ru: 'Отменить', en: 'Undo' },
+  merge: { ru: 'Объединить', en: 'Merge' },
+  split: { ru: 'Разделить', en: 'Split' },
+  eyeOff: { ru: 'Скрыть', en: 'Hide' },
+  tray: { ru: 'Входящие', en: 'Inbox' },
+  bars: { ru: 'Сводки', en: 'Dashboards' },
+  coin: { ru: 'Стоимость', en: 'Cost' },
+  door: { ru: 'Вход', en: 'Entrance' },
+  dossier: { ru: 'Досье', en: 'Dossier' },
+  boundary: { ru: 'Граница', en: 'Boundary' },
+  radius: { ru: 'Радиус срабатывания', en: 'Trigger radius' },
+  key: { ru: 'Ключевое место', en: 'Key place' },
 };

@@ -268,13 +268,18 @@ export function backdrop(data, { lang, theme, width, height, around = 4, u = 1.9
  * The map with nothing of a Route on it yet: the ground of a request, with
  * the point one starts from.
  * @param {any} data
- * @param {{ lang: Lang, theme: Theme, width: number, height: number, u?: number, lift?: number, labels?: number }} options
- *   `lift` moves the start up from the middle, in points, to clear a sheet
+ * @param {{ lang: Lang, theme: Theme, width: number, height: number, u?: number, lift?: number, aside?: number, labels?: number, extra?: (ctx: { u: number }) => string }} options
+ *   `lift` moves the start up from the middle, in points, to clear a sheet;
+ *   `aside` moves it to the right, to clear a panel at the left;
+ *   `extra` is drawn last: who is on the way to a Meeting Point
  */
-export function groundMap(data, { lang, theme, width, height, u = 2.4, lift = 0, labels = 6 }) {
+export function groundMap(
+  data,
+  { lang, theme, width, height, u = 2.4, lift = 0, aside = 0, labels = 6, extra },
+) {
   const start = data.map.start;
   const view = {
-    x: start.street_x - (width * u) / 2,
+    x: start.street_x - (width * u) / 2 - aside * u,
     y: start.street_y - (height * u) / 2 + lift * u,
     w: width * u,
     h: height * u,
@@ -286,13 +291,13 @@ export function groundMap(data, { lang, theme, width, height, u = 2.4, lift = 0,
     layers: layersOf(theme),
     labels: labels > 0 ? { max: labels, size: 10 } : undefined,
     over: (ctx) =>
-      pinned(
+      `${pinned(
         start.street_x,
         start.street_y,
         ctx.u,
         `<rect class="tt-terminus-mark" x="-8" y="-8" width="16" height="16" rx="4"/><text x="15" y="4.5">${data.route.startShort[lang]}</text>`,
         'tt-terminus',
-      ),
+      )}${extra?.(ctx) ?? ''}`,
     label: data.route.startName[lang],
   });
 }
@@ -319,6 +324,20 @@ export function lineMap(data, { lang, theme, size, again = false, walked = false
     label: T[lang].theLine,
   });
 }
+
+/**
+ * A member of a Party on the flat map, by the first letter of the name: one
+ * who has chosen to share their position before the Party gathers (PTY-15).
+ * @param {number} x @param {number} y @param {number} u @param {string} letter
+ */
+export const memberOnPlan = (x, y, u, letter) =>
+  pinned(
+    x,
+    y,
+    u,
+    `<circle class="tt-station-shade" r="13" cy="1.5"/><circle r="12.5"/><text y="4" text-anchor="middle">${letter}</text>`,
+    'tt-station is-current',
+  );
 
 /** The mark of the person on the flat map. @param {number} x @param {number} y @param {number} u @param {Parameters<typeof meDot>[0]} [state] */
 const meOnPlan = (x, y, u, state) =>

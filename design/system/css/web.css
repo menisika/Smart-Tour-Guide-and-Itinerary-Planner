@@ -37,8 +37,8 @@
   display: flex;
   align-items: center;
   gap: 18px;
-  height: 54px;
-  padding: 0 var(--space-8) 0 22px;
+  height: 56px;
+  padding: 0 var(--space-6) 0 22px;
   border-radius: var(--radius-full);
 }
 
@@ -70,7 +70,7 @@
 
 .screen .tt-webnav .tt-action {
   flex: none;
-  min-height: 38px;
+  min-height: var(--target);
   padding: 0 var(--space-16);
   font: var(--type-label-strong);
 }
@@ -146,4 +146,395 @@
   bottom: 196px;
   width: 400px;
   max-width: none;
+}
+
+/* ── The pages of the public web ───────────────────────────────────────── */
+
+.tt-wordmark img {
+  width: 20px;
+  height: 20px;
+}
+
+.screen .tt-langs {
+  min-height: var(--target);
+  padding: 0 var(--space-4);
+}
+
+/* The panel holds what scrolls and, at its foot, what is done with it. */
+.tt-web .tt-panel {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+
+.tt-panel-body {
+  flex: 1;
+  min-height: 0;
+  padding: 22px var(--space-24) 0;
+  overflow: hidden;
+}
+
+.tt-panel-foot {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-10);
+  padding: var(--space-12) var(--space-20) var(--space-20);
+}
+
+.screen .tt-panel-foot .tt-action.is-second {
+  flex: 1 1 150px;
+  min-width: 0;
+}
+
+.tt-panel-body > .tt-scroll {
+  height: 100%;
+}
+
+.tt-web .tt-panel.is-wide {
+  width: 520px;
+}
+
+/* A card in the middle of the window. */
+.tt-webcard {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 7;
+  width: 440px;
+  max-width: calc(100% - 32px);
+  transform: translate(-50%, -50%);
+  padding: var(--space-32) var(--space-32) var(--space-24);
+  border-radius: var(--radius-sheet);
+  background: var(--surface);
+  box-shadow: var(--lift-page);
+}
+
+.tt-webcard .tt-heading h1 {
+  font: var(--type-title-l);
+  letter-spacing: var(--type-title-l-tracking);
+}
+
+.screen .tt-webcard .tt-flow > .tt-action.is-second {
+  background: var(--surface-2);
+}
+
+/* ── The same pages at the width of a phone ────────────────────────────── */
+
+.tt-webphone .tt-webnav {
+  left: var(--space-10);
+  right: var(--space-10);
+  top: var(--space-10);
+  gap: var(--space-8);
+  height: 52px;
+  padding: 0 var(--space-6) 0 var(--space-16);
+}
+
+.tt-webphone .tt-wordmark {
+  flex: 1;
+}
+
+.tt-web.tt-webphone .tt-panel {
+  left: 0;
+  right: 0;
+  top: var(--panel-top, 250px);
+  bottom: 0;
+  width: auto;
+  border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
+}
+
+.tt-webphone .tt-panel-body {
+  padding: var(--space-20) var(--space-20) 0;
+}
+
+.tt-webphone .tt-panel-foot {
+  padding: var(--space-10) var(--space-16) var(--space-16);
+}
+
+.tt-webphone .tt-head-title {
+  font: var(--type-title);
+  letter-spacing: var(--type-title-tracking);
+}
+
+.tt-webphone .tt-frame b {
+  font: var(--type-clock-l);
+  letter-spacing: var(--type-clock-l-tracking);
+}
+
+.tt-webphone .tt-webnote {
+  display: none;
+}
+
+.tt-web.tt-webphone .tt-osm {
+  left: auto;
+  right: var(--space-10);
+  bottom: auto;
+  top: calc(var(--panel-top, 250px) - 24px);
+  transform: none;
+}
+
+.tt-web.tt-webphone .tt-guide {
+  left: 0;
+  right: 0;
+  top: 150px;
+  bottom: 0;
+  width: auto;
+  border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
+}
+
+.tt-web.tt-webphone .tt-guide-photo {
+  height: 132px;
+}
+
+.tt-web.tt-webphone .tt-player {
+  left: var(--space-10);
+  right: var(--space-10);
+  bottom: var(--space-10);
+  width: auto;
+}
+
+.tt-webphone .tt-webcard {
+  left: 0;
+  right: 0;
+  top: auto;
+  bottom: 0;
+  width: auto;
+  max-width: none;
+  transform: none;
+  padding: var(--space-24) var(--space-20);
+  border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
+}
+
+/* A line of the web, inside a panel: what a browser cannot do. */
+.tt-webline {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-8);
+  margin-top: var(--space-12);
+  padding: var(--space-10) var(--space-12);
+  border-radius: var(--radius-m);
+  background: var(--surface-2);
+  font: var(--type-label);
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.tt-webline .icon {
+  flex: none;
+  width: var(--size-icon-s);
+  height: var(--size-icon-s);
+  margin-top: 1px;
+}
+
+/* ── What a messenger shows of a link ──────────────────────────────────── */
+
+/* The picture of a link: 1200 × 630 in the messenger. It is composed at half
+   of that and shown at the width of the card. */
+.tt-og {
+  display: block;
+  width: 300px;
+  height: 157.5px;
+  overflow: hidden;
+}
+
+.tt-og-in {
+  position: relative;
+  display: block;
+  width: 600px;
+  height: 315px;
+  zoom: 0.5;
+  background: var(--surface);
+}
+
+.tt-og-map {
+  position: absolute;
+  inset: 0 0 0 50%;
+}
+
+.tt-og-words {
+  position: absolute;
+  inset: 0 50% 0 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: var(--space-4);
+  padding: var(--space-24);
+  color: var(--ink);
+}
+
+.tt-og-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  margin-bottom: auto;
+  font: var(--type-wordmark);
+  letter-spacing: var(--type-wordmark-tracking);
+}
+
+.tt-og-brand img {
+  width: 22px;
+  height: 22px;
+}
+
+.tt-og-words small {
+  font: var(--type-body);
+  color: var(--ink-2);
+}
+
+.tt-og-words b {
+  font: var(--type-title-l);
+  letter-spacing: var(--type-title-l-tracking);
+  text-wrap: balance;
+}
+
+.tt-og-figure {
+  font: var(--type-clock-l);
+  letter-spacing: var(--type-clock-l-tracking);
+  white-space: nowrap;
+}
+
+.tt-link {
+  display: block;
+  width: 300px;
+  margin-top: var(--space-6);
+  border-radius: var(--radius-s);
+  overflow: hidden;
+  background: var(--surface);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.tt-link-words {
+  display: block;
+  padding: var(--space-8) var(--space-12) var(--space-10);
+  font: var(--type-caption);
+  color: var(--ink-2);
+}
+
+.tt-link-words small,
+.tt-link-words b {
+  display: block;
+}
+
+.tt-link-words small {
+  font: var(--type-micro);
+}
+
+.tt-link-words b {
+  font: var(--type-label-strong);
+  color: var(--ink);
+}
+
+/* Someone else's messenger: plain on purpose. */
+.tt-msgr {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding-top: 54px;
+  background: var(--surface-2);
+  font: var(--type-label);
+  font-family: var(--ui);
+}
+
+.screen[data-os='android'] .tt-msgr {
+  padding-top: 44px;
+}
+
+.tt-msgr header {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--space-10);
+  padding: var(--space-8) var(--space-16);
+  background: var(--surface);
+  box-shadow: 0 0.5px 0 var(--rule);
+}
+
+.tt-msgr-face {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--ink-2);
+}
+
+.tt-msgr header b,
+.tt-msgr header small {
+  display: block;
+  font-family: var(--ui);
+}
+
+.tt-msgr header small {
+  color: var(--ink-2);
+}
+
+.tt-msgr ol {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: var(--space-8);
+  padding: var(--space-12) var(--space-12) var(--space-40);
+}
+
+.tt-msgr li {
+  align-self: flex-start;
+  max-width: 86%;
+  padding: var(--space-8) var(--space-10) var(--space-4);
+  border-radius: var(--radius-m);
+  background: var(--surface);
+}
+
+.tt-msgr li.is-mine {
+  align-self: flex-end;
+  background: var(--ok-tint);
+}
+
+.tt-msgr-from {
+  display: block;
+  font-weight: 700;
+  color: var(--accent-ink);
+}
+
+.tt-msgr time {
+  display: block;
+  font: var(--type-micro);
+  font-family: var(--ui);
+  color: var(--ink-2);
+  text-align: right;
+}
+
+/* ── The app's pages in a phone's browser: no system bars to clear ─────── */
+
+.screen[data-face='webphone'] .tt-bar,
+.screen[data-face='webphone'] .tt-top {
+  top: var(--space-10);
+}
+
+.screen[data-face='webphone'] .tt-page-body {
+  top: 62px;
+}
+
+.screen[data-face='webphone'] .tt-page.has-hero .tt-page-body {
+  top: var(--hero);
+}
+
+.screen[data-face='webphone'] .tt-dock {
+  bottom: var(--space-16);
+}
+
+.screen[data-face='webphone'] .tt-page.has-foot .tt-page-body {
+  bottom: 88px;
+}
+
+.screen[data-face='webphone'] .tt-page.has-foot:has(.tt-dock.is-stack) .tt-page-body {
+  bottom: 132px;
+}
+
+/* What an action promises, under it, in the panel's foot. */
+.tt-panel-note {
+  flex-basis: 100%;
 }

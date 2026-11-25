@@ -57,6 +57,8 @@ import {
 import { ask, dialog, menu, sheet, toast } from './parts/sheets.js';
 import { banner, checks, pack, skeleton, state, steps } from './parts/states.js';
 import { guide, mini, placePage, player, source } from './parts/story.js';
+import { linkPicture, linkPreview, messenger, panel, webCard, webNav } from './parts/web.js';
+import { consoleSpecimens } from './specimens/console.js';
 import { T } from './strings.js';
 
 /**
@@ -78,9 +80,15 @@ import { T } from './strings.js';
  * @property {number} height of the stage at the usual text size
  * @property {boolean} [device] a whole screen, drawn inside the outline of a phone
  * @property {boolean} [grows] the stage grows with the text size
+ * @property {boolean} [wide] a component of a web page or of the console: drawn once, at the width of a desk
+ * @property {'web' | 'console'} [face] which of the two a wide specimen belongs to; the console by default
+ * @property {number} [width] of a wide stage; 1440 by default
  * @property {{ id: string, label: string }[]} [variants] states of the same component, one stage each
  * @property {(ctx: Ctx, variant: string) => string} render
  */
+
+/** The sign of the product, for the bar of the web. */
+const sign = new URL('./mark/sign.svg', import.meta.url).pathname;
 
 /** The map behind a specimen. @param {Ctx} ctx @param {number} height @param {object} [options] */
 const map = ({ data, lang, theme, width }, height, options = {}) =>
@@ -973,6 +981,75 @@ export const specimens = [
           });
     },
   },
+  // ── The public web ──────────────────────────────────────────────────────
+  {
+    id: 'web-panel',
+    group: 'Web',
+    title: 'A page of the web: the bar and the panel',
+    note: 'The same components in a browser’s window. The map fills it; the bar holds the name of the product, the two languages and the way into the application; what the timetable says stands in a panel of glass at the side, with its actions at its foot. At the width of a phone the panel is a sheet under the map.',
+    height: 560,
+    wide: true,
+    face: 'web',
+    width: 1280,
+    render: ({ data, lang, theme }) => {
+      const t = T[lang];
+      return `<div class="tt tt-web"><div class="tt-under">${planMap(data, { lang, theme, width: 1280, height: 560, padding: { top: 80, right: 80, bottom: 60, left: 520 }, labels: 8 })}<span class="tt-osm">© OpenStreetMap</span></div>
+        ${webNav(lang, { mark: sign })}
+        ${panel(`${head(data, lang)}${chart(data, lang, { scale: 6, until: 24 })}`, { foot: `${action(t.pack, { kind: 'second', icon: icons.download, value: `${data.route.packMegabytes} ${t.megabytes}` })}${action(t.playStory, { kind: 'second', icon: icons.headphones })}` })}
+      </div>`;
+    },
+  },
+  {
+    id: 'web-card',
+    group: 'Web',
+    title: 'A card over a page',
+    note: 'For what interrupts a page of the web and waits: signing in, deleting the account. Solid, in the middle of the window; at the width of a phone it rises from the bottom edge.',
+    height: 420,
+    wide: true,
+    face: 'web',
+    width: 1280,
+    render: ({ data, lang, theme }) => {
+      const t = T[lang];
+      return `<div class="tt tt-web"><div class="tt-under">${planMap(data, { lang, theme, width: 1280, height: 420, padding: { top: 60, right: 80, bottom: 60, left: 80 }, labels: 6 })}</div>
+        ${webCard(`${heading(t.failed, t.failedNote)}${action(t.retry, { icon: icons.reload })}`, { name: t.failed })}
+      </div>`;
+    },
+  },
+  {
+    id: 'link-preview',
+    group: 'Web',
+    title: 'What a messenger shows of a link',
+    note: 'The frame is the messenger’s and is drawn plainly on purpose: it is not our design, it is where our link arrives. Ours are the picture — the line of the Route on the map, the name of the product, the length of the walk in the timetable’s numerals —, a title, one line and the address.',
+    height: 430,
+    render: ({ data, lang, theme }) => {
+      const t = T[lang];
+      const length = format.duration(data.route.totalMinutes, lang);
+      return messenger({
+        title: t.settings,
+        people: t.places(data.route.stopCount),
+        messages: [
+          {
+            text: t.kicker,
+            at: data.route.checkedAt,
+            link: linkPreview({
+              picture: linkPicture({
+                map: lineMap(data, { lang, theme, size: 315 }),
+                mark: sign,
+                kicker: t.theLine,
+                title: t.title,
+                figure: length,
+                note: format.distance(data.route.walkingMetres, lang),
+              }),
+              title: t.title,
+              text: `${t.places(data.route.stopCount)} · ${length}`,
+              host: 'promenade.example',
+            }),
+          },
+        ],
+      });
+    },
+  },
+  ...consoleSpecimens,
 ];
 
 /** The kinds of component, in the order the work plan names them. */
@@ -988,7 +1065,17 @@ export function stage(specimen, ctx, variant = specimen.variants?.[0].id ?? '') 
   // What stands on the solid page is as high as its content; what stands over
   // the map has the height it was given.
   const flows = inner.startsWith('<div class="tt-on-page">');
-  return `<div class="screen stage" data-os="${ctx.os}" data-theme="${ctx.theme}" lang="${ctx.lang}" style="--text-scale:${ctx.text};width:${ctx.width}px;${flows ? 'min-height' : 'height'}:${height}px">${inner}</div>`;
+  // A web page has the materials of the web; the console has no glass.
+  const system = specimen.wide
+    ? `data-os="web" data-face="${faceOf(specimen)}"${faceOf(specimen) === 'console' ? ' data-glass="solid"' : ''}`
+    : `data-os="${ctx.os}"`;
+  return `<div class="screen stage${specimen.wide ? ' stage-wide' : ''}" ${system} data-theme="${ctx.theme}" lang="${ctx.lang}" style="--text-scale:${ctx.text};width:${ctx.width}px;${flows ? 'min-height' : 'height'}:${height}px">${inner}</div>`;
 }
+
+/** Which face a wide specimen belongs to. @param {Specimen} specimen */
+export const faceOf = (specimen) => specimen.face ?? 'console';
+
+/** The width a wide specimen is drawn at. @param {Specimen} specimen */
+export const wideWidth = (specimen) => specimen.width ?? 1440;
 
 export { meDot };

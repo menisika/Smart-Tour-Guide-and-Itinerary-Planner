@@ -7,19 +7,27 @@
  * is the design inside them.
  */
 
-/** @typedef {'ios' | 'android' | 'web'} Os */
+/** @typedef {'ios' | 'android' | 'web' | 'webphone' | 'console'} Os */
 
 export const SIZES = {
   ios: { width: 393, height: 852 },
   android: { width: 412, height: 892 },
   web: { width: 1280, height: 800 },
+  // The public web in a phone's browser, and the internal console at a desk.
+  webphone: { width: 390, height: 780 },
+  console: { width: 1440, height: 900 },
 };
+
+/** The outline each is drawn in: a browser window for everything that is a web page. */
+const OUTLINE = { ios: 'ios', android: 'android', web: 'web', webphone: 'web', console: 'web' };
 
 /** Height the system keeps at the top and at the bottom of a phone screen. */
 export const INSETS = {
   ios: { top: 54, bottom: 34 },
   android: { top: 44, bottom: 24 },
   web: { top: 0, bottom: 0 },
+  webphone: { top: 0, bottom: 0 },
+  console: { top: 0, bottom: 0 },
 };
 
 // ── Icons ───────────────────────────────────────────────────────────────────
@@ -73,16 +81,23 @@ const browserBar = (/** @type {string} */ address) => `
  */
 export function frame({ os, theme, lang, direction, clock, inner, address = '', screen = '' }) {
   const size = SIZES[os];
+  const outline = OUTLINE[os];
   const bars =
     os === 'ios'
       ? `${iosStatus(clock)}<span class="sys sys-ios-home" aria-hidden="true"></span>`
       : os === 'android'
         ? `${androidStatus(clock)}<span class="sys sys-android-nav" aria-hidden="true"></span>`
         : browserBar(address);
-  return `<div class="device device-${os}" style="--w:${size.width};--h:${size.height}">
+  // A web page has the materials of the web; the console has no glass at all:
+  // every pane of it is solid.
+  const face =
+    outline === 'web'
+      ? ` data-os="web" data-face="${os}"${os === 'console' ? ' data-glass="solid"' : ''}`
+      : ` data-os="${os}"`;
+  return `<div class="device device-${outline}${outline === os ? '' : ` device-${os}`}" style="--w:${size.width};--h:${size.height}">
     <div class="device-zoom">
-      <div class="screen d-${direction} s-${screen}" data-theme="${theme}" data-os="${os}" lang="${lang}">
-        ${os === 'web' ? `${bars}<div class="page">${inner}</div>` : `${inner}${bars}`}
+      <div class="screen d-${direction} s-${screen}" data-theme="${theme}"${face} lang="${lang}">
+        ${outline === 'web' ? `${bars}<div class="page">${inner}</div>` : `${inner}${bars}`}
       </div>
     </div>
   </div>`;

@@ -211,6 +211,17 @@
   height: 17px;
 }
 
+/* A phone's browser: the address takes the width. */
+.device-webphone .sys-browser {
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 10px;
+  padding: 0 10px;
+}
+
+.device-webphone .sys-browser-space {
+  display: none;
+}
+
 .sys-browser-nav {
   display: flex;
   gap: 14px;

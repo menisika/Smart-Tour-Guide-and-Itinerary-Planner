@@ -37,8 +37,8 @@ export const skeleton = () => '<div class="tt-skel" aria-hidden="true"><i></i><i
 
 /**
  * A band that stays while something is so: there is no network, the battery
- * will not last.
- * @param {{ icon: string, lead: string, rest: string, is: 'warn' | 'stop' }} band
+ * will not last — or, in the colour of "on time", something has gone through.
+ * @param {{ icon: string, lead: string, rest: string, is: 'warn' | 'stop' | 'ok' }} band
  */
 export const banner = ({ icon, lead, rest, is }) =>
   `<p class="tt-banner is-${is}" role="status">${icon}<span><b>${lead}</b>${rest}</span></p>`;
