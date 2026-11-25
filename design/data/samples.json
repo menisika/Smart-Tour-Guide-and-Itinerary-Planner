@@ -75,5 +75,258 @@
     "about": "Digits typed into a one-time code: some so far, and six that do not match.",
     "digits": "482",
     "wrong": "482913"
+  },
+  "party": {
+    "about": "The Party of scenario SC-2: five people on a Saturday at 14:00 for about three hours. The first names are those of the specification's scenarios; who has answered, what each likes and rules out, the votes and the messages are samples. The Places, times and distances shown with this Party are those of the reference Outing.",
+    "date": "2026-11-28",
+    "weekday": {
+      "ru": "суббота",
+      "en": "Saturday"
+    },
+    "start": "14:00",
+    "hours": 3,
+    "invited_at": "2026-11-25",
+    "members": [
+      {
+        "id": "dima",
+        "name": {
+          "ru": "Дима",
+          "en": "Dima"
+        },
+        "organizer": true,
+        "answered": true,
+        "likes": {
+          "ru": "кофе",
+          "en": "coffee"
+        },
+        "status": "here"
+      },
+      {
+        "id": "anya",
+        "name": {
+          "ru": "Аня",
+          "en": "Anya"
+        },
+        "answered": true,
+        "likes": {
+          "ru": "архитектура",
+          "en": "architecture"
+        },
+        "status": "on_the_way"
+      },
+      {
+        "id": "olya",
+        "name": {
+          "ru": "Оля",
+          "en": "Olya"
+        },
+        "answered": true,
+        "likes": {
+          "ru": "парки",
+          "en": "parks"
+        },
+        "dealbreaker": {
+          "ru": "без баров",
+          "en": "no bars"
+        },
+        "status": "on_the_way"
+      },
+      {
+        "id": "pavel",
+        "name": {
+          "ru": "Павел",
+          "en": "Pavel"
+        },
+        "answered": false,
+        "status": "unknown"
+      },
+      {
+        "id": "emma",
+        "name": {
+          "ru": "Эмма",
+          "en": "Emma"
+        },
+        "answered": false,
+        "status": "unknown"
+      }
+    ],
+    "options": {
+      "about": "What each Route offered to the Party gives to whom (PTY-8). The Routes are the three of `options`; the lines are samples written from what those Routes really hold: early twentieth-century buildings, seen from outside, and a Break. None of them has a park, and the line says so: it never promises that a Route suits everyone.",
+      "lines": [
+        {
+          "ru": "Вся архитектура для Ани, кофе в середине для Димы; парка нет — Оле меньше всех",
+          "en": "All the architecture for Anya, coffee halfway for Dima; no park — least for Olya"
+        },
+        {
+          "ru": "То же без одного места: спокойнее для всех, Ане чуть меньше",
+          "en": "The same without one place: calmer for everyone, a little less for Anya"
+        },
+        {
+          "ru": "На час короче: кофе для Димы, половина архитектуры для Ани",
+          "en": "An hour shorter: coffee for Dima, half of the architecture for Anya"
+        }
+      ],
+      "got": [
+        {
+          "anya": {
+            "ru": "вся её эпоха",
+            "en": "her whole period"
+          },
+          "dima": {
+            "ru": "пауза на кофе",
+            "en": "a coffee break"
+          },
+          "olya": {
+            "ru": "без баров; парка нет",
+            "en": "no bars; no park"
+          }
+        },
+        {
+          "anya": {
+            "ru": "10 мест из 11",
+            "en": "10 places of 11"
+          },
+          "dima": {
+            "ru": "пауза на кофе",
+            "en": "a coffee break"
+          },
+          "olya": {
+            "ru": "без баров; больше запаса",
+            "en": "no bars; more to spare"
+          }
+        },
+        {
+          "anya": {
+            "ru": "7 мест из 11",
+            "en": "7 places of 11"
+          },
+          "dima": {
+            "ru": "пауза на кофе",
+            "en": "a coffee break"
+          },
+          "olya": {
+            "ru": "без баров; короче",
+            "en": "no bars; shorter"
+          }
+        }
+      ],
+      "votes": [
+        {
+          "for": 3,
+          "against": 0
+        },
+        {
+          "for": 1,
+          "against": 1
+        },
+        {
+          "for": 0,
+          "against": 2
+        }
+      ],
+      "chosen": 0
+    },
+    "chat": {
+      "about": "Sample messages of the Chat of the Party. The system events are those the specification names.",
+      "lines": [
+        {
+          "event": {
+            "ru": "Оля ответила на приглашение",
+            "en": "Olya answered the invitation"
+          }
+        },
+        {
+          "from": "anya",
+          "at": "13:58",
+          "text": {
+            "ru": "Я за первый вариант",
+            "en": "I am for the first option"
+          }
+        },
+        {
+          "from": "olya",
+          "at": "14:02",
+          "text": {
+            "ru": "Мне второй — он спокойнее",
+            "en": "The second for me — it is calmer"
+          },
+          "reaction": "2"
+        },
+        {
+          "event": {
+            "ru": "Дима выбрал вариант 1",
+            "en": "Dima chose option 1"
+          }
+        },
+        {
+          "from": "dima",
+          "mine": true,
+          "at": "14:10",
+          "text": {
+            "ru": "Встречаемся у вокзала за десять минут до начала",
+            "en": "We meet at the station ten minutes before the start"
+          }
+        }
+      ]
+    }
+  },
+  "catalog": {
+    "about": "Samples for the Catalog of stage S3. The Routes are the three of `options`: two measured and one sample; their titles, Authors, ratings, numbers of Outings and Reviews are samples. A Review says nothing about history.",
+    "entries": [
+      {
+        "option": 0,
+        "author": {
+          "ru": "Кураторы Promenade",
+          "en": "Promenade curators"
+        },
+        "curator": true,
+        "rating": 4.6,
+        "outings": 128
+      },
+      {
+        "option": 1,
+        "title": {
+          "ru": "Без спешки: архитектура начала XX века",
+          "en": "Unhurried: early 20th-century architecture"
+        },
+        "author_member": "olya",
+        "rating": 4.8,
+        "outings": 12
+      },
+      {
+        "option": 2,
+        "title": {
+          "ru": "Час до поезда",
+          "en": "An hour before the train"
+        },
+        "author_member": "anya",
+        "rating": 4.3,
+        "outings": 31
+      }
+    ],
+    "reviews": [
+      {
+        "member": "pavel",
+        "date": "2026-11-21",
+        "rating": 4,
+        "text": {
+          "ru": "Прошли за три часа, как и обещано. Рассказы короткие и по делу.",
+          "en": "It took three hours, as promised. The stories are short and to the point."
+        }
+      },
+      {
+        "member": "emma",
+        "date": "2026-11-14",
+        "rating": 5,
+        "text": {
+          "ru": "Слушала на английском, пока Павел слушал на русском. Удобно.",
+          "en": "I listened in English while Pavel listened in Russian. It just worked."
+        }
+      }
+    ],
+    "visits": {
+      "cities": 1,
+      "outings": 1
+    }
   }
 }

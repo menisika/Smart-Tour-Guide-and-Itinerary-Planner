@@ -18,11 +18,11 @@ let loading;
 
 /**
  * The data of the mockups, with what the screens add to the reference
- * Outing: marked samples, and the Venues near it.
+ * Outing: marked samples, the Venues near it, and what the console shows.
  */
 export function ready() {
-  loading ??= Promise.all([readyBase(), read('samples'), read('venues')]).then(
-    ([data, samples, venues]) => ({ ...data, samples, venues }),
+  loading ??= Promise.all([readyBase(), read('samples'), read('venues'), read('console')]).then(
+    ([data, samples, venues, console]) => ({ ...data, samples, venues, console }),
   );
   return loading;
 }

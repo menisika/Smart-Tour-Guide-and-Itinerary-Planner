@@ -7,9 +7,11 @@
  * that shows one screen at its real size, and for the check that draws and
  * measures all of them.
  */
+import { consoleScenarios, consoleScreens } from './console/index.js';
 import { after } from './phone/after.js';
 import { before } from './phone/before.js';
 import { during } from './phone/outing.js';
+import { web } from './web/pages.js';
 
 /**
  * @typedef {object} Screen
@@ -26,6 +28,8 @@ import { during } from './phone/outing.js';
  */
 
 const PHONE = ['ios', 'android'];
+/** The public web: at the width of a desk and of a phone's browser. */
+const WEB = ['web', 'webphone'];
 
 /** The five states every screen of stage S1 is asked for. */
 export const STATES = {
@@ -579,6 +583,165 @@ export const screens = [
     absent: { loading: WHY.local, empty: WHY.full, offline: WHY.same, error: WHY.safe },
     render: after.profile,
   },
+  // ── D-04 · The public web ───────────────────────────────────────────────
+  {
+    id: 'web-route',
+    pkg: 'D-04',
+    group: 'The public web',
+    title: 'The Route Page, as it opens from a messenger',
+    reqs: ['EDT-7', 'CAT-1', 'RTE-9', 'RTE-12', 'OUT-20', 'NFR-27'],
+    note: 'Opens by a link, without installing anything and without an account. The first screen says what the Route is, that it has been checked, and what can be done: take a copy, listen. What a browser cannot do is said in words, once.',
+    on: WEB,
+    states: {
+      usual: STATES.usual,
+      loading: STATES.loading,
+      error: 'Error: the link no longer leads to a Route',
+    },
+    absent: {
+      empty: 'A Route has at least one Place (RTE-11).',
+      offline: 'The web does not work without a network (§6): the browser says so itself.',
+    },
+    render: web.routePage,
+  },
+  {
+    id: 'web-invitation',
+    pkg: 'D-04',
+    group: 'The public web',
+    title: 'The Invitation page, answered in a minute',
+    reqs: ['PTY-3', 'PTY-4', 'PTY-5', 'NTF-3', 'NTF-4', 'PTY-12'],
+    note: 'Five questions at most: a name, what one likes, Dealbreakers, pace, an optional Wish. Answering needs neither installation nor an account. Once answered, the same link shows the state of the Outing. The Party is the sample Party of SC-2; the Meeting Point is the start of the reference Outing.',
+    on: WEB,
+    states: {
+      usual: STATES.usual,
+      answered: 'Answered: the state of the Outing',
+      error: 'Error: the link was replaced',
+    },
+    absent: {
+      loading: 'The page is rendered on the server and arrives whole (ADR-0007, point 2).',
+      empty: WHY.full,
+      offline: 'The web does not work without a network (§6).',
+    },
+    render: web.invitation,
+  },
+  {
+    id: 'web-request',
+    pkg: 'D-04',
+    group: 'The public web',
+    title: 'The Route request, in a browser',
+    reqs: ['RTE-1', 'PRF-6', 'ACC-1'],
+    note: 'The same request as in the application, in a panel beside the map. The other states of the request are those of the phone’s screen.',
+    on: WEB,
+    states: { usual: STATES.usual },
+    absent: {
+      loading: WHY.local,
+      empty: 'Drawn for the phone: the same components.',
+      offline: 'The web does not work without a network (§6).',
+      error: 'Drawn for the phone: the same components.',
+    },
+    render: web.request,
+  },
+  {
+    id: 'web-edit',
+    pkg: 'D-04',
+    group: 'The public web',
+    title: 'Editing a Route, in a browser',
+    reqs: ['EDT-1', 'EDT-2', 'EDT-3', 'EDT-5', 'EDT-8'],
+    note: 'The same rows as in the application: move by keys, remove, add from the map; a broken condition is listed under the Place that breaks it. The two states are the measured Route without one Place, and a sample of a violation.',
+    on: WEB,
+    states: { usual: STATES.usual, error: 'Error: the edit breaks a condition' },
+    absent: {
+      loading: WHY.local,
+      empty: 'A Route has at least one Place (RTE-11).',
+      offline: 'The web does not work without a network (§6).',
+    },
+    render: web.edit,
+  },
+  {
+    id: 'web-story',
+    pkg: 'D-04',
+    group: 'The public web',
+    title: 'A Story played by hand',
+    reqs: ['OUT-20', 'KNW-11', 'KNW-15', 'KNW-16', 'NFR-27'],
+    note: 'In a browser a Story is started by hand; there is no automatic start and no work without a network, and the page says so. The text follows the voice as in the application. The text is a cited passage standing in for a Story.',
+    on: WEB,
+    states: { usual: STATES.usual },
+    absent: {
+      loading: 'Drawn in the player of the design system: “not ready yet”.',
+      empty: WHY.full,
+      offline: 'The web does not work without a network (§6).',
+      error: WHY.safe,
+    },
+    render: web.story,
+  },
+  {
+    id: 'web-sign-in',
+    pkg: 'D-04',
+    group: 'The public web',
+    title: 'Sign-in, in a browser',
+    reqs: ['ACC-3', 'ACC-5'],
+    note: 'A card over the page one came from. An e-mail one-time code, Apple or Google; their marks are not reproduced.',
+    on: WEB,
+    states: { usual: STATES.usual, code: 'The one-time code' },
+    absent: {
+      loading: 'Drawn for the phone: the same components.',
+      empty: WHY.full,
+      offline: 'The web does not work without a network (§6).',
+      error: 'Drawn for the phone: the same components.',
+    },
+    render: web.signIn,
+  },
+  {
+    id: 'web-delete',
+    pkg: 'D-04',
+    group: 'The public web',
+    title: 'Deleting the account, in a browser',
+    reqs: ['ACC-6', 'NFR-15'],
+    note: 'The same words as in the application: exactly what is removed, and that it cannot be undone.',
+    on: WEB,
+    states: { usual: STATES.usual },
+    absent: {
+      loading: WHY.local,
+      empty: WHY.full,
+      offline: 'The web does not work without a network (§6).',
+      error: WHY.safe,
+    },
+    render: web.deleteAccount,
+  },
+  {
+    id: 'preview-route',
+    pkg: 'D-04',
+    group: 'What a messenger shows',
+    title: 'The preview of a Route Page',
+    reqs: ['EDT-7', 'CAT-1', 'ADR-0007'],
+    note: 'The frame is the messenger’s and is drawn plainly on purpose. Ours are the picture — the line of the Route on the map, with its length in time —, the title, one line and the address. The page is rendered on the server with link-preview tags (ADR-0007, point 2). The message is a sample.',
+    on: PHONE,
+    states: { usual: STATES.usual },
+    absent: {
+      loading: WHY.full,
+      empty: WHY.full,
+      offline: WHY.full,
+      error: 'A messenger that cannot read the tags shows the address alone.',
+    },
+    render: web.previewRoute,
+  },
+  {
+    id: 'preview-invitation',
+    pkg: 'D-04',
+    group: 'What a messenger shows',
+    title: 'The preview of an Invitation',
+    reqs: ['PTY-3', 'PTY-2', 'ADR-0007'],
+    note: 'An Invitation says when, how long and where before it is opened, and that answering takes a minute. Sharing a Route and sending an Invitation are different links with different previews (§4.9, rules). The message is a sample.',
+    on: PHONE,
+    states: { usual: STATES.usual },
+    absent: {
+      loading: WHY.full,
+      empty: WHY.full,
+      offline: WHY.full,
+      error: 'A messenger that cannot read the tags shows the address alone.',
+    },
+    render: web.previewInvitation,
+  },
+  ...consoleScreens,
 ];
 
 /**
@@ -645,6 +808,44 @@ export const scenarios = [
       ['corrections', 'usual', '“My Corrections” shows it.'],
     ],
   },
+  {
+    id: 'WEB-1',
+    title:
+      'A Route opened from a messenger (a walk of the public web, not a scenario of the specification)',
+    steps: [
+      ['preview-route', 'usual', 'A friend drops a link into the chat.', 'ios'],
+      [
+        'web-route',
+        'usual',
+        'It opens in the phone’s browser, with nothing installed.',
+        'webphone',
+      ],
+      ['web-story', 'usual', 'A Story is played by hand.', 'webphone'],
+      ['web-route', 'usual', 'The same page at a desk.', 'web'],
+      ['web-edit', 'usual', 'A copy is taken and edited.', 'web'],
+      ['web-request', 'usual', 'Or a Route of one’s own is asked for.', 'web'],
+      ['web-sign-in', 'usual', 'Signing in keeps it on every device.', 'web'],
+      ['web-sign-in', 'code', 'A one-time code.', 'web'],
+      ['web-delete', 'usual', 'The account can be deleted from the web.', 'web'],
+    ],
+  },
+  {
+    id: 'WEB-2',
+    title: 'An Invitation answered in a minute (the first steps of SC-2)',
+    steps: [
+      ['preview-invitation', 'usual', 'Dima drops the Invitation into the group.', 'ios'],
+      ['web-invitation', 'usual', 'Olya opens it in the browser and answers.', 'webphone'],
+      [
+        'web-invitation',
+        'answered',
+        'The same link now shows the state of the Outing.',
+        'webphone',
+      ],
+      ['web-invitation', 'usual', 'The same page at a desk.', 'web'],
+      ['web-invitation', 'error', 'A link that was replaced says so.', 'webphone'],
+    ],
+  },
+  ...consoleScenarios,
 ];
 
 /** @param {string} id */
