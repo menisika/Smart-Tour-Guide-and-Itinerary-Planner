@@ -65,7 +65,7 @@ pnpm test
 
 Neither command needs the Docker environment, a build, or a network. Neither calls a paid service: language models and speech are replayed from recordings.
 
-- `pnpm lint` — ESLint, the import boundaries, the type check of every package, and the formatting check.
+- `pnpm lint` — ESLint, the import boundaries, the type check of every package, the work plan, the design system, and the formatting check.
 - `pnpm test` — unit tests, the property-based tests of the planner stub, and the tests that prove each architecture rule fails on a deliberate violation.
 - `node scripts/smoke.mjs` — the running environment, after `docker compose up`.
 
