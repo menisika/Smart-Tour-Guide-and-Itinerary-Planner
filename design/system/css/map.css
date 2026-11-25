@@ -427,3 +427,13 @@
   width: 22px;
   height: 22px;
 }
+
+/* The way back to the line, for someone who has left it (OUT-12). */
+.tt-line-back {
+  fill: none;
+  stroke: var(--stop);
+  stroke-width: calc(var(--u) * var(--line-walked-width) * 1px);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: calc(var(--u) * 2px) calc(var(--u) * 9px);
+}

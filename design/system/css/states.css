@@ -299,3 +299,71 @@
   color: var(--stop);
   font-weight: 600;
 }
+
+/* ── What has to be in place before something begins ───────────────────── */
+
+.tt-checks li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  min-height: var(--size-action);
+  padding: var(--space-8) 0;
+}
+
+.tt-checks li + li {
+  box-shadow: inset 0 0.5px 0 var(--rule);
+}
+
+.tt-checks li > i {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--ok-tint);
+  color: var(--accent-ink);
+}
+
+.tt-checks li > i .icon {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2.6;
+}
+
+.tt-checks .is-missing > i {
+  background: var(--stop-tint);
+  color: var(--stop);
+}
+
+.tt-checks li > span {
+  flex: 1;
+  min-width: 0;
+}
+
+.tt-checks b {
+  display: block;
+  font: var(--type-row);
+  letter-spacing: var(--type-row-tracking);
+}
+
+.tt-checks small {
+  display: block;
+  font: var(--type-caption);
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.tt-checks .is-missing small {
+  color: var(--stop);
+}
+
+.screen .tt-checks button {
+  flex: none;
+  min-height: var(--target);
+  padding: 0 var(--space-12);
+  border-radius: var(--radius-full);
+  background: var(--surface-2);
+  font: var(--type-label-strong);
+  color: var(--accent-ink);
+}

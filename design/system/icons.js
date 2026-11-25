@@ -191,6 +191,35 @@ export const icons = {
   ),
   warning: stroke(`<path d="M12 4 2.8 19.5h18.4L12 4ZM12 10v4.3"/>${dot('M12 16.9h.01')}`),
   alert: stroke(`<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v5.3"/>${dot('M12 16.1h.01')}`),
+  // ── What the screens of the Outing added ────────────────────────────────
+  like: stroke(
+    '<path d="M7.5 10.5V20H5a1.5 1.5 0 0 1-1.5-1.5V12A1.5 1.5 0 0 1 5 10.5h2.5Zm0 0 3.6-6.6c1.5 0 2.6 1.2 2.4 2.7l-.5 3h5a2 2 0 0 1 2 2.4l-1.2 6.4a2 2 0 0 1-2 1.6H7.5"/>',
+  ),
+  dislike: stroke(
+    '<path d="M7.5 13.5V4H5a1.5 1.5 0 0 0-1.5 1.5V12A1.5 1.5 0 0 0 5 13.5h2.5Zm0 0 3.6 6.6c1.5 0 2.6-1.2 2.4-2.7l-.5-3h5a2 2 0 0 0 2-2.4l-1.2-6.4a2 2 0 0 0-2-1.6H7.5"/>',
+  ),
+  bell: stroke(
+    '<path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 2h-15l1.5-2ZM10 21a2.2 2.2 0 0 0 4 0"/>',
+  ),
+  swap: stroke('<path d="M4.5 8.5h13M14 5l3.5 3.5L14 12M19.5 15.5h-13M10 12l-3.5 3.5L10 19"/>'),
+  tack: stroke('<path d="M9 3.5h6l-1 6 3.5 3.5h-11L10 9.5l-1-6ZM12 13v7.5"/>'),
+  calendar: stroke(
+    '<rect x="4" y="5.5" width="16" height="14.5" rx="2.5"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/>',
+  ),
+  mail: stroke(
+    '<rect x="3.5" y="5.5" width="17" height="13" rx="2.5"/><path d="m4.5 7.5 7.5 6 7.5-6"/>',
+  ),
+  send: stroke('<path d="M20.5 3.5 10 14M20.5 3.5 14 20.5 10 14 3.5 10l17-6.5Z"/>'),
+  signOut: stroke(
+    '<path d="M14 4.5H7A1.5 1.5 0 0 0 5.5 6v12A1.5 1.5 0 0 0 7 19.5h7M10.5 12h10M17 8.5l3.5 3.5-3.5 3.5"/>',
+  ),
+  history: stroke('<path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3L4.5 9M4.5 4.5V9H9M12 8v4.5l3 1.8"/>'),
+  link: stroke(
+    '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
+  ),
+  speaker: stroke(
+    '<path d="M4.5 9.5v5H8l5 4v-13l-5 4H4.5ZM16.5 9a4 4 0 0 1 0 6M18.8 6.5a7.5 7.5 0 0 1 0 11"/>',
+  ),
 };
 
 /** @typedef {keyof typeof icons} IconName */
@@ -287,4 +316,16 @@ export const ICON_NAMES = {
   question: { ru: 'Вопрос', en: 'Question' },
   warning: { ru: 'Внимание', en: 'Warning' },
   alert: { ru: 'Ошибка', en: 'Error' },
+  like: { ru: 'Понравилось', en: 'Liked' },
+  dislike: { ru: 'Не понравилось', en: 'Did not like' },
+  bell: { ru: 'Уведомления', en: 'Notifications' },
+  swap: { ru: 'Заменить', en: 'Replace' },
+  tack: { ru: 'Закрепить', en: 'Pin' },
+  calendar: { ru: 'Дата', en: 'Date' },
+  mail: { ru: 'Почта', en: 'E-mail' },
+  send: { ru: 'Отправить', en: 'Send' },
+  signOut: { ru: 'Выйти', en: 'Sign out' },
+  history: { ru: 'Версии', en: 'Versions' },
+  link: { ru: 'Ссылка', en: 'Link' },
+  speaker: { ru: 'Звук', en: 'Sound' },
 };

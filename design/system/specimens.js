@@ -16,22 +16,47 @@ import {
   action,
   back,
   chips,
+  code,
   field,
   group,
+  liked,
   options,
+  rate,
   round,
   segments,
   stepper,
+  tastes,
   titlePill,
   toggle,
 } from './parts/controls.js';
-import { item, journal, list, placeRow } from './parts/lists.js';
-import { backdrop, meDot, planMap, walkMap } from './parts/map.js';
+import {
+  bar,
+  credit,
+  heading,
+  hero,
+  over,
+  page as pageOf,
+  photo,
+  sheetHead,
+} from './parts/layout.js';
+import { item, journal, list, log, placeRow, points, reading, saved } from './parts/lists.js';
+import { backdrop, lineMap, meDot, planMap, walkMap } from './parts/map.js';
 import { lockScreen, tabs } from './parts/platform.js';
-import { board, chart, dock, head, verdict } from './parts/route.js';
-import { dialog, menu, sheet, toast } from './parts/sheets.js';
-import { banner, pack, skeleton, state, steps } from './parts/states.js';
-import { guide, mini, player } from './parts/story.js';
+import {
+  ahead,
+  board,
+  chart,
+  dock,
+  figures,
+  head,
+  thumb,
+  variant,
+  variants,
+  verdict,
+} from './parts/route.js';
+import { ask, dialog, menu, sheet, toast } from './parts/sheets.js';
+import { banner, checks, pack, skeleton, state, steps } from './parts/states.js';
+import { guide, mini, placePage, player, source } from './parts/story.js';
 import { T } from './strings.js';
 
 /**
@@ -228,6 +253,51 @@ export const specimens = [
     },
   },
 
+  {
+    id: 'tastes',
+    group: 'Inputs',
+    title: 'Themes of the Profile: liked, neutral, disliked',
+    note: 'One chip, three states, a tap to the next (PRF-2). Liked is filled and ticked; disliked is outlined and struck through; neutral is plain. None is told by colour alone. The themes are samples of the list the product fixes.',
+    height: 150,
+    grows: true,
+    render: ({ lang }) => {
+      const t = T[lang];
+      return page(
+        tastes(
+          [
+            [t.themes[0], 'like'],
+            [t.themes[1], 'neutral'],
+            [t.themes[2], 'dislike'],
+          ],
+          t.tasteSay,
+        ),
+      );
+    },
+  },
+  {
+    id: 'rating',
+    group: 'Inputs',
+    title: 'A rating, and “liked or not”',
+    note: 'An Outing is rated from one to five, each key saying its own number (FBK-1). A Story is liked or not, with words on the keys (FBK-2). Neither is ever required.',
+    height: 190,
+    grows: true,
+    render: ({ lang }) => {
+      const t = T[lang];
+      return page(
+        `${rate(t.rateName, 4, t.rateSay)}<div class="tt-gap"></div>${liked(t.likedName, 'like', t.likedLabels)}`,
+      );
+    },
+  },
+  {
+    id: 'code',
+    group: 'Inputs',
+    title: 'A one-time code',
+    note: 'Six cells, one field: a screen reader and a keyboard meet a single text box (ACC-3). The digits are a sample.',
+    height: 110,
+    grows: true,
+    render: ({ lang }) => page(code(T[lang].codeName, '482')),
+  },
+
   // ── Sheets ──────────────────────────────────────────────────────────────
   {
     id: 'route-sheet',
@@ -321,6 +391,58 @@ export const specimens = [
       const t = T[ctx.lang];
       const again = ctx.data.recalculated.route;
       return `${map(ctx, 170, { around: 8, u: 2.4 })}${toast({ icon: icons.route, lead: t.recalculated, rest: `${t.finishAt(again.finish)} · ${t.reserve(again.reserveMinutes)}`, undo: t.undo, style: 'top:54px' })}`;
+    },
+  },
+
+  {
+    id: 'place-page',
+    group: 'Sheets',
+    title: 'The page of a Place, before the Outing',
+    note: 'The guide speaking, so it is solid and set in the serif: the photograph with its author, the name, why the Place is on the Route in italic (RTE-9), what is known of it, and what can be done with it.',
+    height: 852,
+    device: true,
+    render: ({ data, lang, theme, os }) => {
+      const t = T[lang];
+      const stop = data.stops[2];
+      return `<div class="tt"><div class="tt-under tt-under-plain"></div>${placePage(
+        data,
+        stop,
+        lang,
+        {
+          theme,
+          width: SIZES[os].width,
+          facts: [`${icons.eye}${t.outside}`, `${icons.clock}${t.visit(data.route.visitMinutes)}`],
+          actions: `${action(t.remove, { kind: 'plain-danger', icon: icons.trash })}`,
+        },
+      )}</div>`;
+    },
+  },
+  {
+    id: 'source',
+    group: 'Sheets',
+    title: 'Where a sentence comes from',
+    note: 'One tap on a sentence of a Story (KNW-16): the sentence, the work, the article, its revision and its licence. It is read, so the sheet is solid. A sheet that waits dims what is behind it; its grabber closes it.',
+    height: 470,
+    grows: true,
+    render: ({ data, lang }) => {
+      const t = T[lang];
+      const told = data.outingNow.story[lang];
+      return `<div class="tt-under tt-under-page"></div>${over(
+        `${sheetHead(t.sourceWork)}${source(lang, { quote: told.sentences[told.current].text, source: told.source, actions: action(t.remove, { kind: 'plain', icon: icons.flag }) })}`,
+        { lang, solid: true },
+      )}`;
+    },
+  },
+  {
+    id: 'ask',
+    group: 'Sheets',
+    title: 'A question that does not wait',
+    note: 'Stands over the content and can be left unanswered: nothing is dimmed and nothing is blocked (FBK-2).',
+    height: 150,
+    grows: true,
+    render: (ctx) => {
+      const t = T[ctx.lang];
+      return `${map(ctx, 150, { around: 2, u: 2 })}${ask(t.likedName, liked(t.likedName, '', t.likedLabels)).replace('class="tt-ask lg"', 'class="tt-ask lg" style="top:14px"')}`;
     },
   },
 
@@ -430,6 +552,86 @@ export const specimens = [
     },
   },
 
+  {
+    id: 'reading',
+    group: 'Lists',
+    title: 'How a Wish was understood',
+    note: 'Each row is one constraint or weight, beside the words it was read from, and can be taken out (RTE-2). A hard condition has its own sign and colour; one read with doubt has another. The rows are samples.',
+    height: 250,
+    grows: true,
+    render: ({ lang, data }) => {
+      const t = T[lang];
+      return page(
+        reading(lang, [
+          { icon: icons.building, label: t.themes[0], from: data.route.wish[lang] },
+          { icon: icons.museum, label: t.inside, from: data.route.wish[lang], is: 'hard' },
+          { icon: icons.question, label: t.themes[2], from: data.route.wish[lang], is: 'unsure' },
+          { icon: icons.person, label: t.settings, from: t.budgetNote, fixed: true },
+        ]),
+      );
+    },
+  },
+  {
+    id: 'log',
+    group: 'Lists',
+    title: 'What happened, by time',
+    note: 'The versions of a Route, the outcomes of Corrections, notifications: a time, what it was, what became of it. A line about a Place carries its photograph.',
+    height: 210,
+    grows: true,
+    render: ({ lang, data }) => {
+      const t = T[lang];
+      return page(
+        log([
+          {
+            at: data.route.checkedAt,
+            label: data.stops[1].name[lang],
+            note: t.sent,
+            icon: icons.check,
+            media: thumb(data.stops[1], ''),
+            is: 'ok',
+          },
+          { at: data.route.nowBeforeStart, label: t.recalculated, note: t.waiting, is: 'now' },
+        ]),
+      );
+    },
+  },
+  {
+    id: 'saved',
+    group: 'Lists',
+    title: 'A Route in the collection',
+    note: 'A Route is shown by its own line on the map, with its two times in the timetable’s numerals (EDT-6). An Outing that is over has a walked line.',
+    height: 270,
+    grows: true,
+    render: ({ lang, theme, data }) => {
+      const t = T[lang];
+      const row = (/** @type {boolean} */ walked) =>
+        saved({
+          map: lineMap(data, { lang, theme, size: 104, walked }),
+          title: t.title,
+          times: `${data.route.start} — ${data.route.finish}`,
+          facts: `${t.places(data.route.stopCount)} · ${format.distance(data.route.walkingMetres, lang)}`,
+        });
+      return page(`${row(false)}${row(true)}`);
+    },
+  },
+  {
+    id: 'points',
+    group: 'Lists',
+    title: 'A few plain statements',
+    note: 'What a decision takes away, what a page keeps: each with its sign, none a control.',
+    height: 150,
+    grows: true,
+    render: ({ lang }) => {
+      const t = T[lang];
+      return page(
+        points([
+          { icon: icons.pack, text: t.packName },
+          { icon: icons.sync, text: t.journal },
+        ]),
+      );
+    },
+  },
+
   // ── The Story player ────────────────────────────────────────────────────
   {
     id: 'player',
@@ -487,6 +689,73 @@ export const specimens = [
         held: { kind: 'held', lead: t.held, rest: t.resume },
       }[variant];
       return `${map(ctx, 132, { around: 2, u: 2.2 })}<header class="tt-top tt-top-stage">${board(data, lang, minute, /** @type {any} */ (say))}</header>`;
+    },
+  },
+
+  {
+    id: 'variants',
+    group: 'Progress',
+    title: 'The Routes offered',
+    note: 'One of two or three (RTE-7): the character in a word, why in the guide’s italic, the two times, the Places in order as photographs, the measures. The chosen one has a ring and a tick. Both Routes here are measured: the reference Outing, and the same without one Place.',
+    height: 290,
+    grows: true,
+    render: ({ data, lang }) => {
+      const t = T[lang];
+      return `<div class="tt-under tt-under-plain"></div>${pane(
+        variants(t.theLine, [
+          variant(lang, {
+            name: t.guided,
+            why: data.stops[0].why[lang],
+            route: data.route,
+            stops: data.stops,
+            chosen: true,
+          }),
+          variant(lang, {
+            name: t.quiet,
+            why: data.stops[1].why[lang],
+            route: data.recalculated.route,
+            stops: data.recalculated.stops,
+            chosen: false,
+          }),
+        ]),
+      )}`;
+    },
+  },
+  {
+    id: 'figures',
+    group: 'Progress',
+    title: 'A few measures side by side',
+    note: 'Numbers in the timetable’s numerals over their names: the end of an Outing.',
+    height: 110,
+    grows: true,
+    render: ({ data, lang }) => {
+      const t = T[lang];
+      return page(
+        figures([
+          { label: t.out, value: data.route.start },
+          { label: t.back, value: data.route.finish },
+          { label: t.theLine, value: format.distance(data.route.walkingMetres, lang) },
+        ]),
+      );
+    },
+  },
+  {
+    id: 'ahead',
+    group: 'Progress',
+    title: 'The Place ahead',
+    note: 'For the way between two Places (OUT-2): one number large enough for a glance, and in words whether one is in time. A warning and “off the Route” change the words; the colour only repeats them.',
+    height: 190,
+    grows: true,
+    variants: [
+      { id: 'ok', label: 'In time' },
+      { id: 'warn', label: 'Behind' },
+      { id: 'stop', label: 'Off the Route' },
+    ],
+    render: (ctx, variantId) => {
+      const t = T[ctx.lang];
+      const next = ctx.data.outingNow.next;
+      const note = { ok: t.onTime, warn: t.behind(6), stop: t.offRoute }[variantId] ?? '';
+      return `${map(ctx, 190, { around: 3, u: 2 })}${ahead(ctx.lang, { stop: next, note, is: variantId === 'ok' ? undefined : /** @type {any} */ (variantId) }).replace('class="tt-ahead lg', 'style="bottom:14px" class="tt-ahead lg')}`;
     },
   },
 
@@ -637,6 +906,24 @@ export const specimens = [
     },
   },
 
+  {
+    id: 'checks',
+    group: 'States',
+    title: 'What has to be in place before the start',
+    note: 'Each line is there or missing, in words; what is missing has its way out beside it. The check before an Outing: the Route Pack, the sound, the permission (§4.7).',
+    height: 230,
+    grows: true,
+    render: ({ lang }) => {
+      const t = T[lang];
+      return page(
+        checks([
+          { label: t.packName, note: t.packReady, ok: true },
+          { label: t.autoStart, note: t.needsNetwork, ok: false, action: t.retry },
+        ]),
+      );
+    },
+  },
+
   // ── Where the systems differ ────────────────────────────────────────────
   {
     id: 'tabs',
@@ -654,6 +941,37 @@ export const specimens = [
     height: 852,
     device: true,
     render: (ctx) => lockScreen(ctx.data, ctx),
+  },
+  {
+    id: 'page-head',
+    group: 'Navigation',
+    title: 'A page: its bar and its head',
+    note: 'A screen that is not the map under a sheet is a solid page. On iOS the way back is a round control of glass and the title stands in the middle; on Android it is the top app bar of Material. A page may open with a photograph of a Place — credited where it stands — with its words on a shade that belongs to the photograph.',
+    height: 852,
+    device: true,
+    variants: [
+      { id: 'photo', label: 'With a photograph' },
+      { id: 'plain', label: 'With a bar' },
+    ],
+    render: ({ data, lang, os }, variantId) => {
+      const t = T[lang];
+      const stop = data.outingNow.stop;
+      return variantId === 'photo'
+        ? pageOf({
+            bar: bar(os, lang),
+            hero: hero({
+              media: photo(stop),
+              kicker: t.kicker,
+              title: stop.name[lang],
+              credit: credit(stop, lang),
+            }),
+            body: `<p class="tt-aside">${t.emptyNote}</p>`,
+          })
+        : pageOf({
+            bar: bar(os, lang, { title: t.journal }),
+            body: heading(t.settings, t.emptyNote),
+          });
+    },
   },
 ];
 

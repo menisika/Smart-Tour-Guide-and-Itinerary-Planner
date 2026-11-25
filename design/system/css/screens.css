@@ -30,3 +30,163 @@
 .tt-route .tt-sheet .tt-head-title {
   margin-top: var(--space-2);
 }
+
+/* ── What the screens of the solo Outing add ───────────────────────────── */
+
+.tt-fill {
+  flex: 1;
+}
+
+.tt-space {
+  height: var(--space-12);
+}
+
+.tt-lockup {
+  display: block;
+  height: 24px;
+  margin-bottom: var(--space-16);
+}
+
+.tt-aside-under {
+  margin-top: var(--space-8);
+}
+
+.tt-aside-over {
+  margin: var(--space-12) 0 var(--space-16);
+}
+
+/* The request is the first destination: its sheet stands above the bar. */
+.tt-request .tt-sheet {
+  bottom: 96px;
+  padding-bottom: var(--space-12);
+}
+
+.screen[data-os='android'] .tt-request .tt-sheet {
+  bottom: 100px;
+}
+
+/* A sheet that holds a state: the state stands at its top. */
+.tt-sheet > .tt-state {
+  padding-top: var(--space-8);
+}
+
+/* The relaxations of a request that cannot be met: one tap each. */
+.tt-relax {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  margin-top: var(--space-16);
+}
+
+.screen .tt-relax .tt-action {
+  background: var(--surface-2);
+}
+
+/* The two ways to add a Place, above the list of those there are. */
+.tt-adds {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--space-8);
+  margin: var(--space-4) 0 0 calc(-1 * var(--space-12));
+}
+
+.tt-edit .tt-sheet {
+  padding-bottom: 96px;
+}
+
+.tt-place-screen .tt-scrim,
+.tt-place-screen .tt-guide {
+  z-index: 7;
+}
+
+.tt-place-screen .tt-scrim {
+  z-index: 6;
+}
+
+.tt-place-screen .tt-guide.is-place {
+  top: 72px;
+}
+
+/* ── The Outing on the way ─────────────────────────────────────────────── */
+
+/* The round controls of the map, at the side, above the Place ahead. */
+.tt-rail {
+  position: absolute;
+  right: 14px;
+  bottom: 214px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.tt-walk .tt-osm {
+  left: var(--space-12);
+  right: auto;
+}
+
+.screen[data-os='android'] .tt-walk .tt-osm,
+.screen[data-os='android'] .tt-rail {
+  bottom: 196px;
+}
+
+/* "Did you like the Story?" stands above the player. */
+.tt-outing-ended .tt-ask {
+  bottom: 246px;
+}
+
+.screen[data-os='android'] .tt-outing-ended .tt-ask {
+  bottom: 226px;
+}
+
+/* A sheet that is read holds the source with room around it. */
+.tt-over .tt-source-actions .tt-action.is-second {
+  background: var(--surface-2);
+}
+
+/* ── Pages ─────────────────────────────────────────────────────────────── */
+
+/* A destination of the bar at the foot has no way back: its heading stands
+   where the bar would. */
+.tt-page.is-root .tt-bar {
+  display: none;
+}
+
+.tt-page.is-root .tt-page-body,
+.screen[data-os='android'] .tt-page.is-root .tt-page-body {
+  top: 66px;
+  display: flex;
+  flex-direction: column;
+}
+
+.tt-page.is-root .tt-heading {
+  margin-bottom: var(--space-12);
+}
+
+/* A page that is one state: it stands in the middle. */
+.tt-page.is-centred .tt-page-body {
+  display: grid;
+  align-content: center;
+  top: 0;
+}
+
+.tt-or {
+  font: var(--type-label);
+  color: var(--ink-2);
+  text-align: center;
+}
+
+.screen .tt-page .tt-flow > .tt-action.is-second {
+  background: var(--surface-2);
+}
+
+/* A sheet as high as what it holds: it leaves the rest of the screen to the
+   map. Under it float the actions, so it keeps room for them. */
+.tt-sheet.is-state {
+  padding-bottom: var(--space-32);
+}
+
+.tt-sheet.has-foot-stack {
+  padding-bottom: 158px;
+}

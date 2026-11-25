@@ -561,3 +561,265 @@
   letter-spacing: var(--type-clock-m-tracking);
   color: var(--ink);
 }
+
+/* ── One of the Routes offered ─────────────────────────────────────────── */
+
+.tt-variants {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.screen .tt-variant {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: var(--space-10) var(--space-12) var(--space-10);
+  border-radius: var(--radius-m);
+  background: var(--surface-2);
+  text-align: left;
+}
+
+.tt-variant[aria-checked='true'] {
+  box-shadow: inset 0 0 0 2px var(--accent-ink);
+}
+
+.screen[data-theme='sun'] .tt-variant:not([aria-checked='true']) {
+  box-shadow: inset 0 0 0 1.5px var(--ink);
+}
+
+.tt-variant-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-8);
+  padding-right: var(--space-32);
+}
+
+.tt-variant-head b {
+  flex: 1;
+  min-width: 0;
+  font: var(--type-body-strong);
+  letter-spacing: var(--type-body-strong-tracking);
+}
+
+.tt-variant-times {
+  flex: none;
+  font: var(--type-clock-m);
+  letter-spacing: var(--type-clock-m-tracking);
+  white-space: nowrap;
+}
+
+/* Why this one is what it is: the guide's italic. */
+.tt-variant-why {
+  display: block;
+  margin-top: var(--space-2);
+  font: var(--type-guide-aside);
+  letter-spacing: var(--type-guide-aside-tracking);
+  color: var(--ink-2);
+}
+
+.tt-variant-foot {
+  display: flex;
+  align-items: center;
+  gap: var(--space-10);
+  margin-top: var(--space-8);
+}
+
+.tt-variant-thumbs {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+}
+
+.tt-variant-thumbs img,
+.tt-variant-thumbs .tt-thumb-plan,
+.tt-variant-thumbs i {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  margin-right: -6px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 0 2px var(--surface-2);
+}
+
+.tt-variant-thumbs i {
+  display: grid;
+  place-items: center;
+  background: var(--ink);
+  color: var(--surface);
+  font: var(--type-micro);
+  font-weight: 700;
+  font-style: normal;
+}
+
+.tt-variant-facts {
+  flex: none;
+  font: var(--type-caption);
+  font-weight: 500;
+  color: var(--ink-2);
+  text-align: right;
+}
+
+.tt-variant .tt-option-mark {
+  position: absolute;
+  right: var(--space-10);
+  top: var(--space-8);
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 2px var(--ink-3);
+}
+
+.tt-variant .tt-option-mark .icon {
+  width: 14px;
+  height: 14px;
+  stroke-width: 3;
+  opacity: 0;
+}
+
+.tt-variant[aria-checked='true'] .tt-option-mark {
+  background: var(--accent);
+  color: var(--on-accent);
+  box-shadow: none;
+}
+
+.tt-variant[aria-checked='true'] .tt-option-mark .icon {
+  opacity: 1;
+}
+
+/* ── A few measures side by side ───────────────────────────────────────── */
+
+.tt-figures {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-12);
+  margin: 0;
+}
+
+.tt-figures div {
+  flex: none;
+}
+
+.tt-figures dt {
+  font: var(--type-caption);
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.tt-figures dd {
+  margin: var(--space-2) 0 0;
+  font: var(--type-clock-m);
+  letter-spacing: var(--type-clock-m-tracking);
+  white-space: nowrap;
+}
+
+/* ── The Place ahead ───────────────────────────────────────────────────── */
+
+.tt-ahead {
+  position: absolute;
+  left: var(--space-12);
+  right: var(--space-12);
+  bottom: 38px;
+  z-index: 3;
+  padding: var(--space-12) var(--space-16) var(--space-16);
+  border-radius: var(--radius-sheet);
+}
+
+.screen[data-os='android'] .tt-ahead {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding-bottom: var(--space-40);
+  border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
+}
+
+.tt-ahead-top {
+  display: flex;
+  align-items: center;
+  gap: var(--space-10);
+}
+
+.tt-ahead-top > i {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--on-accent);
+  font: var(--type-numeral);
+  line-height: 26px;
+  font-style: normal;
+  text-align: center;
+}
+
+.tt-ahead-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.tt-ahead-body small {
+  display: block;
+  font: var(--type-caption);
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.tt-ahead-body b {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  font: var(--type-row);
+  letter-spacing: var(--type-row-tracking);
+}
+
+.tt-ahead-photo {
+  flex: none;
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-s);
+  object-fit: cover;
+  box-shadow: var(--lift-thumb);
+}
+
+.tt-ahead-far {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-12);
+  margin-top: var(--space-8);
+}
+
+.tt-ahead-far b {
+  font: var(--type-clock-xl);
+  letter-spacing: var(--type-clock-xl-tracking);
+  white-space: nowrap;
+}
+
+.tt-ahead-far span {
+  font: var(--type-body);
+  color: var(--ink-2);
+}
+
+.tt-ahead.is-warn .tt-ahead-far span {
+  color: var(--warn);
+}
+
+.tt-ahead.is-stop .tt-ahead-far b,
+.tt-ahead.is-stop .tt-ahead-far span {
+  color: var(--stop);
+}
+
+/* A window on a part of the chart: the Places around a change. */
+.tt-chart-window {
+  position: relative;
+  overflow: hidden;
+}
+
+.tt-chart-window .tt-chart {
+  margin-top: 0;
+}

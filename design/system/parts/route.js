@@ -166,3 +166,50 @@ export const dock = (data, lang) => `<div class="tt-dock">
     <button class="tt-action is-second lg">${icons.download}<span><b>${T[lang].pack}</b><small>${data.route.packMegabytes}${format.NBSP}${T[lang].megabytes}</small></span></button>
     <button class="tt-action lg lg-tint">${icons.play}<span>${T[lang].start}</span></button>
   </div>`;
+
+/**
+ * One of the Routes offered (RTE-7): its character in a word, why it is
+ * that, its two times, its measures, and its Places in order as photographs.
+ * It is one of several: the chosen one carries a tick as well as a ring.
+ * @param {Lang} lang
+ * @param {{ name: string, why: string, route: any, stops: any[], chosen: boolean, reserve?: boolean }} option
+ */
+export function variant(lang, { name, why, route, stops, chosen }) {
+  const t = T[lang];
+  const shown = stops.slice(0, 7);
+  return `<button class="tt-variant" role="radio" aria-checked="${chosen}">
+    <span class="tt-variant-head"><b>${name}</b><span class="tt-variant-times">${route.start} — ${route.finish}</span></span>
+    <span class="tt-variant-why">${why}</span>
+    <span class="tt-variant-foot"><span class="tt-variant-thumbs">${shown.map((s) => thumb(s, '')).join('')}${stops.length > shown.length ? `<i>+${stops.length - shown.length}</i>` : ''}</span><span class="tt-variant-facts">${t.places(route.stopCount)} · ${format.distance(route.walkingMetres, lang)}<br />${t.reserve(route.reserveMinutes)}</span></span>
+    <span class="tt-option-mark">${icons.check}</span>
+  </button>`;
+}
+
+/** @param {string} name what is being chosen @param {string[]} options the markup of each */
+export const variants = (name, options) =>
+  `<div class="tt-variants" role="radiogroup" aria-label="${name}">${options.join('')}</div>`;
+
+/**
+ * A few measures side by side, each a number in the timetable's numerals
+ * over its name.
+ * @param {{ value: string, label: string }[]} items
+ */
+export const figures = (items) =>
+  `<dl class="tt-figures">${items.map((f) => `<div><dt>${f.label}</dt><dd>${f.value}</dd></div>`).join('')}</dl>`;
+
+/**
+ * The Place ahead, for the way between two Places (OUT-2): how far, how
+ * long, and whether one gets there in time.
+ * @param {Lang} lang
+ * @param {{ stop: any, note: string, is?: 'warn' | 'stop', lead?: string, metres?: number, minutes?: number }} options
+ */
+export function ahead(
+  lang,
+  { stop, note, is, lead, metres = stop.legMetres, minutes = stop.legMinutes },
+) {
+  const t = T[lang];
+  return `<section class="tt-ahead lg${is ? ` is-${is}` : ''}">
+    <div class="tt-ahead-top"><i>${stop.order}</i><span class="tt-ahead-body"><small>${lead ?? t.next} · ${stop.arrive}</small><b>${stop.name[lang]}</b></span>${thumb(stop, 'tt-ahead-photo')}</div>
+    <p class="tt-ahead-far"><b>${format.distance(metres, lang)}</b><span>${format.duration(minutes, lang)} · ${note}</span></p>
+  </section>`;
+}

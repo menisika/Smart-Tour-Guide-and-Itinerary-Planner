@@ -241,3 +241,270 @@
 .tt-journal .is-sent small {
   color: var(--accent-ink);
 }
+
+/* A pinned Place: the Route is built around it. */
+.tt-place-body small .icon {
+  width: 13px;
+  height: 13px;
+  margin-right: var(--space-2);
+  vertical-align: -2px;
+}
+
+.tt-place.is-pinned > i {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+/* ── How a Wish was understood ─────────────────────────────────────────── */
+
+.tt-read li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  min-height: var(--size-action);
+  padding: var(--space-6) 0;
+}
+
+.tt-read li + li {
+  box-shadow: inset 0 0.5px 0 var(--rule);
+}
+
+.tt-read li > .icon {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  color: var(--accent-ink);
+}
+
+.tt-read-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.tt-read-body b {
+  display: block;
+  font: var(--type-row);
+  letter-spacing: var(--type-row-tracking);
+}
+
+.tt-read-body small {
+  display: block;
+  font: var(--type-caption);
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.tt-read .is-hard > .icon {
+  color: var(--stop);
+}
+
+.tt-read .is-unsure > .icon {
+  color: var(--warn);
+}
+
+.screen .tt-read button {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: var(--target);
+  height: var(--target);
+  color: var(--ink-2);
+}
+
+.tt-read button .icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* ── What happened, by time ────────────────────────────────────────────── */
+
+.tt-log li + li {
+  box-shadow: inset 0 0.5px 0 var(--rule);
+}
+
+.screen .tt-log button {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  width: 100%;
+  min-height: var(--size-action);
+  padding: var(--space-8) 0;
+  text-align: left;
+}
+
+.tt-log button > b {
+  flex: none;
+  min-width: 46px;
+  font: var(--type-label-strong);
+  letter-spacing: var(--type-label-strong-tracking);
+  color: var(--ink-2);
+}
+
+.tt-log-body {
+  flex: 1;
+  min-width: 0;
+  font: var(--type-body);
+}
+
+.tt-log-body small {
+  display: block;
+  font: var(--type-caption);
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.tt-log-body small .icon {
+  width: 14px;
+  height: 14px;
+  margin-right: var(--space-4);
+  vertical-align: -2.5px;
+}
+
+.tt-log button > .icon {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  color: var(--ink-3);
+}
+
+.tt-log .is-now button > b,
+.tt-log .is-ok .tt-log-body small {
+  color: var(--accent-ink);
+}
+
+.tt-log .is-warn .tt-log-body small {
+  color: var(--warn);
+}
+
+.tt-log .is-off .tt-log-body {
+  color: var(--ink-2);
+}
+
+/* ── A Route in the collection, a past Outing ──────────────────────────── */
+
+.screen .tt-saved {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  width: 100%;
+  padding: var(--space-8);
+  border-radius: var(--radius-card);
+  background: var(--surface-2);
+  text-align: left;
+}
+
+.tt-saved + .tt-saved {
+  margin-top: var(--space-10);
+}
+
+.screen[data-theme='sun'] .tt-saved {
+  box-shadow: inset 0 0 0 1.5px var(--ink);
+}
+
+.tt-saved-map {
+  flex: none;
+  width: 104px;
+  height: 104px;
+  border-radius: var(--radius-m);
+  overflow: hidden;
+  box-shadow: var(--lift-thumb);
+}
+
+.tt-saved-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.tt-saved-body b {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  font: var(--type-row);
+  letter-spacing: var(--type-row-tracking);
+}
+
+.tt-saved-times {
+  display: block;
+  margin-top: var(--space-4);
+  font: var(--type-clock-m);
+  letter-spacing: var(--type-clock-m-tracking);
+}
+
+.tt-saved-body small {
+  display: block;
+  margin-top: var(--space-2);
+  font: var(--type-caption);
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.tt-saved-body .tt-saved-note {
+  color: var(--accent-ink);
+}
+
+.tt-saved > .icon {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  color: var(--ink-3);
+}
+
+/* ── A few plain statements ────────────────────────────────────────────── */
+
+.tt-points li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-12);
+  padding: var(--space-8) 0;
+  font: var(--type-body);
+}
+
+.tt-points li + li {
+  box-shadow: inset 0 0.5px 0 var(--rule);
+}
+
+.tt-points .icon {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  color: var(--ink-2);
+}
+
+/* The number of a Place stands on the corner of its picture, so that its
+   name has the width of the row. */
+.tt-place {
+  position: relative;
+}
+
+.tt-place > i {
+  position: absolute;
+  left: 0;
+  top: var(--space-4);
+  z-index: 1;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  box-shadow: 0 0 0 2px var(--surface);
+}
+
+.tt-place > i + img,
+.tt-place > i + .tt-thumb-plan {
+  margin-left: var(--space-8);
+}
+
+.screen .tt-place button + button {
+  margin-left: calc(-1 * var(--space-8));
+}
+
+.tt-log button > img,
+.tt-log button > .tt-thumb-plan {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-s);
+  object-fit: cover;
+  box-shadow: var(--lift-thumb);
+}
