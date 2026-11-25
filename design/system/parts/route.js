@@ -56,8 +56,10 @@ export const thumb = (stop, className) =>
  * The chart: every minute of the Outing takes the same height, so that a
  * glance down it is a glance along the afternoon.
  * @param {any} data @param {Lang} lang
- * @param {{ scale: number, minute?: number, compact?: boolean, until?: number, selected?: number, stops?: any[], route?: any, skipped?: number, ends?: boolean }} options
- *   `ends: false` leaves out the start and the finish: a window into the middle of an Outing
+ * @param {{ scale: number, minute?: number, compact?: boolean, until?: number, selected?: number, stops?: any[], route?: any, skipped?: any, ends?: boolean }} options
+ *   `ends: false` leaves out the start and the finish: a window into the middle of an Outing;
+ *   `skipped` is a Place that was skipped: it takes no time, so it is not a row, and is named
+ *   in the leg that goes round it
  */
 export function chart(data, lang, options) {
   const { scale, minute, compact = false, selected, skipped, ends = true } = options;
@@ -80,25 +82,28 @@ export function chart(data, lang, options) {
     if (s.arriveMin > until) break;
     const legTop = y(leave) + top;
     const legHeight = y(s.arriveMin) - y(leave);
+    // The leg that goes round a skipped Place names it under its own measure.
+    const round = skipped && s.order === skipped.order + 1 && legHeight >= 44;
     if (legHeight >= (compact ? 22 : 14)) {
-      html += `<span class="tt-leg" style="top:${legTop}px;height:${legHeight}px">${icons.walk}${format.duration(s.legMinutes, lang)}${compact ? '' : ` · ${format.distance(s.legMetres, lang)}`}</span>`;
+      html += `<span class="tt-leg" style="top:${legTop - (round ? 9 : 0)}px;height:${legHeight}px">${icons.walk}${format.duration(s.legMinutes, lang)}${compact ? '' : ` · ${format.distance(s.legMetres, lang)}`}</span>`;
+    }
+    if (round) {
+      html += `<span class="tt-skipnote" style="top:${legTop + Math.round(legHeight / 2) + 1}px"><i>${skipped.order}</i><s>${skipped.name[lang]}</s> · ${t.skipped}</span>`;
     }
     const state =
-      s.order === skipped
-        ? ' is-skipped'
-        : minute === undefined
-          ? s.order === selected
+      minute === undefined
+        ? s.order === selected
+          ? ' is-current'
+          : ''
+        : s.leaveMin <= minute
+          ? ' is-done'
+          : s.arriveMin <= minute
             ? ' is-current'
-            : ''
-          : s.leaveMin <= minute
-            ? ' is-done'
-            : s.arriveMin <= minute
-              ? ' is-current'
-              : '';
+            : '';
     html += `<div class="tt-row tt-stop${state}" role="listitem" style="top:${y(s.arriveMin) + top}px;height:${y(s.leaveMin) - y(s.arriveMin)}px">
       <b>${s.arrive}</b>
       <i class="tt-dwell"><span>${s.order}</span></i>
-      <span class="tt-row-body"><span class="tt-row-name">${s.name[lang]}</span>${compact ? '' : `<span class="tt-row-why">${s.order === skipped ? t.skipped : s.why[lang]}</span>`}</span>
+      <span class="tt-row-body"><span class="tt-row-name">${s.name[lang]}</span>${compact ? '' : `<span class="tt-row-why">${s.why[lang]}</span>`}</span>
       ${compact ? '' : thumb(s, 'tt-row-photo')}
     </div>`;
     leave = s.leaveMin;

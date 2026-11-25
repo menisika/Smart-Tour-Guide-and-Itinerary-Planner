@@ -49,14 +49,15 @@ export function voice(story) {
  * The page of the guide: the photograph of the Place with its author, the
  * name, the Story as prose, its source in a footnote. A solid page: it is read.
  * @param {any} data @param {Lang} lang
- * @param {{ from?: number, full?: boolean, photo?: boolean, theme?: Theme, width?: number }} [options]
- *   `photo: false` draws the Place as one that has no free photograph
+ * @param {{ from?: number, full?: boolean, photo?: boolean, theme?: Theme, width?: number, story?: any }} [options]
+ *   `photo: false` draws the Place as one that has no free photograph;
+ *   `story` is the Story at another moment: with `current: -1` nothing is being spoken yet
  */
 export function guide(data, lang, options = {}) {
   const { full = false, photo = true, theme = 'light', width = 393 } = options;
   const t = T[lang];
   const now = data.outingNow;
-  const story = now.story[lang];
+  const story = options.story ?? now.story[lang];
   const from = options.from ?? Math.max(0, story.current - 1);
   const date = format.date(story.source.revision_date, lang);
   const head =
@@ -93,11 +94,11 @@ const nextRow = (data, lang) => {
 /**
  * The player: the voice, five keys, the next Place.
  * @param {any} data @param {Lang} lang
- * @param {{ state?: 'playing' | 'paused' | 'ended' | 'preparing' | 'quiet' }} [options]
+ * @param {{ state?: 'playing' | 'paused' | 'ended' | 'preparing' | 'quiet', story?: any }} [options]
  */
-export function player(data, lang, { state = 'playing' } = {}) {
+export function player(data, lang, { state = 'playing', story: given } = {}) {
   const t = T[lang];
-  const story = data.outingNow.story[lang];
+  const story = given ?? data.outingNow.story[lang];
   const ended = { ...story, elapsed: story.total, current: story.sentences.length - 1 };
   const top =
     state === 'preparing'

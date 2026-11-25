@@ -329,12 +329,12 @@ export const specimens = [
     id: 'chart',
     group: 'Lists',
     title: 'The chart of a Route, under way',
-    note: 'The product’s own list: every minute takes the same height. What has been visited is in the colour of the line, the Place one is at carries the accent and a ring, a skipped Place is struck out and says so. A row is one Place and is never lower than a target: the scale grows before a row shrinks.',
+    note: 'The product’s own list: every minute takes the same height. What has been visited is in the colour of the line, and the Place one is at carries the accent and a ring. A skipped Place takes no time, so it is not a row: it is named, struck out, in the leg that goes round it. A row is one Place and is never lower than a target: the scale grows before a row shrinks.',
     height: 560,
     render: (ctx) => {
       const { data, lang } = ctx;
       const again = data.recalculated;
-      const shown = data.stops.filter((/** @type {any} */ s) => s.order >= 5 && s.order <= 9);
+      const shown = again.stops.filter((/** @type {any} */ s) => s.order >= 5 && s.order <= 10);
       const from = shown[0].arriveMin - 6;
       const shifted = shown.map((/** @type {any} */ s) => ({
         ...s,
@@ -342,7 +342,7 @@ export const specimens = [
         leaveMin: s.leaveMin - from,
       }));
       return `<div class="tt-under tt-under-plain"></div>${pane(
-        `<p class="tt-kicker">${T[lang].onTime} · ${T[lang].finishAt(data.route.finish)}</p>
+        `<p class="tt-kicker">${T[lang].onTime} · ${T[lang].finishAt(again.route.finish)}</p>
         <div class="tt-chart-window" style="height:${Math.round(430 * ctx.text)}px">${chart(
           data,
           lang,
@@ -351,7 +351,7 @@ export const specimens = [
             stops: shifted,
             until: 76,
             minute: shifted[1].arriveMin + 3,
-            skipped: again.skipped.order,
+            skipped: again.skipped,
             ends: false,
           },
         )}</div>`,

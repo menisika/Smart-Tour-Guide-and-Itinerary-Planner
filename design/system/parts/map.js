@@ -180,27 +180,29 @@ export const pinBadge = (stop, is = '') => ({
  * @param {any[]} options.pins the Places to stand on it; the first is the one being told
  * @param {boolean} [options.saver]
  * @param {boolean} [options.unsure] the position is uncertain
+ * @param {number} [options.bearing] the direction that is up; the direction of travel by default
+ * @param {number} [options.pitch] the angle of the view; the walking camera of the tokens by default
+ * @param {('current' | 'done' | '')[]} [options.pinStates] how each pin is drawn; the first is "current" by default
  */
 export function walkMap(data, options) {
   const { lang, theme, width, height, minute, walkedLegs, pins, saver = false } = options;
   const here = positionAt(data, minute);
+  const states = options.pinStates ?? pins.map((_, i) => (i === 0 ? 'current' : ''));
   return pitchedMap(data, {
     width,
     height,
     lang,
     layers: layersOf(theme, saver),
     at: here,
-    bearing: bearingAt(data, minute),
+    bearing: options.bearing ?? bearingAt(data, minute),
     u: saver ? 1.5 : 1.25,
     near: 150,
-    pitch: saver ? 0 : data.tokens.map.camera.walk.pitch,
+    pitch: saver ? 0 : (options.pitch ?? data.tokens.map.camera.walk.pitch),
     walls: saver ? [] : [3, 6, 9, 12, 15],
     over: () =>
       `${routeLine(data, walkedLegs)}${pins.map((/** @type {any} */ s) => `<use href="#m-foot-${s.order}" class="tt-foot"/>`).join('')}`,
     standing: [
-      ...pins.map((/** @type {any} */ s, /** @type {number} */ i) =>
-        pinBadge(s, i === 0 ? 'current' : ''),
-      ),
+      ...pins.map((/** @type {any} */ s, /** @type {number} */ i) => pinBadge(s, states[i])),
       {
         x: here.x,
         y: here.y,
@@ -262,4 +264,14 @@ export function backdrop(data, { lang, theme, width, height, around = 4, u = 1.9
   });
 }
 
-export { pathThrough, positionAt, bearingAt, fitView, mapSvg, pinned, routePath, routeSamples };
+export {
+  pathThrough,
+  positionAt,
+  bearingAt,
+  fitView,
+  mapSvg,
+  pinned,
+  routePath,
+  routeSamples,
+  spread,
+};

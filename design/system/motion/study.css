@@ -1,0 +1,230 @@
+/*
+ * The page of a motion study: a phone, and beside it what happens and which
+ * token is behind each step. Inside the system's page only the phone is shown.
+ */
+
+body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 460px);
+  gap: 24px;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.study-stage {
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  padding: 12px;
+}
+
+#phone {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 414px;
+}
+
+.study-panel {
+  align-self: center;
+  padding: 30px 32px;
+  border-radius: var(--radius-sheet);
+  background: var(--surface);
+  box-shadow: var(--lift-glass);
+}
+
+.study-back {
+  margin: 0 0 18px;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.study-panel h1 {
+  margin: 0;
+  font: 700 30px/1.08 var(--font-num);
+  letter-spacing: -0.035em;
+}
+
+.study-panel h2 {
+  margin: 28px 0 10px;
+  font: 600 12px/1.3 var(--font-text);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.study-lead {
+  margin: 12px 0 0;
+  font: 400 16.5px/1.5 var(--font-serif);
+}
+
+.study-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.study-keys .sys-button {
+  min-height: 40px;
+  padding: 0 14px;
+  font-size: 13px;
+}
+
+.study-keys .sys-button[aria-pressed='true'] {
+  background: var(--line);
+  color: var(--marker);
+}
+
+.study-steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.study-steps li {
+  display: grid;
+  grid-template-columns: 62px minmax(0, 1fr);
+  gap: 10px;
+  padding: 9px 0;
+  border-top: 0.5px solid var(--rule);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.study-steps b {
+  font: 700 11px/1.7 var(--font-num);
+  color: var(--accent-ink);
+}
+
+.study-steps small {
+  display: block;
+  margin-top: 2px;
+  font:
+    500 11.5px/1.4 ui-monospace,
+    'SF Mono',
+    Menlo,
+    Consolas,
+    monospace;
+  color: var(--ink-2);
+}
+
+.is-embedded {
+  display: block;
+  min-height: 0;
+  padding: 0;
+  background: none;
+}
+
+.is-embedded .study-panel {
+  display: none;
+}
+
+.is-embedded .study-stage {
+  padding: 10px;
+}
+
+@media (max-width: 860px) {
+  body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ── What the scenes add to the components ─────────────────────────────── */
+
+/* The Place ahead, while walking: one row at the bottom. */
+.st-walkcard {
+  z-index: 4;
+}
+
+.st-far {
+  flex: none;
+  padding-right: var(--space-12);
+  font: var(--type-clock-m);
+  letter-spacing: var(--type-clock-m-tracking);
+}
+
+.st-walkcard > i {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font: var(--type-numeral);
+  font-size: 12px;
+  line-height: 32px;
+  font-style: normal;
+  text-align: center;
+  box-shadow: inset 0 0 0 2px var(--line);
+}
+
+/* The ring that leaves the Place on arrival. */
+.st-ring {
+  position: absolute;
+  z-index: 1;
+  width: 64px;
+  height: 64px;
+  margin: -44px 0 0 -32px;
+  border-radius: 50%;
+  border: 3px solid var(--accent);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* The second of grace before a Story starts by itself: a ring closes round the key. */
+.st-count {
+  position: absolute;
+  inset: -5px;
+  width: calc(100% + 10px);
+  height: calc(100% + 10px);
+  transform: rotate(-90deg);
+  pointer-events: none;
+}
+
+.st-count circle {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.tt-keys .tt-key-main {
+  position: relative;
+}
+
+/* A time that rolls to its new value. */
+.st-roll {
+  display: inline-block;
+  height: 1em;
+  line-height: 1;
+  overflow: hidden;
+  vertical-align: -0.08em;
+}
+
+.st-roll > span {
+  display: block;
+  height: 1em;
+}
+
+/* The two values are the time itself, not a label over it. */
+.tt-frame .st-roll,
+.tt-frame .st-roll > span {
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  line-height: 1;
+}
+
+.tt-frame b:has(.st-roll) {
+  line-height: 38px;
+}
+
+.st-recalc .tt-sheet {
+  padding-bottom: 0;
+}
+
+.st-old path,
+.st-new path {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

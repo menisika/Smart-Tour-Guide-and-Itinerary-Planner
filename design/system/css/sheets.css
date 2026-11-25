@@ -207,6 +207,11 @@
 }
 
 /* The rule beside the sentence being spoken. */
+/* Nothing is being spoken yet: every sentence waits, and there is no rule. */
+.tt-reading:not(:has(.is-current)) .tt-rule {
+  opacity: 0;
+}
+
 .tt-rule {
   position: absolute;
   left: 0;
