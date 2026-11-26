@@ -1,0 +1,211 @@
+/*
+ * The two materials of the system.
+ *
+ * Liquid Glass is the layer of controls and navigation that floats over the
+ * content: a sheet over the map, a bar, a key. On iOS 26 and later it is the
+ * system's own material (in the application: `expo-glass-effect`, which falls
+ * back to a plain view elsewhere); on the web it is drawn with a backdrop
+ * filter. Text that is read sits on the other material, a solid page.
+ *
+ *   .lg            regular glass: a sheet, a bar, a card of controls; may carry text
+ *   .lg-clear      clear glass: a small control over the map; never over a photograph
+ *   .lg-tint       glass that takes the accent: the one prominent action
+ *
+ * A pane of glass becomes solid — the same shape, an opaque surface — in four
+ * cases, and each is a rule below:
+ *
+ *   Android                     Material 3 surfaces, by the owner's decision: no imitation of glass
+ *   the sun theme               bright sunlight: solid panes with a definite edge
+ *   data-glass="solid"          the saver mode, which spends nothing on blur
+ *   "reduce transparency"       the system's accessibility setting
+ */
+
+/* A pane holds its own bright edge, so it has to be positioned; how is left to
+   whoever places it, which is why this rule weighs nothing. */
+:where(.lg) {
+  position: relative;
+}
+
+.screen .lg {
+  isolation: isolate;
+  background: var(--lg-fill);
+  -webkit-backdrop-filter: blur(var(--lg-blur, var(--blur-regular))) saturate(1.9) brightness(1.05);
+  backdrop-filter: blur(var(--lg-blur, var(--blur-regular))) saturate(1.9) brightness(1.05);
+  box-shadow:
+    inset 0 0 0 0.5px var(--lg-edge-low),
+    inset 0 0 16px var(--lg-inner),
+    var(--lift-glass);
+}
+
+/* The bright edge of a pane of glass: strongest where the light comes from. */
+.screen .lg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  padding: 1.25px;
+  border-radius: inherit;
+  background: linear-gradient(
+    150deg,
+    var(--lg-edge) 0%,
+    var(--lg-edge-low) 26%,
+    transparent 52%,
+    var(--lg-edge-low) 78%,
+    var(--lg-edge) 100%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.screen .lg-clear {
+  --lg-blur: var(--blur-clear);
+  background: var(--lg-fill-clear);
+}
+
+.screen .lg-tint {
+  --lg-blur: var(--blur-tint);
+  background: color-mix(in srgb, var(--accent) 86%, transparent);
+  color: var(--on-accent);
+  box-shadow:
+    inset 0 0 0 0.5px rgb(255 255 255 / 0.3),
+    inset 0 10px 14px -8px rgb(255 255 255 / 0.5),
+    inset 0 -10px 14px -10px rgb(0 0 0 / 0.25),
+    0 12px 26px color-mix(in srgb, var(--accent) 45%, transparent),
+    0 2px 6px rgb(12 18 30 / 0.16);
+}
+
+/* ── Solid panes ───────────────────────────────────────────────────────── */
+
+/* Android: the same shapes as surfaces of Material 3. */
+.screen[data-os='android'] .lg {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background: var(--md-surface);
+  box-shadow: var(--lift-md-2);
+}
+
+.screen[data-os='android'] .lg-clear {
+  background: var(--md-surface-high);
+}
+
+.screen[data-os='android'] .lg-tint {
+  background: var(--accent);
+  color: var(--on-accent);
+  box-shadow: var(--lift-md-2);
+}
+
+/* Bright sunlight: nothing is seen through, and every pane has an edge. */
+.screen[data-theme='sun'] .lg {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background: var(--surface);
+  box-shadow: var(--lift-glass);
+}
+
+.screen[data-theme='sun'] .lg-tint {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+/* The saver mode, and "reduce transparency": a solid pane, its shadow kept. */
+.screen[data-glass='solid'] .lg {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background: var(--surface);
+}
+
+.screen[data-glass='solid'] .lg-clear {
+  background: var(--md-surface-high);
+}
+
+.screen[data-glass='solid'] .lg-tint {
+  background: var(--accent);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .screen .lg {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: var(--surface);
+  }
+
+  .screen .lg-clear {
+    background: var(--md-surface-high);
+  }
+
+  .screen .lg-tint {
+    background: var(--accent);
+  }
+}
+
+.screen[data-os='android'] .lg::before,
+.screen[data-theme='sun'] .lg::before,
+.screen[data-glass='solid'] .lg::before {
+  display: none;
+}
+
+/* ── Things that move ──────────────────────────────────────────────────── */
+
+@keyframes lg-pulse {
+  0% {
+    transform: scale(0.55);
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+
+/* One period of the dashes of a line that moves, whatever the scale of its map. */
+@keyframes lg-march {
+  to {
+    stroke-dashoffset: calc(var(--u, 1) * -14px);
+  }
+}
+
+@keyframes lg-voice {
+  0%,
+  100% {
+    transform: scaleY(0.35);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes lg-shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes lg-turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* With "reduce motion", and in the saver mode, nothing loops and nothing glides. */
+@media (prefers-reduced-motion: reduce) {
+  .screen *,
+  .screen *::before,
+  .screen *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+.screen[data-motion='still'] *,
+.screen[data-motion='still'] *::before,
+.screen[data-motion='still'] *::after {
+  animation: none !important;
+  transition: none !important;
+}

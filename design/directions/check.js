@@ -1,6 +1,6 @@
 /**
- * A check of every drawing: three directions, two screens, three systems, two
- * themes, two languages. It finds what a person scanning seventy-two drawings
+ * A check of every drawing of the two reference screens: three systems, two
+ * themes, two languages. It finds what a person scanning twenty-four drawings
  * would miss — a button that leaves the screen in one language, a label cut in
  * one theme — and nothing else.
  */
@@ -12,7 +12,7 @@ const WHOLE =
   'button, h1, .tt-sheet, .tt-guide, .tt-player, .tt-board, .tt-dock, .tt-top, .tt-keys, .tt-frame, .tt-verdict, .tt-facts, .tt-voice, .tt-next, .tt-footnote, .tt-made, .tt-status, .tt-title, .tt-strip, .tt-guide-chip, .tt-webnav, .tt-webnote, .tt-webchart';
 /** What is set on one line and may not be cut. */
 const ONE_LINE =
-  '.tt-go span, .tt-title b, .tt-status b, .tt-verdict, .tt-facts, .tt-frame b, .tt-pack small, .tt-row-end .tt-row-name, .tt-open, .tt-guide-chip, .tt-guide-photo figcaption';
+  '.tt-action span, .tt-action small, .tt-title b, .tt-status b, .tt-frame b, .tt-row-end .tt-row-name, .tt-guide-chip, .tt-guide-photo figcaption';
 
 const report = /** @type {HTMLElement} */ (document.getElementById('report'));
 const host = document.createElement('div');

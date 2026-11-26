@@ -17,6 +17,10 @@
       "en": "early 20th-century architecture, no museums"
     }
   },
+  "study": {
+    "about": "A choice made for the design system, not a measurement: the Place that is skipped where the Route is shown being recalculated (OUT-9). The way around it is found on the same pedestrian graph by design/tools/build-map.mjs and kept in map.json as `detour`.",
+    "skip_order": 7
+  },
   "assumptions": {
     "walking_kmh": 4.5,
     "visit_minutes": 8
@@ -25,6 +29,11 @@
     "name": {
       "ru": "Железнодорожный вокзал",
       "en": "Railway station"
+    },
+    "short": {
+      "about": "The same name as a label on the map, where there is room for one word.",
+      "ru": "Вокзал",
+      "en": "Station"
     },
     "lat": 53.89056,
     "lon": 27.55118

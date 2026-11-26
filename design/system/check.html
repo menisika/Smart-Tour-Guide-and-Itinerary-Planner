@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="mark/app-icon-dark.svg" />
+    <title>Promenade — check of the design system</title>
+    <link rel="stylesheet" href="system.css" />
+    <link rel="stylesheet" href="stage.css" />
+    <link rel="stylesheet" href="page.css" />
+  </head>
+  <body>
+    <section class="sys-sheet">
+      <header>
+        <span class="sys-number">✓</span>
+        <h2>Check of the design system</h2>
+        <p>
+          Draws every component for iOS and Android, in the three themes and both languages, and
+          again at 130 % and 200 % of the text size, and measures what a person scanning hundreds of
+          drawings would miss: a control smaller than its platform’s target, a control without a
+          name for a screen reader, a line that is cut, a pane that leaves its screen, and on a
+          whole screen an action that lies out of reach of a thumb. It does not judge how a
+          component looks: that is done by eye, on <a href="./">the system’s page</a>.
+        </p>
+      </header>
+      <pre id="report" class="sys-report">Drawing…</pre>
+    </section>
+    <script type="module" src="check.js"></script>
+  </body>
+</html>

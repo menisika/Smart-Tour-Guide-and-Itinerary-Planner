@@ -1,0 +1,32 @@
+/*
+ * How the components stand on a phone's screen: what floats at the top, and
+ * the two reference screens of `D-01`. A screen of `D-03` adds its own
+ * arrangement in the same way and draws nothing of its own.
+ */
+
+.tt-top {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  top: 58px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.screen[data-os='android'] .tt-top {
+  top: 52px;
+}
+
+.tt-outing .tt-top {
+  align-items: flex-start;
+}
+
+.tt-osm-outing {
+  top: 208px;
+}
+
+.tt-route .tt-sheet .tt-head-title {
+  margin-top: var(--space-2);
+}

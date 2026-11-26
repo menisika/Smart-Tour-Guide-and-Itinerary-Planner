@@ -35,6 +35,8 @@ const TYPES = {
   '.jpg': 'image/jpeg',
   '.webp': 'image/webp',
   '.woff2': 'font/woff2',
+  '.pmtiles': 'application/octet-stream',
+  '.pbf': 'application/x-protobuf',
   '.txt': 'text/plain; charset=utf-8',
   '.md': 'text/markdown; charset=utf-8',
 };
@@ -57,14 +59,40 @@ function resolveFile(urlPath) {
   return undefined;
 }
 
+/**
+ * The one thing the pages do not carry themselves: the renderer of the live
+ * map on the system's page and the reader of its tile archive. They are
+ * development dependencies of the repository, served from where pnpm put them.
+ * @type {Record<string, string>}
+ */
+const VENDOR = {
+  '/vendor/maplibre-gl.css': 'maplibre-gl/dist/maplibre-gl.css',
+  '/vendor/maplibre-gl.mjs': 'maplibre-gl/dist/maplibre-gl.mjs',
+  '/vendor/maplibre-gl-shared.mjs': 'maplibre-gl/dist/maplibre-gl-shared.mjs',
+  '/vendor/maplibre-gl-worker.mjs': 'maplibre-gl/dist/maplibre-gl-worker.mjs',
+  '/vendor/pmtiles.js': 'pmtiles/dist/pmtiles.js',
+};
+
+/** @param {string} urlPath @returns {string | undefined} */
+function vendorFile(urlPath) {
+  const target = VENDOR[urlPath];
+  if (!target) return undefined;
+  const file = join(root, '..', 'node_modules', target);
+  try {
+    return statSync(file).isFile() ? file : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 const server = createServer((request, response) => {
   const url = new URL(request.url ?? '/', 'http://localhost');
   if (url.pathname === '/') {
-    response.writeHead(302, { location: '/directions/' });
+    response.writeHead(302, { location: '/system/' });
     response.end();
     return;
   }
-  const file = resolveFile(url.pathname);
+  const file = vendorFile(url.pathname) ?? resolveFile(url.pathname);
   if (!file) {
     response.writeHead(404, { 'content-type': 'text/plain; charset=utf-8' });
     response.end(`Not found: ${url.pathname}\n`);
@@ -80,15 +108,37 @@ const server = createServer((request, response) => {
     response.end();
     return;
   }
-  response.writeHead(200, {
+  const headers = {
     'content-type': TYPES[extname(file)] ?? 'application/octet-stream',
     'cache-control': 'no-store',
-  });
+    'accept-ranges': 'bytes',
+  };
+  // A tile archive is read a piece at a time, as it is from object storage
+  // (ADR-0008): a request for a range of bytes gets that range.
+  const range = /^bytes=(\d+)-(\d*)$/.exec(request.headers.range ?? '');
+  if (range) {
+    const size = statSync(file).size;
+    const start = Number(range[1]);
+    const end = range[2] === '' ? size - 1 : Math.min(Number(range[2]), size - 1);
+    if (start > end) {
+      response.writeHead(416, { 'content-range': `bytes */${size}` });
+      response.end();
+      return;
+    }
+    response.writeHead(206, {
+      ...headers,
+      'content-range': `bytes ${start}-${end}/${size}`,
+      'content-length': end - start + 1,
+    });
+    createReadStream(file, { start, end }).pipe(response);
+    return;
+  }
+  response.writeHead(200, headers);
   createReadStream(file).pipe(response);
 });
 
 server.listen(port, host, () => {
-  console.log(`Design mockups: http://localhost:${port}/`);
+  console.log(`Design: http://localhost:${port}/`);
   if (lan) {
     for (const addresses of Object.values(networkInterfaces())) {
       for (const address of addresses ?? []) {

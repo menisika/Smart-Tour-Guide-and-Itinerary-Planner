@@ -1,0 +1,487 @@
+/*
+ * Panes that rise over the content: the sheet of the Route, the guide's page,
+ * a question, a menu, a note.
+ *
+ * On iOS a sheet floats: it stands off the edges and is round on every corner.
+ * On Android it is attached to the bottom edge and round at the top, as
+ * Material has it. Neither can be moved only by dragging: the grabber is a
+ * button, and a key opens the page in full (WCAG 2.2, criterion 2.5.7).
+ */
+
+/* ── The sheet of the Route: glass, because it is the timetable speaking ── */
+
+.tt-sheet {
+  position: absolute;
+  left: var(--size-sheet-inset);
+  right: var(--size-sheet-inset);
+  bottom: var(--size-sheet-inset);
+  z-index: 2;
+  padding: 0 18px;
+  border-radius: var(--radius-sheet);
+  overflow: hidden;
+}
+
+.screen[data-os='android'] .tt-sheet {
+  border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
+}
+
+/* The grabber is a control: it is as wide as the sheet and a full target
+   high, and the bar drawn in it is only its sign. */
+.screen .tt-grab {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: var(--target);
+  /* It takes 24 points of the sheet and reaches over what lies under it. */
+  margin-bottom: calc(24px - var(--target));
+  padding-top: 9px;
+}
+
+.tt-grab::before {
+  content: '';
+  width: 36px;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--ink-3);
+}
+
+.screen[data-os='android'] .tt-grab::before {
+  width: 32px;
+  height: 4px;
+}
+
+/* ── The page of the guide: solid, because it is read ──────────────────── */
+
+.tt-guide {
+  position: absolute;
+  left: var(--size-sheet-inset);
+  right: var(--size-sheet-inset);
+  top: 236px;
+  bottom: var(--size-sheet-inset);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  border-radius: var(--radius-sheet);
+  background: var(--surface);
+  overflow: hidden;
+  box-shadow: var(--lift-page);
+}
+
+.screen[data-os='android'] .tt-guide {
+  top: 244px;
+  border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
+}
+
+.tt-guide-photo {
+  position: relative;
+  flex: none;
+  height: 112px;
+  margin: var(--space-8) var(--space-8) 0;
+  border-radius: var(--radius-photo);
+  overflow: hidden;
+}
+
+.tt-guide-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 38%;
+}
+
+/* The chip on a photograph is regular glass: a photograph can be any colour. */
+.tt-guide-chip {
+  position: absolute;
+  left: var(--space-8);
+  top: var(--space-8);
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  min-height: 30px;
+  padding: var(--space-2) var(--space-12) var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  font: var(--type-label);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.tt-guide-chip i {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--on-accent);
+  font: var(--type-numeral);
+  line-height: 22px;
+  font-style: normal;
+  text-align: center;
+}
+
+.tt-guide-chip b {
+  font-weight: 700;
+}
+
+.tt-guide-photo figcaption {
+  position: absolute;
+  right: var(--space-8);
+  bottom: var(--space-8);
+  max-width: calc(100% - 16px);
+  padding: var(--space-2) var(--space-6);
+  border-radius: var(--radius-xs);
+  font: var(--type-micro);
+  font-weight: 500;
+  background: var(--photo-scrim);
+  color: var(--on-photo);
+}
+
+.tt-guide-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 11px var(--space-20) 184px;
+}
+
+.screen[data-os='android'] .tt-guide-body {
+  padding-bottom: 196px;
+}
+
+.tt-guide-kind {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font: var(--type-label);
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.tt-guide-kind .icon {
+  width: 15px;
+  height: 15px;
+  color: var(--accent-ink);
+}
+
+.tt-guide-name {
+  flex: none;
+  margin-top: 3px;
+  font: var(--type-guide-title);
+  letter-spacing: var(--type-guide-title-tracking);
+  text-wrap: balance;
+}
+
+.tt-reading {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  margin-top: var(--space-10);
+  padding-left: 14px;
+  overflow: hidden;
+}
+
+.tt-text {
+  font: var(--type-guide-body);
+  overflow: hidden;
+}
+
+/* A sentence not being spoken is still read by those who cannot hear it, so
+   it keeps the contrast of text. */
+.tt-sentence {
+  color: var(--ink-2);
+}
+
+/* In the sentence being spoken, the words already said are in full ink. */
+.tt-sentence.is-current b {
+  font-weight: inherit;
+  color: var(--ink);
+}
+
+.tt-sentence sup {
+  margin-left: 1px;
+  font-family: var(--font-text);
+  font-size: 0.6em;
+  font-weight: 700;
+  line-height: 0;
+  color: var(--accent-ink);
+}
+
+/* The rule beside the sentence being spoken. */
+/* Nothing is being spoken yet: every sentence waits, and there is no rule. */
+.tt-reading:not(:has(.is-current)) .tt-rule {
+  opacity: 0;
+}
+
+.tt-rule {
+  position: absolute;
+  left: 0;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--line);
+  transition:
+    top var(--dur-follow) var(--ease-standard),
+    height var(--dur-follow) var(--ease-standard);
+}
+
+.tt-footnote {
+  flex: none;
+  position: relative;
+  margin: var(--space-8) 0 0 14px;
+  padding-top: var(--space-6);
+  font: var(--type-guide-note);
+  color: var(--ink-2);
+}
+
+.tt-footnote::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 56px;
+  border-top: 1px solid var(--ink-3);
+}
+
+.tt-footnote sup {
+  font-family: var(--font-text);
+  font-size: 0.75em;
+  font-weight: 700;
+  line-height: 0;
+  color: var(--accent-ink);
+}
+
+.tt-made {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: var(--space-4) 0 0 14px;
+  font: var(--type-micro);
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.tt-made .icon {
+  width: 14px;
+  height: 14px;
+}
+
+/* The page opened in full: it reaches the top, the photograph grows, the
+   Story is set a size larger, and a key folds it back. */
+.tt-guide.is-full {
+  top: 112px;
+}
+
+.screen[data-os='android'] .tt-guide.is-full {
+  top: 108px;
+}
+
+.tt-guide.is-full .tt-guide-photo {
+  height: 172px;
+}
+
+.tt-guide.is-full .tt-guide-name {
+  font: var(--type-guide-title-l);
+  letter-spacing: var(--type-guide-title-l-tracking);
+}
+
+.tt-guide.is-full .tt-text {
+  font: var(--type-guide-body-l);
+}
+
+.tt-guide.is-full .tt-guide-body {
+  padding-bottom: 96px;
+}
+
+.screen .tt-guide-fold {
+  position: absolute;
+  right: var(--space-8);
+  top: var(--space-8);
+  display: grid;
+  place-items: center;
+  width: var(--size-control);
+  height: var(--size-control);
+  border-radius: var(--radius-full);
+}
+
+/* ── A question that waits for an answer ───────────────────────────────── */
+
+.tt-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  background: var(--scrim);
+}
+
+.tt-dialog {
+  position: absolute;
+  left: var(--space-16);
+  right: var(--space-16);
+  bottom: var(--space-24);
+  z-index: 7;
+  padding: var(--space-20) var(--space-20) var(--space-16);
+  border-radius: var(--radius-sheet);
+}
+
+.screen[data-os='android'] .tt-dialog {
+  left: var(--space-24);
+  right: var(--space-24);
+  bottom: auto;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: var(--space-24);
+  background: var(--md-surface-high);
+  box-shadow: var(--lift-md-3);
+}
+
+.tt-dialog-icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin-bottom: var(--space-12);
+  border-radius: 50%;
+  background: var(--ok-tint);
+  color: var(--accent-ink);
+}
+
+.tt-dialog h2 {
+  font: var(--type-title);
+  letter-spacing: var(--type-title-tracking);
+  text-wrap: balance;
+}
+
+.tt-dialog p {
+  margin-top: var(--space-6);
+  font: var(--type-body);
+  color: var(--ink-2);
+}
+
+.tt-dialog-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  margin-top: var(--space-16);
+}
+
+.screen .tt-dialog-actions .tt-action {
+  flex: none;
+  min-height: var(--size-control);
+}
+
+/* Android answers at the end of the row, in words. */
+.screen[data-os='android'] .tt-dialog-actions {
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+/* ── A menu of what can be done now ────────────────────────────────────── */
+
+.tt-menu {
+  position: absolute;
+  right: var(--space-12);
+  top: 108px;
+  z-index: 7;
+  width: 272px;
+  padding: var(--space-6);
+  border-radius: 26px;
+}
+
+.screen[data-os='android'] .tt-menu {
+  padding: var(--space-8) 0;
+  border-radius: var(--radius-xs);
+  background: var(--md-surface-high);
+}
+
+.screen .tt-menu button {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  width: 100%;
+  min-height: var(--size-control);
+  padding: var(--space-6) var(--space-12);
+  border-radius: 20px;
+  font: var(--type-body);
+  text-align: left;
+}
+
+.screen[data-os='android'] .tt-menu button {
+  border-radius: 0;
+  padding: var(--space-6) var(--space-16);
+}
+
+.tt-menu button > span {
+  flex: 1;
+  min-width: 0;
+}
+
+.tt-menu small {
+  display: block;
+  font: var(--type-caption);
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.tt-menu .icon {
+  width: 22px;
+  height: 22px;
+}
+
+.tt-menu hr {
+  height: 0.5px;
+  margin: var(--space-4) var(--space-12);
+  border: 0;
+  background: var(--rule);
+}
+
+.tt-menu .is-danger {
+  color: var(--stop);
+}
+
+.tt-menu .is-off {
+  color: var(--ink-2);
+}
+
+/* ── A note that comes and goes by itself ──────────────────────────────── */
+
+.tt-toast {
+  position: absolute;
+  left: var(--space-16);
+  right: var(--space-16);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: var(--space-10);
+  min-height: var(--size-control);
+  padding: var(--space-8) var(--space-8) var(--space-8) var(--space-16);
+  border-radius: 26px;
+  font: var(--type-label);
+  font-weight: 500;
+}
+
+.screen[data-os='android'] .tt-toast {
+  border-radius: var(--radius-xs);
+  background: var(--md-surface-high);
+  box-shadow: var(--lift-md-3);
+}
+
+.tt-toast > span {
+  flex: 1;
+  min-width: 0;
+}
+
+.tt-toast b {
+  display: block;
+  font: var(--type-label-strong);
+}
+
+.tt-toast > .icon {
+  width: 20px;
+  height: 20px;
+  color: var(--accent-ink);
+}
+
+.screen .tt-toast .tt-action.is-plain {
+  min-height: var(--target);
+  min-width: var(--target);
+}

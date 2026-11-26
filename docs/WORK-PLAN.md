@@ -41,7 +41,7 @@ flowchart LR
   classDef todo fill:#f1f3f5,stroke:#868e96,color:#000
   classDef outside fill:#ffffff,stroke:#868e96,stroke-dasharray:4 3,color:#000
   subgraph ZERO["Stage zero — the design, approved by the owner"]
-    D["<b>D</b> · Design, stage zero<br/>1 of 9 done"]:::progress
+    D["<b>D</b> · Design, stage zero<br/>2 of 9 done"]:::progress
   end
   subgraph ONE["Stage S1 — a solo Outing on foot"]
     direction TB
@@ -72,12 +72,12 @@ Generated from the packages; change a status in its package, never here.
 
 <!-- generated:board -->
 <!-- prettier-ignore-start -->
-182 work packages: 179 todo · 1 in progress · 0 blocked · 2 done · 0 dropped.
+182 work packages: 178 todo · 1 in progress · 0 blocked · 3 done · 0 dropped.
 
 | Package | Title | Status | Depends on |
 |---|---|---|---|
 | D-01 | Design brief and three directions | **done** | F-01 |
-| D-02 | Design system | todo | D-01 |
+| D-02 | Design system | **done** | D-01 |
 | D-03 | Screens of the solo Outing on iOS and Android | todo | D-02 |
 | D-04 | Screens of the web and of the console | todo | D-02 |
 | D-09 | Key screens of the Party and of the Catalog | todo | D-02 |
@@ -277,7 +277,7 @@ flowchart LR
   classDef todo fill:#f1f3f5,stroke:#868e96,color:#000
   classDef outside fill:#ffffff,stroke:#868e96,stroke-dasharray:4 3,color:#000
   D_01["<b>D-01</b><br/>Design brief and three directions"]:::done
-  D_02["<b>D-02</b><br/>Design system"]:::todo
+  D_02["<b>D-02</b><br/>Design system"]:::done
   D_03["<b>D-03</b><br/>Screens of the solo Outing on iOS and Android"]:::todo
   D_04["<b>D-04</b><br/>Screens of the web and of the console"]:::todo
   D_09["<b>D-09</b><br/>Key screens of the Party and of the Catalog"]:::todo
@@ -328,7 +328,7 @@ flowchart LR
 
 ### D-02 · Design system
 
-- **Status:** todo
+- **Status:** done
 - **Depends on:** D-01
 - **Requirements:** `NFR-24`, `NFR-25`, `NFR-27`
 - **Decisions:** ADR-0005, ADR-0007 (point 6), ADR-0008
@@ -337,14 +337,14 @@ flowchart LR
 
 **Tasks**
 
-- [ ] Define the tokens in one source file that the applications can later import: colour for light, dark and bright sunlight; a type scale; spacing; radii; elevation; motion.
-- [ ] Draw the style of the map for light and dark, for the tile schema of ADR-0008, so that the Route and the person's position read at a glance.
-- [ ] Draw the components: buttons, inputs, sheets, lists, the Story player, progress along a Route, map markers, and the states every screen needs — loading, empty, no network, unavailable, error.
-- [ ] Write down where iOS and Android differ and why: navigation, back, sheets, system controls, the lock screen.
-- [ ] Draw an icon set of the product's own, or choose a licensed one; pictographic characters are not icons.
-- [ ] Design the product's own mark in the chosen direction: the application's icon and a wordmark.
-- [ ] Study motion for the moments that carry the product — arriving at a Place, a Story starting by itself, the Route recalculating — and keep each as a short animated page.
-- [ ] Set the accessibility rules and check them: contrast at WCAG 2.2 level AA, touch targets, text that scales, labels for screen readers, one-handed reach.
+- [x] Define the tokens in one source file that the applications can later import: colour for light, dark and bright sunlight; a type scale; spacing; radii; elevation; motion.
+- [x] Draw the style of the map for light and dark, for the tile schema of ADR-0008, so that the Route and the person's position read at a glance.
+- [x] Draw the components: buttons, inputs, sheets, lists, the Story player, progress along a Route, map markers, and the states every screen needs — loading, empty, no network, unavailable, error.
+- [x] Write down where iOS and Android differ and why: navigation, back, sheets, system controls, the lock screen.
+- [x] Draw an icon set of the product's own, or choose a licensed one; pictographic characters are not icons.
+- [x] Design the product's own mark in the chosen direction: the application's icon and a wordmark.
+- [x] Study motion for the moments that carry the product — arriving at a Place, a Story starting by itself, the Route recalculating — and keep each as a short animated page.
+- [x] Set the accessibility rules and check them: contrast at WCAG 2.2 level AA, touch targets, text that scales, labels for screen readers, one-handed reach.
 
 **Done when**
 
@@ -5881,14 +5881,20 @@ A stage is closed by the rule of [specification §7.4](PRODUCT-SPEC.md#74-when-a
 
 What was made better than a package asked for. One line each; the pull request holds the detail.
 
-| Package | Improvement                                                                                                                                                                                           | Pull request             |
-| ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
-| D-01    | The map of the mockups is real: OpenStreetMap geometry and the walked line of the reference Outing, built by `design/tools/build-map.mjs`, so that a map treatment is judged on true streets          | the pull request of D-01 |
-| D-01    | Every drawing opens alone at its real size and fits a phone held in the hand (`one.html`, `pnpm design --lan`); `check.html` looks through all of them for a control or a text that leaves its screen | the pull request of D-01 |
-| D-01    | The sheet of each direction computes the contrast of its colour pairs from its own style sheet and plays the text following the voice                                                                 | the pull request of D-01 |
-| D-01    | The brief lists the screens of scenarios SC-8 and SC-9 beside SC-1…SC-7, and the letters a typeface must carry                                                                                        | the pull request of D-01 |
-| D-01    | A second round at the owner's request: Liquid Glass on iOS and the web, a map seen at an angle on the way, a photograph of every Place with its author and licence, icons of the kinds of Place       | the pull request of D-01 |
-| D-01    | A third round at the owner's request joins the two remaining directions into one: Timetable as the base, the guide's page from Guidebook                                                              | the pull request of D-01 |
+| Package | Improvement                                                                                                                                                                                                        | Pull request             |
+| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------ |
+| D-01    | The map of the mockups is real: OpenStreetMap geometry and the walked line of the reference Outing, built by `design/tools/build-map.mjs`, so that a map treatment is judged on true streets                       | the pull request of D-01 |
+| D-01    | Every drawing opens alone at its real size and fits a phone held in the hand (`one.html`, `pnpm design --lan`); `check.html` looks through all of them for a control or a text that leaves its screen              | the pull request of D-01 |
+| D-01    | The sheet of each direction computes the contrast of its colour pairs from its own style sheet and plays the text following the voice                                                                              | the pull request of D-01 |
+| D-01    | The brief lists the screens of scenarios SC-8 and SC-9 beside SC-1…SC-7, and the letters a typeface must carry                                                                                                     | the pull request of D-01 |
+| D-01    | A second round at the owner's request: Liquid Glass on iOS and the web, a map seen at an angle on the way, a photograph of every Place with its author and licence, icons of the kinds of Place                    | the pull request of D-01 |
+| D-01    | A third round at the owner's request joins the two remaining directions into one: Timetable as the base, the guide's page from Guidebook                                                                           | the pull request of D-01 |
+| D-02    | The style of the map is proven where it will run: MapLibre draws the generated style from a tile archive of the Outing's area, from above and at the walking angle with buildings standing, on the system's page   | the pull request of D-02 |
+| D-02    | The two screens of `D-01` are assembled from the system's components, and a check page measures every control of 30 components in 848 drawings: target size, a name for screen readers, cut text, reach of a thumb | the pull request of D-02 |
+| D-02    | A third theme for bright sunlight with text held to 7 : 1, and a saver mode of the map; text on glass is measured over every area the map can put under a pane                                                     | the pull request of D-02 |
+| D-02    | The two sounds of the plan's "room to improve" are designed with the motion and described in the tokens as tones; each motion study can be slowed and shows what remains with "reduce motion"                      | the pull request of D-02 |
+| D-02    | The Route recalculated is measured, not drawn: the way round a skipped Place comes from the same pedestrian graph, and the map builder's output is now the same on every run                                       | the pull request of D-02 |
+| D-02    | The style sheet of the tokens, the map styles and the files of the mark are generated from one file, and `pnpm lint` fails when one is stale or a colour pair falls under level AA                                 | the pull request of D-02 |
 
 ## Plan change log
 

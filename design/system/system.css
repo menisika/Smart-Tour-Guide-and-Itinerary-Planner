@@ -1,0 +1,21 @@
+/*
+ * The design system of Promenade, as one style sheet: the tokens, the two
+ * materials, and every component. A page that shows a screen links this file
+ * and nothing else of the system's.
+ */
+
+@import url('css/fonts.css');
+@import url('tokens.css');
+@import url('css/device.css');
+@import url('css/materials.css');
+@import url('css/core.css');
+@import url('css/map.css');
+@import url('css/controls.css');
+@import url('css/route.css');
+@import url('css/sheets.css');
+@import url('css/player.css');
+@import url('css/lists.css');
+@import url('css/states.css');
+@import url('css/platform.css');
+@import url('css/screens.css');
+@import url('css/web.css');
