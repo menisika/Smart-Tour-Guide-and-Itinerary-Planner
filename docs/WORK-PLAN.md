@@ -51,7 +51,7 @@ flowchart LR
     S1_KNW["<b>S1-KNW</b> · Knowledge: Preparation, Dossier, Story, Narration<br/>0 of 22 done"]:::todo
     S1_CUR["<b>S1-CUR</b> · The internal console for stage S1<br/>0 of 14 done"]:::todo
     S1_RTE["<b>S1-RTE</b> · From a request to a Route a person can keep<br/>1 of 17 done"]:::progress
-    S1_OUT["<b>S1-OUT</b> · The Outing on the device<br/>0 of 22 done"]:::todo
+    S1_OUT["<b>S1-OUT</b> · The Outing on the device<br/>0 of 22 done"]:::progress
     S1_ACC["<b>S1-ACC</b> · Accounts and access in S1<br/>0 of 11 done"]:::todo
     S1_FBK["<b>S1-FBK</b> · Feedback, notifications and measurement in S1<br/>0 of 7 done"]:::todo
     S1_OPS["<b>S1-OPS</b> · Operating S1<br/>0 of 12 done"]:::todo
@@ -72,7 +72,7 @@ Generated from the packages; change a status in its package, never here.
 
 <!-- generated:board -->
 <!-- prettier-ignore-start -->
-182 work packages: 173 todo · 0 in progress · 0 blocked · 9 done · 0 dropped.
+182 work packages: 172 todo · 1 in progress · 0 blocked · 9 done · 0 dropped.
 
 | Package | Title | Status | Depends on |
 |---|---|---|---|
@@ -178,7 +178,7 @@ Generated from the packages; change a status in its package, never here.
 | S1-RTE-17 | Yardsticks of route quality and walking times | todo | S1-RTE-08, S1-RTE-09, S1-PLC-19 |
 | S1-OUT-01 | Application shell and languages | todo | — |
 | S1-OUT-02 | Map from a local file | todo | S1-OUT-01 |
-| S1-OUT-03 | Arrival trigger rules | todo | — |
+| S1-OUT-03 | Arrival trigger rules | **in progress** | — |
 | S1-OUT-04 | Queueing, passing, straying and the Visit rule | todo | S1-OUT-03 |
 | S1-OUT-05 | Location session | todo | S1-OUT-01, S1-OUT-03 |
 | S1-OUT-06 | Audio session and playback | todo | S1-OUT-01 |
@@ -3260,7 +3260,7 @@ flowchart LR
   classDef outside fill:#ffffff,stroke:#868e96,stroke-dasharray:4 3,color:#000
   S1_OUT_01["<b>S1-OUT-01</b><br/>Application shell and languages"]:::todo
   S1_OUT_02["<b>S1-OUT-02</b><br/>Map from a local file"]:::todo
-  S1_OUT_03["<b>S1-OUT-03</b><br/>Arrival trigger rules"]:::todo
+  S1_OUT_03["<b>S1-OUT-03</b><br/>Arrival trigger rules"]:::progress
   S1_OUT_04["<b>S1-OUT-04</b><br/>Queueing, passing, straying and the Visit rule"]:::todo
   S1_OUT_05["<b>S1-OUT-05</b><br/>Location session"]:::todo
   S1_OUT_06["<b>S1-OUT-06</b><br/>Audio session and playback"]:::todo
@@ -3437,7 +3437,7 @@ flowchart LR
 
 ### S1-OUT-03 · Arrival trigger rules
 
-- **Status:** todo
+- **Status:** in progress
 - **Depends on:** —
 - **Requirements:** `OUT-3`, `OUT-4`, `NFR-37`
 - **Decisions:** ADR-0005 (point 3), ADR-0027 (point 3)
