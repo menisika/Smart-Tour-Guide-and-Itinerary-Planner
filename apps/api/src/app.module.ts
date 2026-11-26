@@ -4,6 +4,7 @@ import { PlacesModule } from './modules/places/index.ts';
 import { PlanningModule } from './modules/planning/index.ts';
 import { ConfigModule } from './platform/config/config.module.ts';
 import { DatabaseModule } from './platform/database/database.module.ts';
+import { DomainEventsModule } from './platform/events/index.ts';
 import { HealthModule } from './platform/health/health.module.ts';
 import { ModelPortsModule } from './ports/model-ports.module.ts';
 
@@ -12,6 +13,7 @@ import { ModelPortsModule } from './ports/model-ports.module.ts';
   imports: [
     ConfigModule,
     DatabaseModule.forRoot('pooled'),
+    DomainEventsModule,
     ModelPortsModule,
     HealthModule,
     PlacesModule,

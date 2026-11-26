@@ -9,7 +9,7 @@ import { AppModule } from './app.module.ts';
 import { configureApi } from './configure-api.ts';
 import { PLANNING_API } from './modules/planning/index.ts';
 import { APP_CONFIG, type AppConfig } from './platform/config/app-config.ts';
-import { DATABASE_POOL } from './platform/database/database.module.ts';
+import { DATABASE_POOL } from './platform/database/pool.ts';
 import { LANGUAGE_MODEL } from './ports/language-model/language-model.port.ts';
 import { ReplayLanguageModel } from './ports/language-model/replay-language-model.adapter.ts';
 

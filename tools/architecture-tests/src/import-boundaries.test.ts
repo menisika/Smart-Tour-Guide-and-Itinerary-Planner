@@ -182,6 +182,30 @@ describe('import boundaries fail on a deliberate violation', () => {
     });
   });
 
+  describe('a module reaches the database through the platform only (ADR-0003)', () => {
+    it('catches a module that takes the pool', () => {
+      expect(
+        reported(
+          'api-modules-database-through-index',
+          'apps/api/src/modules/planning/internal/takes-the-pool.ts',
+          'apps/api/src/platform/database/pool.ts',
+        ),
+      ).toBe(true);
+    });
+
+    it('catches a module that imports the database driver', () => {
+      expect(
+        reportedFrom('apps/api/src/modules/planning/internal/imports-the-driver.ts'),
+      ).toContain('api-modules-not-to-pg');
+    });
+
+    it("accepts the use of the database layer's index", () => {
+      expect(
+        reportedFrom('apps/api/src/modules/planning/internal/uses-the-database-index.ts'),
+      ).toEqual([]);
+    });
+  });
+
   it('catches a shared package that imports an application (ADR-0005)', () => {
     expect(
       reported(

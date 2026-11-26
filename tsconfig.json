@@ -6,6 +6,11 @@
     "noEmit": true,
     "types": ["node"]
   },
-  "include": ["vitest.config.ts", "apps/api/vitest.config.ts", "scripts/**/*.mjs"],
+  "include": [
+    "vitest.config.ts",
+    "apps/api/vitest.config.ts",
+    "apps/api/vitest.integration.config.ts",
+    "scripts/**/*.mjs"
+  ],
   "exclude": ["**/node_modules", "**/dist"]
 }

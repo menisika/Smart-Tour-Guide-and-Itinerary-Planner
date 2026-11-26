@@ -77,6 +77,26 @@ module.exports = {
       to: { path: API_MODULES },
     },
 
+    {
+      name: 'api-modules-database-through-index',
+      comment:
+        'A module reaches the database through `platform/database/index.ts` only — the `sql` tag, `Database` and `UnitOfWork` — and never holds the pool, so that every statement it sends can be read and checked against its own schema (ADR-0003, point 5).',
+      severity: 'error',
+      from: { path: API_MODULES },
+      to: {
+        path: '^apps/api/src/platform/database/',
+        pathNot: '^apps/api/src/platform/database/index\\.ts$',
+      },
+    },
+    {
+      name: 'api-modules-not-to-pg',
+      comment:
+        'A module does not talk to the database driver itself: a statement sent past `platform/database` escapes the check of schema ownership (ADR-0003, point 5).',
+      severity: 'error',
+      from: { path: API_MODULES },
+      to: { path: ['(^|/)node_modules/pg/', '^pg($|/)'] },
+    },
+
     // ── ADR-0005, point 2 ────────────────────────────────────────────────
     {
       name: 'packages-not-to-apps',
