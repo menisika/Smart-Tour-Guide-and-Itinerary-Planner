@@ -72,7 +72,7 @@ Generated from the packages; change a status in its package, never here.
 
 <!-- generated:board -->
 <!-- prettier-ignore-start -->
-182 work packages: 172 todo · 0 in progress · 0 blocked · 10 done · 0 dropped.
+182 work packages: 171 todo · 1 in progress · 0 blocked · 10 done · 0 dropped.
 
 | Package | Title | Status | Depends on |
 |---|---|---|---|
@@ -92,7 +92,7 @@ Generated from the packages; change a status in its package, never here.
 | F-05 | Job launcher port | todo | F-04 |
 | F-06 | Planner in a pool of worker threads | todo | F-03 |
 | F-07 | Planner on the phone's engine in the pipeline | todo | — |
-| F-08 | Object-store port, S3 adapter and signed links | todo | — |
+| F-08 | Object-store port, S3 adapter and signed links | **in progress** | — |
 | F-09 | Observability baseline | todo | F-03, F-05 |
 | F-10 | Fault-injecting doubles for every external adapter | todo | F-08, F-05 |
 | F-11 | Rate limits and abuse protection | todo | F-03, F-04, S1-ACC-01 |
@@ -545,7 +545,7 @@ flowchart LR
   F_05["<b>F-05</b><br/>Job launcher port"]:::todo
   F_06["<b>F-06</b><br/>Planner in a pool of worker threads"]:::todo
   F_07["<b>F-07</b><br/>Planner on the phone's engine in the pipeline"]:::todo
-  F_08["<b>F-08</b><br/>Object-store port, S3 adapter and signed links"]:::todo
+  F_08["<b>F-08</b><br/>Object-store port, S3 adapter and signed links"]:::progress
   F_09["<b>F-09</b><br/>Observability baseline"]:::todo
   F_10["<b>F-10</b><br/>Fault-injecting doubles for every external adapter"]:::todo
   F_11["<b>F-11</b><br/>Rate limits and abuse protection"]:::todo
@@ -743,7 +743,7 @@ flowchart LR
 
 ### F-08 · Object-store port, S3 adapter and signed links
 
-- **Status:** todo
+- **Status:** in progress
 - **Depends on:** —
 - **Requirements:** `NFR-23`, `NFR-31`, `NFR-33`
 - **Decisions:** ADR-0010 (points 3, 5), ADR-0002 (point 3)
