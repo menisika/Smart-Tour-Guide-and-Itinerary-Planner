@@ -51,7 +51,7 @@ flowchart LR
     S1_KNW["<b>S1-KNW</b> · Knowledge: Preparation, Dossier, Story, Narration<br/>0 of 22 done"]:::todo
     S1_CUR["<b>S1-CUR</b> · The internal console for stage S1<br/>0 of 14 done"]:::todo
     S1_RTE["<b>S1-RTE</b> · From a request to a Route a person can keep<br/>1 of 17 done"]:::progress
-    S1_OUT["<b>S1-OUT</b> · The Outing on the device<br/>0 of 22 done"]:::progress
+    S1_OUT["<b>S1-OUT</b> · The Outing on the device<br/>1 of 22 done"]:::progress
     S1_ACC["<b>S1-ACC</b> · Accounts and access in S1<br/>0 of 11 done"]:::todo
     S1_FBK["<b>S1-FBK</b> · Feedback, notifications and measurement in S1<br/>0 of 7 done"]:::todo
     S1_OPS["<b>S1-OPS</b> · Operating S1<br/>0 of 12 done"]:::todo
@@ -72,7 +72,7 @@ Generated from the packages; change a status in its package, never here.
 
 <!-- generated:board -->
 <!-- prettier-ignore-start -->
-182 work packages: 172 todo · 1 in progress · 0 blocked · 9 done · 0 dropped.
+182 work packages: 172 todo · 0 in progress · 0 blocked · 10 done · 0 dropped.
 
 | Package | Title | Status | Depends on |
 |---|---|---|---|
@@ -178,7 +178,7 @@ Generated from the packages; change a status in its package, never here.
 | S1-RTE-17 | Yardsticks of route quality and walking times | todo | S1-RTE-08, S1-RTE-09, S1-PLC-19 |
 | S1-OUT-01 | Application shell and languages | todo | — |
 | S1-OUT-02 | Map from a local file | todo | S1-OUT-01 |
-| S1-OUT-03 | Arrival trigger rules | **in progress** | — |
+| S1-OUT-03 | Arrival trigger rules | **done** | — |
 | S1-OUT-04 | Queueing, passing, straying and the Visit rule | todo | S1-OUT-03 |
 | S1-OUT-05 | Location session | todo | S1-OUT-01, S1-OUT-03 |
 | S1-OUT-06 | Audio session and playback | todo | S1-OUT-01 |
@@ -3260,7 +3260,7 @@ flowchart LR
   classDef outside fill:#ffffff,stroke:#868e96,stroke-dasharray:4 3,color:#000
   S1_OUT_01["<b>S1-OUT-01</b><br/>Application shell and languages"]:::todo
   S1_OUT_02["<b>S1-OUT-02</b><br/>Map from a local file"]:::todo
-  S1_OUT_03["<b>S1-OUT-03</b><br/>Arrival trigger rules"]:::progress
+  S1_OUT_03["<b>S1-OUT-03</b><br/>Arrival trigger rules"]:::done
   S1_OUT_04["<b>S1-OUT-04</b><br/>Queueing, passing, straying and the Visit rule"]:::todo
   S1_OUT_05["<b>S1-OUT-05</b><br/>Location session"]:::todo
   S1_OUT_06["<b>S1-OUT-06</b><br/>Audio session and playback"]:::todo
@@ -3437,7 +3437,7 @@ flowchart LR
 
 ### S1-OUT-03 · Arrival trigger rules
 
-- **Status:** in progress
+- **Status:** done
 - **Depends on:** —
 - **Requirements:** `OUT-3`, `OUT-4`, `NFR-37`
 - **Decisions:** ADR-0005 (point 3), ADR-0027 (point 3)
@@ -3446,12 +3446,12 @@ flowchart LR
 
 **Tasks**
 
-- [ ] Define the trigger configuration as data: radius bounds (25–60 m), the confirmation rule, the leave factor (1.5), the uncertainty limit (50 m) and a per-Place radius override. Key it by Travel Mode.
-- [ ] T2: adapt the radius to the reported accuracy within the bounds, with the per-Place override winning.
-- [ ] T3: confirm arrival by two consecutive fixes inside the radius or a dwell of a few seconds. Above the uncertainty limit, emit "ask: are you at …?" instead of an arrival (`OUT-4`).
-- [ ] T4: register leaving only beyond 1.5 × the radius. Emit an automatic start at most once per Place per Outing.
-- [ ] T7: group Places closer than two radii into a scene with one arrival and an ordered list. T10: never emit an automatic start for a manual Place; emit a prompt.
-- [ ] Define the format of a recorded track (fixes with time, position, accuracy) and a generator of synthetic tracks with noise, jumps and gaps. Replace the PLACEHOLDER `advance`.
+- [x] Define the trigger configuration as data: radius bounds (25–60 m), the confirmation rule, the leave factor (1.5), the uncertainty limit (50 m) and a per-Place radius override. Key it by Travel Mode.
+- [x] T2: adapt the radius to the reported accuracy within the bounds, with the per-Place override winning.
+- [x] T3: confirm arrival by two consecutive fixes inside the radius or a dwell of a few seconds. Above the uncertainty limit, emit "ask: are you at …?" instead of an arrival (`OUT-4`).
+- [x] T4: register leaving only beyond 1.5 × the radius. Emit an automatic start at most once per Place per Outing.
+- [x] T7: group Places closer than two radii into a scene with one arrival and an ordered list. T10: never emit an automatic start for a manual Place; emit a prompt.
+- [x] Define the format of a recorded track (fixes with time, position, accuracy) and a generator of synthetic tracks with noise, jumps and gaps. Replace the PLACEHOLDER `advance`.
 
 **Done when**
 
@@ -5915,6 +5915,9 @@ What was made better than a package asked for. One line each; the pull request h
 | S1-RTE-01 | The planning files of `contracts` are under `promenade/no-floating-point` themselves, and the rules both sides must compute alike — pace rounding, node numbering, the fixed-point scale — live in one file that imports nothing, so the planner and the verifier run without a schema library | #11          |
 | S1-RTE-01 | The test-only generators cannot reach shipped code: an import boundary with its proof in `tools/architecture-tests`, and an entry point that has no build in `dist`                                                                                                                            | #11          |
 | S1-RTE-01 | A test per schema lists every integer field it tried a fraction in, so a field added later without the integer constraint fails by name; the stub planner is checked for order-independence with the matrix permuted                                                                           | #11          |
+| S1-OUT-03 | The state of the rules is plain data that survives JSON, so an Outing resumes after a restart with the same events (`OUT-13`), and a "yes" to "are you at …?" is a second pure function, `confirmArrival`                                                                                      | #PR          |
+| S1-OUT-03 | Where the radii of two scenes overlap at poor accuracy, a fix speaks for the nearer scene only, and leaving is registered only on a fix that can be trusted: one position never arrives at two scenes, and a thrown fix never ends a presence                                                  | #PR          |
+| S1-OUT-03 | The tests were run against nine deliberately broken variants of the rules, and a fixture was added for the one that survived                                                                                                                                                                   | #PR          |
 
 ## Plan change log
 
