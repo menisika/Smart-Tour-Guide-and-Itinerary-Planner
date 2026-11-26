@@ -253,6 +253,7 @@ export const icons = {
   key: stroke(
     '<circle cx="8" cy="15.5" r="4"/><path d="M11 12.5 19.5 4M16.5 7l2.5 2.5M13.8 9.7l2 2"/>',
   ),
+  gauge: stroke(`<path d="M4.6 17a8.5 8.5 0 1 1 14.8 0M12 13.5l4-5.5"/>${dot('M12 13.5h.01')}`),
 };
 
 /** @typedef {keyof typeof icons} IconName */
@@ -375,4 +376,5 @@ export const ICON_NAMES = {
   boundary: { ru: 'Граница', en: 'Boundary' },
   radius: { ru: 'Радиус срабатывания', en: 'Trigger radius' },
   key: { ru: 'Ключевое место', en: 'Key place' },
+  gauge: { ru: 'Эксплуатация', en: 'Operations' },
 };

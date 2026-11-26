@@ -6,13 +6,18 @@
  *
  * The second form is a step of a scenario and can be followed with “next”.
  * On a phone the outline of the device is dropped and the screen is fitted to
- * the width of the phone, so that a mockup can be held in the hand.
+ * the width of the phone, so that a mockup can be held in the hand. With
+ * `?bare` in the address the page is the screen and nothing else, at its
+ * exact size: that is what `design/tools/export-approved.mjs` photographs.
  */
 import { scenarios, screenOf } from './registry.js';
 import { draw, ready, settle } from './render.js';
 
 const one = /** @type {HTMLElement} */ (document.getElementById('one'));
 const bar = /** @type {HTMLElement} */ (document.getElementById('bar'));
+
+const bare = new URLSearchParams(location.search).has('bare');
+document.body.classList.toggle('pg-bare', bare);
 
 async function show() {
   const query = new URLSearchParams(location.hash.slice(1));
@@ -33,7 +38,7 @@ async function show() {
   one.innerHTML = draw(screen, { ...view, state: state in screen.states ? state : 'usual', data });
   const device = /** @type {HTMLElement} */ (one.querySelector('.device'));
   // A phone may enlarge the screen to its own width; a desktop shows it as it is.
-  device.dataset.maxScale = innerWidth <= 480 ? '1.4' : '1';
+  device.dataset.maxScale = innerWidth <= 480 && !bare ? '1.4' : '1';
   await settle(one);
 
   const rest = `&theme=${view.theme}&lang=${view.lang}`;

@@ -21,10 +21,10 @@ const CONTROLS =
   'button, a[href], input, textarea, [role="button"], [role="switch"], [role="radio"], [role="menuitem"], [role="textbox"], [role="slider"], [tabindex]';
 /** What is set on one line and may not be cut. */
 const ONE_LINE =
-  '.tt-action span, .tt-action b, .tt-action small, .tt-title b, .tt-status b, .tt-frame b, .tt-stepper output, .tt-seg span, .tt-chip span, .tt-tabs button, .tt-bar-title, .tt-variant-times, .tt-figures dd, .tt-ahead-far b, .tt-saved-times, .tt-guide-chip, .tt-row-end .tt-row-name, .cs-btn span, .cs-tag span, .cs-seg span, .cs-tabs button, .cs-chip span, .cs-sort span, .cs-figures b, .cs-stepper output, .cs-audio-time, .cs-num';
+  '.tt-action span, .tt-action b, .tt-action small, .tt-title b, .tt-status b, .tt-frame b, .tt-stepper output, .tt-seg span, .tt-chip span, .tt-tabs button, .tt-bar-title, .tt-variant-times, .tt-figures dd, .tt-ahead-far b, .tt-saved-times, .tt-guide-chip, .tt-row-end .tt-row-name, .cs-btn span, .cs-tag span, .cs-seg span, .cs-tabs button, .cs-chip span, .cs-sort span, .cs-figures b, .cs-stepper output, .cs-audio-time, .cs-num, .cs-fortnight b, .cs-fortnight small';
 /** What has to lie wholly inside its screen. */
 const WHOLE =
-  'h1, .tt-sheet, .tt-over, .tt-guide, .tt-player, .tt-mini, .tt-board, .tt-dock, .tt-dialog, .tt-menu, .tt-toast, .tt-tabs, .tt-banner, .tt-bar, .tt-top, .tt-ahead, .tt-hero, .tt-band, .tt-state, .tt-heading, .tt-webnav, .tt-webcard, .tt-panel, .tt-panel-foot, .tt-link, .tt-msgr li, .tt-composer, .tt-recap, .cs-nav, .cs-bar, .cs-head, .cs-pane-head, .cs-pane-foot, .cs-filters, .cs-band, .cs-tabs, .cs-notice, .cs-map, .cs-audio, .cs-run, .cs-pair, .cs-fact, .cs-diff';
+  'h1, .tt-sheet, .tt-over, .tt-guide, .tt-player, .tt-mini, .tt-board, .tt-dock, .tt-dialog, .tt-menu, .tt-toast, .tt-tabs, .tt-banner, .tt-bar, .tt-top, .tt-ahead, .tt-hero, .tt-band, .tt-state, .tt-heading, .tt-webnav, .tt-webcard, .tt-panel, .tt-panel-foot, .tt-link, .tt-msgr li, .tt-composer, .tt-recap, .cs-nav, .cs-bar, .cs-head, .cs-pane-head, .cs-pane-foot, .cs-filters, .cs-band, .cs-tabs, .cs-notice, .cs-map, .cs-audio, .cs-run, .cs-pair, .cs-fact, .cs-diff, .cs-gate-card, .cs-fortnight, .cs-statement, .cs-list-head';
 /** A pane that waits for an answer: what is behind it is covered on purpose. */
 const MODAL = '.tt-scrim, .tt-dialog, .tt-menu, .tt-over, .tt-webcard, .tt-guide.is-place';
 
@@ -145,7 +145,16 @@ async function check(screen, state, os, theme, lang) {
     const top = document.elementFromPoint(x, y);
     host.style.pointerEvents = 'none';
     if (!top || top === element || element.contains(top) || top.contains(element)) continue;
-    if (top.closest(MODAL) && !element.closest(MODAL)) continue;
+    // A pane that waits covers what is behind it on purpose — the screen, and
+    // an earlier pane that waited before it.
+    const waiting = top.closest(MODAL);
+    const own = element.closest(MODAL);
+    if (
+      waiting &&
+      waiting !== own &&
+      (!own || own.compareDocumentPosition(waiting) & Node.DOCUMENT_POSITION_FOLLOWING)
+    )
+      continue;
     const cover = top.closest('[class]');
     note(`${id} is covered by “${cover?.className ?? top.tagName.toLowerCase()}”`, where);
   }

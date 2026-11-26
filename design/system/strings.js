@@ -55,6 +55,7 @@ export const T = {
     next: 'Далее',
     // ── The Story ─────────────────────────────────────────────────────────
     made: 'Создано автоматически · проверено куратором',
+    madeDraft: 'Создано автоматически · ещё не проверено куратором',
     photo: 'Фото',
     noPhoto: 'Свободного фото пока нет · план © OpenStreetMap',
     source: (/** @type {any} */ s, /** @type {string} */ date) =>
@@ -207,6 +208,7 @@ export const T = {
     seenOutside: 'outside',
     next: 'Next',
     made: 'Written automatically · verified by a curator',
+    madeDraft: 'Written automatically · not yet verified by a curator',
     photo: 'Photo',
     noPhoto: 'No free photograph yet · plan © OpenStreetMap',
     source: (/** @type {any} */ s, /** @type {string} */ date) =>

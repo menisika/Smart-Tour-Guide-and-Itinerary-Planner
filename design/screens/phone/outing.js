@@ -32,7 +32,7 @@ import { lockScreen } from '../../system/parts/platform.js';
 import { ahead, board, chart, figures } from '../../system/parts/route.js';
 import { ask, dialog, menu, sheet, toast } from '../../system/parts/sheets.js';
 import { banner } from '../../system/parts/states.js';
-import { guide, mini, player, source } from '../../system/parts/story.js';
+import { guide, mini, more, player, source } from '../../system/parts/story.js';
 import { noNetwork, osm, sizeOf, words } from './kit.js';
 
 /** @typedef {import('./kit.js').Ctx} Ctx */
@@ -90,7 +90,7 @@ const mapOnTheWay = ({ os, theme, lang, data }, more = {}) => {
 };
 
 /** The Outing on the way, as what stands behind a pane. @param {Ctx} ctx @param {Parameters<typeof board>[3]} [say] @param {boolean} [pressed] */
-const wayBehind = (ctx, say, pressed) =>
+export const wayBehind = (ctx, say, pressed) =>
   `<div class="tt-under">${mapOnTheWay(ctx)}</div>${outingTop(ctx, onTheWay(ctx.data).minute, say, pressed)}`;
 
 // ── A Story ─────────────────────────────────────────────────────────────────
@@ -105,6 +105,23 @@ function story(ctx) {
   const minute = now.stop.arriveMin + 1;
   const ended = is === 'ended';
   const over = { ...told, current: -1, elapsed: told.total };
+  // A "More" block is the rest of the same cited passage: nothing is written for it.
+  const first = 2;
+  const extra =
+    is === 'more'
+      ? {
+          full: true,
+          story: { ...told, sentences: told.sentences.slice(0, first) },
+          after: more({
+            title: w.moreTitle(w.themes[1].toLowerCase()),
+            text: told.sentences[first].text,
+            others: w.moreOthers,
+            themes: [w.themes[0], w.themes[6]],
+          }),
+        }
+      : is === 'unverified'
+        ? { verified: false }
+        : {};
   return {
     clock: now.clock,
     inner: `<div class="tt tt-outing${ended ? ' tt-outing-ended' : ''}">
@@ -112,8 +129,8 @@ function story(ctx) {
       ${outingTop(ctx, minute)}
       ${osm('top:208px')}
       ${is === 'offline' ? noNetwork(lang, { top: underBoard(os) }) : ''}
-      ${guide(data, lang, { theme, width, full: is === 'full', ...(ended ? { story: over, from: Math.max(0, told.sentences.length - 3) } : {}) })}
-      ${is === 'full' ? mini(data, lang) : player(data, lang, ended ? { state: 'ended' } : {})}
+      ${guide(data, lang, { theme, width, full: is === 'full', ...(ended ? { story: over, from: Math.max(0, told.sentences.length - 3) } : {}), ...extra })}
+      ${is === 'full' || is === 'more' ? mini(data, lang) : player(data, lang, ended ? { state: 'ended' } : {})}
       ${ended ? ask(w.storyOver, liked(w.storyOver, '', w.likeLabels)) : ''}
     </div>`,
   };
@@ -204,7 +221,7 @@ function sentence(ctx) {
                 })
           }${action(w.inaccurate, { kind: 'plain', icon: icons.flag })}`,
         })}`,
-        { lang, solid: true },
+        { lang },
       )}
     </div>`,
   };
@@ -241,7 +258,7 @@ function correction(ctx) {
               ${field({ name: w.wrongName, hint: w.wrongHint, state: 'empty' })}
               <div class="tt-space"></div>
               ${action(w.sendCorrection, { icon: icons.send })}`,
-              { lang, solid: true },
+              { lang },
             )
       }
     </div>`,
@@ -306,9 +323,10 @@ function outingMenu(ctx) {
     clock: format.clockPlus(data.route.start, Math.floor(onTheWay(data).minute)),
     inner: `<div class="tt tt-outing tt-walk">
       ${wayBehind(ctx, undefined, true)}
-      ${offline ? noNetwork(lang, { top: sizeOf(ctx.os).height - 140 }) : ''}
+      ${offline ? noNetwork(lang, { top: sizeOf(ctx.os).height - 100 }) : ''}
       ${menu(t.say.more, [
         { icon: icons.next, label: t.skip },
+        { icon: icons.check, label: w.markVisited },
         { icon: icons.timer, label: t.shorten, note: t.shortenNote },
         { icon: icons.plus, label: w.extend, note: w.extendNote },
         { icon: icons.cup, label: t.coffee, note: t.coffeeNote },
@@ -488,7 +506,7 @@ function finish({ os, theme, lang, data, state: is }) {
       ])}
       <div class="tt-space"></div><div class="tt-space"></div>
       ${label(w.rateOuting)}
-      ${rate(w.rateOuting, 4, w.rateSay)}
+      ${rate(w.rateOuting, 0, w.rateSay)}
       <p class="tt-aside tt-aside-under">${w.rateNote}</p>
       ${is === 'offline' ? `<div class="tt-space"></div>${banner({ icon: icons.noNetwork, lead: t.noNetwork, rest: w.ratingKept, is: 'warn' })}` : ''}`,
       foot: foot(

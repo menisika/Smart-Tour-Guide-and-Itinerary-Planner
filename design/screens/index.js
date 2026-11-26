@@ -20,6 +20,7 @@ const PACKAGES = {
   'D-03': 'The solo Outing on iOS and Android',
   'D-04': 'The web and the console',
   'D-09': 'The Party and the Catalog',
+  'D-05': 'What the walk through the packages of stage S1 added',
 };
 
 /** @type {Record<string, string>} */

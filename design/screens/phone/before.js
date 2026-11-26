@@ -119,50 +119,54 @@ function request({ os, theme, lang, data, state: is }) {
   const map = groundMap(data, { lang, theme, width, height, lift: height / 2 - 150 });
   const wish = data.route.wish[lang];
   const offline = is === 'offline';
+  const noGps = is === 'nopermission';
   return {
     clock: data.route.nowBeforeStart,
     inner: `<div class="tt tt-request">
       <div class="tt-under">${map}${osm(`top:${underTop(os) - 4}px;right:auto;left:14px`)}</div>
       <header class="tt-top"><span class="tt-fill"></span>${round(icons.locate, t.say.locate)}</header>
-      ${offline ? noNetwork(lang, { top: underTop(os) + 30, rest: w.needsNetworkToPlan }) : ''}
+      ${offline ? noNetwork(lang, { top: underTop(os) + 22, rest: w.needsNetworkToPlan }) : ''}
+      ${noGps ? `<div class="tt-band" style="top:${underTop(os) + 22}px">${banner({ icon: icons.locate, lead: w.noPermission, rest: w.noPermissionNote, is: 'warn' })}</div>` : ''}
       ${sheet(
-        flow(
-          [
-            `<div class="tt-list">${item({ icon: icons.station, label: data.route.startName[lang], note: w.startFinish })}</div>`,
-            segments(
-              w.when,
-              [
-                { label: `${w.whenNow} · ${data.route.checkedAt}` },
-                { label: w.whenLater, icon: icons.calendar },
-              ],
-              0,
-            ),
-            stepper({
-              name: t.budgetName,
-              note: t.budgetNote,
-              value: format.duration(data.route.budgetMinutes, lang),
-              less: t.say.less,
-              more: t.say.more15,
-            }),
-            is === 'empty'
-              ? field({ name: t.wishName, hint: t.wishHint, note: t.wishNote, state: 'empty' })
-              : is === 'error'
-                ? field({ name: t.wishName, hint: t.wishHint, note: t.wishWrong, state: 'wrong' })
-                : field({ name: t.wishName, value: wish, note: t.wishNote }),
-            toggle(t.inside, false, w.insideNote),
-            segments(
-              w.familiar,
-              w.familiarOptions.map((name) => ({ label: name })),
-              1,
-            ),
-            action(offline ? w.needsNetwork : w.showReading, {
-              icon: offline ? icons.noNetwork : icons.arrowRight,
-              state: offline ? 'disabled' : undefined,
-            }),
-          ],
-          'tight',
-        ),
-        { lang },
+        `${scroll(
+          flow(
+            [
+              `<div class="tt-list">${item({ icon: icons.pin, label: w.nearMe, note: w.where })}${item({ icon: icons.station, label: noGps ? w.pickOnMap : data.route.startName[lang], note: w.startFinish })}${item({ icon: icons.walk, label: w.onFoot, note: w.travelMode })}</div>`,
+              segments(
+                w.when,
+                [
+                  { label: `${w.whenNow} · ${data.route.checkedAt}` },
+                  { label: w.whenLater, icon: icons.calendar },
+                ],
+                0,
+              ),
+              stepper({
+                name: t.budgetName,
+                note: t.budgetNote,
+                value: format.duration(data.route.budgetMinutes, lang),
+                less: t.say.less,
+                more: t.say.more15,
+              }),
+              is === 'empty'
+                ? field({ name: t.wishName, hint: t.wishHint, note: t.wishNote, state: 'empty' })
+                : is === 'error'
+                  ? field({ name: t.wishName, hint: t.wishHint, note: t.wishWrong, state: 'wrong' })
+                  : field({ name: t.wishName, value: wish, note: t.wishNote }),
+              toggle(t.inside, false, w.insideNote),
+              toggle(w.excludeUnknownHours, false),
+              segments(
+                w.familiar,
+                w.familiarOptions.map((name) => ({ label: name })),
+                1,
+              ),
+            ],
+            'tight',
+          ),
+        )}${action(offline ? w.needsNetwork : w.showReading, {
+          icon: offline ? icons.noNetwork : icons.arrowRight,
+          state: offline ? 'disabled' : undefined,
+        })}`,
+        { lang, top: os === 'android' ? 196 : 186, className: 'is-column' },
       )}
       ${tabs(lang, 0)}
     </div>`,
@@ -392,7 +396,7 @@ function place(ctx) {
   const unknown = is === 'unknown';
   // A Place that is seen from outside has no hours to miss; the state of
   // unknown hours is shown on a theatre, as a sample of a Place one goes into.
-  const stop = data.stops[unknown ? 4 : 2];
+  const stop = data.stops[unknown ? 4 : 0];
   const facts = [
     unknown ? '' : `${icons.eye}${w.factOutside}`,
     stop.heritage ? `${icons.shield}${w.factHeritage}` : '',
@@ -409,7 +413,7 @@ function place(ctx) {
         warning: unknown
           ? `${banner({ icon: icons.warning, lead: w.unknownHours, rest: w.unknownHoursNote, is: 'warn' })}${toggle(w.excludeUnknown, false)}`
           : '',
-        actions: `${action(w.pin, { kind: 'plain', icon: icons.tack })}${action(w.replace, { kind: 'plain', icon: icons.swap })}${action(w.removeFromRoute, { kind: 'plain-danger', icon: icons.trash })}`,
+        actions: `${action(w.pin, { kind: 'plain', icon: icons.tack })}${action(w.replace, { kind: 'plain', icon: icons.swap })}${action(w.reportPlace, { kind: 'plain', icon: icons.flag })}${action(w.removeFromRoute, { kind: 'plain-danger', icon: icons.trash })}`,
       })}
     </div>`,
   };
@@ -478,7 +482,7 @@ function edit(ctx) {
       ${sheet(
         `${sheetHead(w.editTitle)}${verdict(lang, budget)}
         ${broken ? `<div class="tt-space"></div>${banner({ icon: icons.alert, lead: w.violations, rest: w.violationsNote, is: 'stop' })}` : ''}
-        <div class="tt-adds">${action(w.addPlace, { kind: 'plain', icon: icons.map })}${action(w.addCustom, { kind: 'plain', icon: icons.plus })}</div>
+        <div class="tt-adds">${action(w.addPlace, { kind: 'plain', icon: icons.map })}${action(w.addCustom, { kind: 'plain', icon: icons.plus })}${action(w.rebuild, { kind: 'plain', icon: icons.tack })}</div>
         ${scroll(`<ol>${rows.join('')}</ol>`)}`,
         { lang, top, className: 'is-column' },
       )}

@@ -14,17 +14,19 @@ Then open <http://localhost:4310/>, which is the design system. To hold a mockup
 pnpm design --lan
 ```
 
-| Page                                                    | What it is                                                                                                                                                                                                                                               |
-| ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `/system/`                                              | The design system (`D-02`): every token and component, the map, the icons, the mark, the motion studies and the accessibility rules. Its own [README](system/README.md) says how it is made.                                                             |
-| `/system/check.html`                                    | Draws every component in every system, theme, language and text size and measures it. It has to report nothing.                                                                                                                                          |
-| `/system/motion/…`                                      | The three motion studies, each alone.                                                                                                                                                                                                                    |
-| `/screens/`                                             | The screens (`D-03`, `D-04`, `D-09`): the scenarios of the specification as walks, and every screen in each of its states with the requirements it shows. Its own [README](screens/README.md) says how they are made and how the specification was read. |
-| `/screens/check.html`                                   | Draws every screen in every state, system, theme and language and measures it. It has to report nothing.                                                                                                                                                 |
-| `/directions/`                                          | The two reference screens of `D-01` side by side, for one system, theme and language at a time. Since `D-02` they are assembled from the components of the system.                                                                                       |
-| `/directions/timetable.html`                            | The sheet of the chosen direction as the owner accepted it: its reasons, type, colours, map, motion, and all twenty-four drawings.                                                                                                                       |
-| `/directions/one.html#d=…&screen=…&os=…&theme=…&lang=…` | One screen at its real size. On a phone the outline of the device is dropped and the screen fills the width.                                                                                                                                             |
-| `/directions/check.html`                                | Draws every variant of the two screens and reports a control, a title or a line of text that leaves its screen or is cut.                                                                                                                                |
+| Page                                                    | What it is                                                                                                                                                                                                                                                                     |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `/system/`                                              | The design system (`D-02`): every token and component, the map, the icons, the mark, the motion studies and the accessibility rules. Its own [README](system/README.md) says how it is made.                                                                                   |
+| `/system/check.html`                                    | Draws every component in every system, theme, language and text size and measures it. It has to report nothing.                                                                                                                                                                |
+| `/system/motion/…`                                      | The three motion studies, each alone.                                                                                                                                                                                                                                          |
+| `/screens/`                                             | The screens (`D-03`, `D-04`, `D-09`): the scenarios of the specification as walks, and every screen in each of its states with the requirements it shows. Its own [README](screens/README.md) says how they are made and how the specification was read.                       |
+| `/screens/check.html`                                   | Draws every screen in every state, system, theme and language and measures it. It has to report nothing.                                                                                                                                                                       |
+| `/walkthrough/`                                         | The six scenarios as walks one clicks through (`D-05`): a screen leads on by its own control. With hints off it keeps every tap that led nowhere, for a first-time walk. Its [README](walkthrough/README.md) holds the reviews and the record of stage S1, package by package. |
+| `/walkthrough/check.html`                               | Walks every step of every walk and looks for a dead end. It has to report nothing.                                                                                                                                                                                             |
+| `/directions/`                                          | The two reference screens of `D-01` side by side, for one system, theme and language at a time. Since `D-02` they are assembled from the components of the system.                                                                                                             |
+| `/directions/timetable.html`                            | The sheet of the chosen direction as the owner accepted it: its reasons, type, colours, map, motion, and all twenty-four drawings.                                                                                                                                             |
+| `/directions/one.html#d=…&screen=…&os=…&theme=…&lang=…` | One screen at its real size. On a phone the outline of the device is dropped and the screen fills the width.                                                                                                                                                                   |
+| `/directions/check.html`                                | Draws every variant of the two screens and reports a control, a title or a line of text that leaves its screen or is cut.                                                                                                                                                      |
 
 The server is `serve.mjs`: a small file over Node's `http`. It serves this folder, answers a request for a range of bytes (the tile archive of the live map is read that way), and hands out MapLibre and the PMTiles reader from the repository's development dependencies under `/vendor/`. Everything but the live map opens from any static server pointed at this folder.
 
@@ -51,7 +53,10 @@ directions/
   timetable/         the two reference screens of the chosen direction, arranged from the system's components
   index.html, one.html, check.html, timetable.html and their scripts
 screens/             every screen, arranged from the system's components: a registry, the index, the check — see its README
+walkthrough/         the click-through walks, their check, and the record of the reviews — see its README
+approved/            the approved screens as images, with an index: written by tools/export-approved.mjs, never by hand
 tools/
+  export-approved.mjs  photographs every approved screen into design/approved/ with a headless Chrome
   build-map.mjs      builds data/map.json from OpenStreetMap data
   build-system.mjs   writes what is generated from system/tokens.json (`pnpm design:build`)
   check-system.mjs   the checks of the design system (`pnpm lint:design`)
@@ -68,6 +73,8 @@ Recorded in full in the [screens' README](screens/README.md#the-owners-acceptanc
 - **`D-03` — accepted on 25 November 2026.** The owner accepted the screens of the solo Outing on iOS and Android as they were shown, without asking for another round.
 - **`D-04` — accepted on 25 November 2026.** The owner accepted the pages of the public web and the screens of the console as they were shown, without asking for another round.
 - **`D-09` — accepted on 25 November 2026.** The owner accepted the key screens of the Party and of the Catalog as they were shown, without asking for another round.
+
+**The design is approved: 26 November 2026.** The owner walked through the six scenarios on the mockups (`D-05`) and approved the design as it stands. The approved screens — every screen in every state and system, 401 drawings — are listed and kept as images in [`approved/`](approved/README.md); they are the fixed reference that built screens are compared with. The reviews and the record of the walk are in the [walk-through's README](walkthrough/README.md).
 
 ## Rules of the folder
 
@@ -91,7 +98,7 @@ Recorded in full in the [screens' README](screens/README.md#the-owners-acceptanc
 | `pnpm lint:types`, `pnpm lint:boundaries`, `pnpm test` | No: there is no TypeScript and no test here. The scripts carry JSDoc types for the editor.                                                                                                    |
 | The pre-commit and commit-message hooks                | Yes. The commit scope is `design`.                                                                                                                                                            |
 
-Before a change is pushed, open `/system/check.html`, `/directions/check.html` and `/screens/check.html`: each has to report nothing. They are pages and not commands because they measure controls as a browser lays them out, and the repository has no browser among its tools.
+Before a change is pushed, open `/system/check.html`, `/directions/check.html`, `/screens/check.html` and `/walkthrough/check.html`: each has to report nothing. They are pages and not commands because they measure controls as a browser lays them out, and the repository has no browser among its tools.
 
 What is still checked by eye: how a screen looks at the width of a phone and of a desktop, and the map style on real tiles (the live map on the system's page).
 

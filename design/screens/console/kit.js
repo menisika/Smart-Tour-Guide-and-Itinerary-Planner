@@ -70,10 +70,11 @@ export const empty = (options) => centred(state(options));
 /**
  * A page of the console in its shell.
  * @param {Ctx} ctx
- * @param {{ at: string, crumbs: string[], body: string, path: string, counts?: Record<string, number> }} page
- *   `at` is the destination of the navigation the page belongs to; `counts` replaces a count of the navigation
+ * @param {{ at: string, crumbs: string[], body: string, path: string, counts?: Record<string, number>, role?: string }} page
+ *   `at` is the destination of the navigation the page belongs to; `counts` replaces a count of the navigation;
+ *   `role` is the role one acts in, where it is not the one the page asks for
  */
-export function frame({ theme, lang, data }, { at, crumbs, body, path, counts = {} }) {
+export function frame({ theme, lang, data }, { at, crumbs, body, path, counts = {}, role }) {
   const c = C[lang];
   const k = data.console;
   const me = who(data, lang);
@@ -120,13 +121,14 @@ export function frame({ theme, lang, data }, { at, crumbs, body, path, counts = 
           title: c.navWatch,
           items: [
             item('dashboards', icons.bars, c.navDashboards),
+            item('operations', icons.gauge, c.navOperations),
             item('admin', icons.tune, c.navAdmin),
           ],
         },
       ],
       crumbs: [k.city.name[lang], ...crumbs],
       me: { name: me.name, note: me.email },
-      role: c.roles[at === 'admin' ? 'administrator' : 'curator'],
+      role: c.roles[role ?? (at === 'admin' || at === 'operations' ? 'administrator' : 'curator')],
       say: { search: c.search, hint: c.searchHint, help: c.help },
       body,
     }),

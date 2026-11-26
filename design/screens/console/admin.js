@@ -7,8 +7,19 @@ import {
   bars,
   block,
   button,
+  accented,
   check,
+  checklist,
   columns,
+  details,
+  diff,
+  filters,
+  kindTile,
+  num,
+  shareCell,
+  strip,
+  tabs,
+  text,
   figures,
   form,
   formRow,
@@ -50,6 +61,236 @@ function dashboards(ctx) {
     note: c.dashboardsNote,
     actions: `${seg(c.period, [{ label: c.days7 }, { label: c.days30 }, { label: c.allTime }], 1)}${select({ name: c.city, value: k.city.name[lang], icon: icons.pin })}`,
   });
+  const sections = (/** @type {number} */ chosen) =>
+    tabs(
+      c.navDashboards,
+      [{ label: c.overview }, { label: c.coverageAndFreshness }, { label: c.productTab }],
+      chosen,
+    );
+  if (is === 'coverage') {
+    const regions = table({
+      name: c.coverageByRegion,
+      is: 'tall',
+      columns: [
+        { label: c.cityOrRegion },
+        { label: c.objects, end: true, width: '92px' },
+        { label: c.keyPlaces, end: true, width: '124px' },
+        { label: c.verifiedShare, width: '140px' },
+        { label: c.whoLooks, width: '184px' },
+      ],
+      rows: d.coverage_regions.items.map((/** @type {any} */ r) => {
+        const fresh = k.areas.freshness.find((/** @type {any} */ f) => f.id === r.id);
+        return {
+          is: /** @type {'chosen' | undefined} */ (r.opened ? 'chosen' : undefined),
+          cells: [
+            nameCell({
+              name: r.id === 'city' ? k.city.name[lang] : c.regionNames[r.id],
+              note: r.opened ? c.referenceCity : c.notPrepared,
+              go: r.opened,
+            }),
+            num(count(fresh.objects, lang)),
+            r.key ? num(String(r.key)) : quiet(c.noList),
+            r.key
+              ? shareCell(r.verified / r.key, percent(r.verified / r.key, lang), 'ok')
+              : quiet(c.no),
+            r.opened
+              ? tag(c.areaOpened, { is: 'ok' })
+              : tag(c.reviewedByNobody, { icon: icons.eyeOff }),
+          ],
+        };
+      }),
+    });
+    const byArea = table({
+      name: c.freshByArea,
+      columns: [
+        { label: c.area },
+        { label: c.objects, end: true, width: '92px' },
+        { label: c.editedYear, width: '140px' },
+        { label: c.untouched5, width: '156px' },
+        { label: c.edited30, end: true, width: '136px' },
+      ],
+      rows: k.areas.freshness.map((/** @type {any} */ f) => ({
+        cells: [
+          nameCell({
+            name: f.id === 'city' ? k.city.name[lang] : c.regionNames[f.id],
+            go: false,
+          }),
+          num(count(f.objects, lang)),
+          shareCell(
+            f.edited_in_the_last_year / f.objects,
+            percent(f.edited_in_the_last_year / f.objects, lang),
+          ),
+          shareCell(
+            f.not_edited_for_5_years / f.objects,
+            percent(f.not_edited_for_5_years / f.objects, lang),
+            'warn',
+          ),
+          num(count(f.edited_in_the_last_30_days, lang)),
+        ],
+      })),
+    });
+    const byKind = table({
+      name: c.freshByKind,
+      columns: [
+        { label: c.kindOfPlace },
+        { label: c.objects, end: true, width: '88px' },
+        { label: c.editedYear, width: '136px' },
+        { label: c.material30short, end: true, width: '112px' },
+      ],
+      rows: k.freshness_checks.by_kind.items.map((/** @type {any} */ g) => ({
+        cells: [
+          nameCell({ name: c.groups[g.kind], go: false }),
+          num(count(g.objects, lang)),
+          shareCell(
+            g.edited_in_the_last_year / g.objects,
+            percent(g.edited_in_the_last_year / g.objects, lang),
+          ),
+          num(count(g.material_changes_30_days, lang)),
+        ],
+      })),
+    });
+    return frame(ctx, {
+      at: 'dashboards',
+      crumbs: [c.navDashboards, c.coverageAndFreshness],
+      body: `${head}${sections(1)}${split(
+        [
+          stack(
+            [
+              pane({
+                title: c.coverageByRegion,
+                note: c.coverageByRegionNote,
+                is: 'flush',
+                body: regions,
+              }),
+              pane({ title: c.freshByArea, note: c.freshByAreaNote, is: 'flush', body: byArea }),
+            ],
+            'auto minmax(0, 1fr)',
+          ),
+          pane({
+            title: c.freshByKind,
+            note: c.freshByKindNote,
+            is: 'flush quiet',
+            body: `${byKind}${padded(block('', notice({ is: 'info', lead: c.nobodyLead, rest: c.nobodyRest })))}`,
+          }),
+        ],
+        'minmax(0, 1fr) 500px',
+      )}`,
+      path: 'dashboards/coverage',
+    });
+  }
+  if (is === 'product') {
+    const pr = d.product;
+    /** A value of a measure, as it is written. @param {any} m @param {number} v */
+    const shown = (m, v) =>
+      m.unit === 'share' ? percent(v, lang) : m.unit === 'money' ? money(v, lang, 3) : c.minutes(v);
+    const measure = (/** @type {any} */ m) => {
+      const top = Math.max(...m.values);
+      const last = m.values[m.values.length - 1];
+      return pane({
+        title: c.measures[m.id],
+        note: c.measureNotes[m.id],
+        body: `${figures([{ value: shown(m, last), label: c.lastWeek }])}${block(
+          c.byWeek,
+          columns({
+            name: c.measures[m.id],
+            items: m.values.map((/** @type {number} */ v, /** @type {number} */ i) => ({
+              label: c.weekN(pr.weeks[i].slice(1)),
+              value: shown(m, v),
+              share: v / top,
+              is: i === m.values.length - 1 ? undefined : 'quiet',
+            })),
+          }),
+        )}`,
+      });
+    };
+    const stories = table({
+      name: c.storyRatings,
+      columns: [
+        { label: c.place },
+        { label: c.languages.ru, width: '132px' },
+        { label: c.languages.en, width: '132px' },
+      ],
+      rows: pr.stories.map((/** @type {any} */ row) => {
+        const stop = data.stops[row.stop_order - 1];
+        const cell = (/** @type {number[]} */ [liked, not]) =>
+          shareCell(
+            liked / (liked + not),
+            c.likedOf(liked, not),
+            liked / (liked + not) < 0.8 ? 'warn' : 'ok',
+          );
+        return {
+          cells: [
+            nameCell({ lead: kindTile(stop.kind), name: stop.name[lang] }),
+            cell(row.ru),
+            cell(row.en),
+          ],
+        };
+      }),
+    });
+    const ages = table({
+      name: c.correctionsByAge,
+      columns: [
+        { label: c.waitsFor },
+        { label: c.correctionTabs.new, end: true, width: '104px' },
+        { label: c.correctionTabs.in_work, end: true, width: '104px' },
+      ],
+      rows: pr.corrections.by_age.map((/** @type {any} */ a) => ({
+        is: /** @type {'warn' | undefined} */ (a.id === 'week' && a.in_work ? 'warn' : undefined),
+        cells: [
+          nameCell({ name: c.ages[a.id], go: false }),
+          a.new ? num(String(a.new)) : quiet('0'),
+          a.in_work ? num(String(a.in_work)) : quiet('0'),
+        ],
+      })),
+      foot: {
+        label: c.closedTotal(pr.corrections.by_status.accepted, pr.corrections.by_status.declined),
+        span: 1,
+        cells: [
+          num(String(pr.corrections.by_status.new)),
+          num(String(pr.corrections.by_status.in_work)),
+        ],
+      },
+    });
+    return frame(ctx, {
+      at: 'dashboards',
+      crumbs: [c.navDashboards, c.productTab],
+      body: `${head}${sections(2)}${strip(
+        figures([
+          {
+            value: String(pr.activations.total),
+            label: c.activations,
+            note: c.activationsNote(pr.activations.values[pr.activations.values.length - 1]),
+          },
+          { value: String(d.ratings.outings), label: c.outingsRated },
+          { value: decimal(d.ratings.mean, lang), unit: c.of(5), label: c.meanRating },
+        ]),
+      )}${split(
+        [
+          stack(
+            [
+              stack(pr.measures.slice(0, 3).map(measure), 'repeat(3, minmax(0, 1fr))', 'columns'),
+              stack(pr.measures.slice(3).map(measure), 'repeat(3, minmax(0, 1fr))', 'columns'),
+            ],
+            'minmax(0, 1fr) minmax(0, 1fr)',
+          ),
+          stack(
+            [
+              pane({ title: c.storyRatings, note: c.storyRatingsNote, is: 'flush', body: stories }),
+              pane({
+                title: c.correctionsByAge,
+                note: c.correctionsByAgeNote,
+                is: 'flush',
+                body: ages,
+              }),
+            ],
+            'auto minmax(0, 1fr)',
+          ),
+        ],
+        'minmax(0, 1.6fr) minmax(0, 1fr)',
+      )}`,
+      path: 'dashboards/product',
+    });
+  }
   if (is === 'loading' || is === 'empty') {
     return frame(ctx, {
       at: 'dashboards',
@@ -262,7 +503,7 @@ function dashboards(ctx) {
   return frame(ctx, {
     at: 'dashboards',
     crumbs: [c.navDashboards],
-    body: `${head}${split(
+    body: `${head}${sections(0)}${split(
       [
         `${stack(
           [coverage, cost, ratings],
@@ -344,7 +585,7 @@ function admin(ctx) {
         { label: c.action },
         { label: c.onWhat, width: '172px' },
       ],
-      rows: a.audit.slice(0, 8).map((/** @type {any} */ e) => ({
+      rows: a.audit.slice(0, 7).map((/** @type {any} */ e) => ({
         cells: [
           e.at,
           who(data, lang, e.who).name,
@@ -466,14 +707,138 @@ function admin(ctx) {
     )}`,
   });
 
-  return frame(ctx, {
-    at: 'admin',
-    crumbs: [c.navAdmin],
-    body: `${pageHead({
+  const adminHead = (/** @type {number} */ chosen) =>
+    `${pageHead({
       title: c.navAdmin,
       note: c.adminNote,
       actions: mark(true, c.audited, c.audited) + quiet(c.audited),
-    })}${split(
+    })}${tabs(
+      c.navAdmin,
+      [
+        { label: c.rolesAndPlans },
+        { label: c.rateLimits, count: a.rate_limits.items.length },
+        { label: c.auditTitle },
+      ],
+      chosen,
+    )}`;
+  if (is === 'limits') {
+    const limits = table({
+      name: c.rateLimits,
+      is: 'tall',
+      columns: [
+        { label: c.whatIsLimited },
+        { label: c.countedWhere, width: '196px' },
+        { label: c.limitKey, width: '176px' },
+        { label: c.limit, width: '148px' },
+        { label: c.perWindow, width: '148px' },
+      ],
+      rows: a.rate_limits.items.map((/** @type {any} */ r) => ({
+        cells: [
+          nameCell({ name: c.limitNames[r.id], note: c.limitWhat[r.id], go: false }),
+          tag(c.countedIn[r.where], { icon: r.where === 'database' ? icons.lock : icons.clock }),
+          c.limitKeys[r.key],
+          stepper({ name: c.limitNames[r.id], value: String(r.limit), less: c.less, more: c.more }),
+          select({ name: `${c.perWindow}: ${c.limitNames[r.id]}`, value: c.windows[r.per] }),
+        ],
+      })),
+    });
+    return frame(ctx, {
+      at: 'admin',
+      crumbs: [c.navAdmin, c.rateLimits],
+      body: `${adminHead(1)}${split(
+        [
+          pane({ is: 'flush', body: limits }),
+          pane({
+            title: c.overLimit,
+            note: c.overLimitNote,
+            is: 'quiet',
+            body: `${figures([{ value: String(a.rate_limits.refused_today), label: c.refusedToday }])}${block(
+              c.howItAnswers,
+              checklist([
+                { is: 'info', lead: c.answerCode, rest: c.answerCodeRest },
+                { is: 'info', lead: c.answerRollback, rest: c.answerRollbackRest },
+                { is: 'info', lead: c.answerAddress, rest: c.answerAddressRest },
+                { is: 'info', lead: c.answerBudget, rest: c.answerBudgetRest },
+              ]),
+            )}`,
+            foot: `${text(c.noRelease)}${button(c.save, { kind: 'main' })}`,
+          }),
+        ],
+        'minmax(0, 1fr) 380px',
+      )}`,
+      path: 'administration/limits',
+    });
+  }
+  if (is === 'audit') {
+    const first = a.audit[1];
+    const entries = table({
+      name: c.auditTitle,
+      columns: [
+        { label: c.when, sort: 'descending', width: '164px' },
+        { label: c.whoWord, width: '92px' },
+        { label: c.role, width: '148px' },
+        { label: c.action },
+        { label: c.entity, width: '104px' },
+        { label: c.onWhat, width: '196px' },
+      ],
+      rows: a.audit.map((/** @type {any} */ e, /** @type {number} */ i) => ({
+        is: /** @type {'chosen' | undefined} */ (i === 1 ? 'chosen' : undefined),
+        cells: [
+          `${day(k.today, lang)}, ${e.at}`,
+          who(data, lang, e.who).name,
+          tag(c.roles[e.role], { icon: icons.shield }),
+          nameCell({ name: c.auditActions[e.action] }),
+          c.entities[e.on],
+          what(e),
+        ],
+      })),
+    });
+    const word = k.pronunciation.entries[0];
+    return frame(ctx, {
+      at: 'admin',
+      crumbs: [c.navAdmin, c.auditTitle],
+      body: `${adminHead(2)}${filters({
+        name: c.filter,
+        search: { name: c.findInLog, hint: c.findInLog },
+        selects: [
+          { name: c.personWord, value: c.anyone },
+          { name: c.action, value: c.anyAction },
+          { name: c.entity, value: c.anyEntity },
+          { name: c.period, value: c.today },
+        ],
+        summary: c.shown(a.audit.length),
+      })}${split(
+        [
+          pane({ is: 'flush', body: entries }),
+          pane({
+            title: c.auditActions[first.action],
+            note: `${day(k.today, lang)}, ${first.at}`,
+            is: 'quiet',
+            body: `${details([
+              { label: c.whoWord, value: who(data, lang, first.who).name },
+              { label: c.role, value: c.roles[first.role] },
+              { label: c.entity, value: c.entities[first.on] },
+              { label: c.onWhat, value: accented(word.stressed) },
+            ])}${block(
+              c.beforeAfter,
+              diff({
+                old: accented(word.guess),
+                next: accented(word.stressed),
+                say: { old: c.was, next: c.now },
+              }),
+            )}${block('', notice({ is: 'info', lead: c.appendOnly, rest: c.appendOnlyRest }))}`,
+          }),
+        ],
+        'minmax(0, 1fr) 340px',
+      )}`,
+      path: 'administration/audit',
+    });
+  }
+
+  return frame(ctx, {
+    at: 'admin',
+    crumbs: [c.navAdmin],
+    body: `${adminHead(0)}${split(
       [stack([roles, log], 'auto minmax(0, 1fr)'), stack([plans, budgets], 'auto minmax(0, 1fr)')],
       'minmax(0, 1.14fr) minmax(0, 1fr)',
     )}`,

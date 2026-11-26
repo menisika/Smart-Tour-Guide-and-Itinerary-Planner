@@ -128,8 +128,16 @@
   color: var(--on-photo);
 }
 
-.tt-hero-words:has(+ figcaption) {
-  padding-bottom: var(--space-32);
+/* Under words the credit moves to the top of the photograph, clear of both
+   the words and the bar. */
+.tt-hero-words:not(:empty) + figcaption {
+  top: 108px;
+  bottom: auto;
+}
+
+.screen[data-face='webphone'] .tt-hero-words:not(:empty) + figcaption,
+.tt-webpage .tt-hero-words:not(:empty) + figcaption {
+  top: 62px;
 }
 
 /* A control over a photograph is regular glass: a photograph can be any colour. */
@@ -318,9 +326,21 @@
   box-shadow: var(--lift-md-3);
 }
 
-.tt-over.is-solid {
+.tt-over,
+.tt-sheet.is-solid {
   background: var(--surface);
   box-shadow: var(--lift-page);
+}
+
+/* A sheet over the map that holds what is read — Reviews, messages — is
+   solid too: glass is for controls. */
+.screen .tt-sheet.is-solid {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.screen .tt-sheet.is-solid::before {
+  display: none;
 }
 
 .screen .tt-over .tt-action:not(.is-plain) {

@@ -210,6 +210,6 @@ export function ahead(
   const t = T[lang];
   return `<section class="tt-ahead lg${is ? ` is-${is}` : ''}">
     <div class="tt-ahead-top"><i>${stop.order}</i><span class="tt-ahead-body"><small>${lead ?? t.next} · ${stop.arrive}</small><b>${stop.name[lang]}</b></span>${thumb(stop, 'tt-ahead-photo')}</div>
-    <p class="tt-ahead-far"><b>${format.distance(metres, lang)}</b><span>${format.duration(minutes, lang)} · ${note}</span></p>
+    <p class="tt-ahead-far"><b>${format.distance(metres, lang)}</b><span>${is ? icons.warning : ''}${format.duration(minutes, lang)} · ${note}</span></p>
   </section>`;
 }

@@ -559,9 +559,9 @@ export const tree = (root, items) => {
 export const listItem = ({ lead = '', title, note = '', tags = '', at = '', chosen = false }) =>
   `<li><button class="cs-item"${chosen ? ' aria-current="true"' : ''}>${lead}<span class="cs-item-words"><b>${title}</b>${note ? `<small>${note}</small>` : ''}</span>${at ? `<time>${at}</time>` : ''}${tags ? `<span class="cs-item-tags">${tags}</span>` : ''}</button></li>`;
 
-/** @param {string} name @param {string[]} items @param {string} [title] the name of a group */
-export const list = (name, items, title = '') =>
-  `${title ? `<h3 class="cs-list-title">${title}</h3>` : ''}<ul class="cs-list" aria-label="${name}">${items.join('')}</ul>`;
+/** @param {string} name @param {string[]} items @param {string} [title] the name of a group @param {string} [tools] what can be done to the whole group */
+export const list = (name, items, title = '', tools = '') =>
+  `${title ? `<div class="cs-list-head"><h3 class="cs-list-title">${title}</h3>${tools}</div>` : ''}<ul class="cs-list" aria-label="${name}">${items.join('')}</ul>`;
 
 /** A note inside a pane: what follows from a state, in a line or two. @param {{ icon?: string, lead: string, rest?: string, is?: Tone, tools?: string }} note */
 export const notice = ({ icon, lead, rest = '', is = 'info', tools = '' }) =>
@@ -579,6 +579,55 @@ export const checklist = (items) =>
         `<li class="is-${item.is}">${small({ ok: icons.check, warn: icons.warning, stop: icons.alert, info: icons.info, quiet: icons.clock }[item.is])}<span><b>${item.lead}</b>${item.rest ? ` ${item.rest}` : ''}</span>${item.tool ?? ''}</li>`,
     )
     .join('')}</ul>`;
+
+/**
+ * A statement of the guide with where it comes from: the sentence in the
+ * guide's face under a bar, then its source as pairs of a name and a value.
+ * @param {{ quote: string, rows: { label: string, value: string }[] }} statement
+ */
+export const statement = ({ quote, rows }) =>
+  `<div class="cs-statement"><blockquote>${quote}</blockquote>${details(rows)}</div>`;
+
+/**
+ * Opening hours as they resolve, day by day: a day is a line of twenty-four
+ * hours with the open part filled and its times under it; a closed day and a
+ * day nobody knows say so in words.
+ * @param {{ name: string, days: { label: string, open?: [number, number][] , note: string, is?: 'today' | 'off' | 'unknown' }[] }} horizon
+ *   `open` is in minutes of the day
+ */
+export const fortnight = ({ name, days }) =>
+  `<ol class="cs-fortnight" aria-label="${name}">${days
+    .map(
+      (day) =>
+        `<li${day.is ? ` class="is-${day.is}"` : ''}><b>${day.label}</b><i>${(day.open ?? [])
+          .map(
+            ([from, to]) =>
+              `<i style="left:${((from / 1440) * 100).toFixed(1)}%;width:${(((to - from) / 1440) * 100).toFixed(1)}%"></i>`,
+          )
+          .join('')}</i><small>${day.note}</small></li>`,
+    )
+    .join('')}</ol>`;
+
+/**
+ * What stands in place of the console when one is not let in, or cannot go
+ * on: the lockup with the word "console", one thing said plainly, and what
+ * can be done about it.
+ * @param {{ theme: Theme, word: string, icon?: string, title: string, text?: string, body?: string, foot?: string, note?: string, is?: 'stop' | '' }} gate
+ */
+export function gate({
+  theme,
+  word,
+  icon = '',
+  title,
+  text = '',
+  body = '',
+  foot = '',
+  note = '',
+  is = '',
+}) {
+  const lockup = asset(theme === 'dark' ? 'mark/lockup-on-dark.svg' : 'mark/lockup.svg');
+  return `<div class="cs cs-gate"><main class="cs-gate-card${is ? ` is-${is}` : ''}"><p class="cs-brand"><img src="${lockup}" alt="Promenade" /><span>${word}</span></p>${icon ? `<span class="cs-gate-icon">${icon}</span>` : ''}<h1>${title}</h1>${text ? `<p class="cs-gate-text">${text}</p>` : ''}${body ? `<div class="cs-gate-body">${body}</div>` : ''}${foot ? `<div class="cs-actions">${foot}</div>` : ''}</main>${note ? `<p class="cs-gate-note">${note}</p>` : ''}</div>`;
+}
 
 // ── The map ─────────────────────────────────────────────────────────────────
 
@@ -616,15 +665,17 @@ export const mapTools = (groups) =>
  * @param {number} [options.labels]
  * @param {boolean} [options.handles] the boundary is being shaped
  * @param {{ x: number, y: number, n: number | string }} [options.anchor] the Place the work is done around
+ * @param {{ x: number, y: number, kind: 'car' | 'bicycle' }[]} [options.parking] where one leaves a car or a bicycle
  */
 export function workMap(data, options) {
   const { lang, theme, width, height, label, boundary = [], entrances = [], places = [] } = options;
-  const { radius, anchor, margin = 72, labels = 5, handles = true } = options;
+  const { radius, anchor, parking = [], margin = 72, labels = 5, handles = true } = options;
   const unitsPerMetre = data.map.units_per_metre ?? 2;
   const reach = radius ? radius.metres * unitsPerMetre : 0;
   const fit = options.fit ?? [
     ...boundary.map(([x, y]) => ({ x, y })),
     ...places,
+    ...parking,
     ...(anchor ? [anchor] : []),
     ...(radius
       ? [
@@ -671,6 +722,20 @@ export function workMap(data, options) {
             u,
             '<rect x="-8" y="-8" width="16" height="16" rx="5"/><path d="M-2.5 4.5v-8a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v8M-4.5 4.5h9"/>',
             'cs-m-entrance',
+          ),
+        )
+        .join('')}${parking
+        .map((p) =>
+          pinned(
+            p.x,
+            p.y,
+            u,
+            `<rect x="-9" y="-9" width="18" height="18" rx="4"/>${
+              p.kind === 'car'
+                ? '<path d="M-2.6 5v-9.5h3.2a3 3 0 0 1 0 6h-3.2"/>'
+                : '<circle cx="-3.6" cy="2.4" r="2.6"/><circle cx="3.6" cy="2.4" r="2.6"/><path d="M-3.6 2.4-1-3.4h3l1.6 5.8M-1-3.4 1.4 2.4"/>'
+            }`,
+            'cs-m-parking',
           ),
         )
         .join('')}${places

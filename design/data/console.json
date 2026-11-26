@@ -296,11 +296,18 @@
         "entailment": 5,
         "judge": 1
       },
-      "narration_mismatches": 1
+      "narration_mismatches": 1,
+      "scores": [0.9, 0.8, 0.3, 0.0, 0.0, 0.0, 0.4, 0.5, 0.1, 0.9, 0.0, 0.0],
+      "scores_set_by_curator": [9]
     },
     "no_facts": {
       "about": "A real Place nested in the Territory below, a memorial of the war: flagged sensitive by its kind. That its Dossier holds no confirmed fact is a sample of the state of KNW-6.",
       "osm": "node/457364556"
+    },
+    "contradiction": {
+      "about": "Real: the two cited passages differ here — the Russian one names one architect, the English one two. It is shown as the form of a contradiction note; no fact is written for it.",
+      "ru": 2,
+      "en": 0
     }
   },
   "pronunciation": {
@@ -442,7 +449,14 @@
         "lead_title": null,
         "status": "listen"
       }
-    ]
+    ],
+    "override": {
+      "about": "Real: an ordinary word of the cited Russian passage whose stress depends on its form. Sample: that the voice misread it and a Curator fixed its reading in this one Story.",
+      "sentence": 4,
+      "word": "колокола",
+      "stressed": "колокола́",
+      "guess": "ко́локола"
+    }
   },
   "territory": {
     "source": {
@@ -606,6 +620,91 @@
           "y": 1772
         }
       ]
+    },
+    "parking": {
+      "about": "Real: the nearest parking area that is not private and the nearest bicycle parking, as OpenStreetMap has them (table feature of minsk.duckdb); the distance is a straight line from the centre of the Territory. That a Curator chose them as the parking points of the Place is a sample.",
+      "car": {
+        "osm": "way/762532130",
+        "x": 5686,
+        "y": 1861,
+        "metres": 86,
+        "tags": {}
+      },
+      "bicycle": {
+        "osm": "node/9869126891",
+        "x": 5063,
+        "y": 2020,
+        "metres": 236,
+        "tags": {
+          "access": "yes",
+          "bicycle_parking": "wall_loops",
+          "capacity": "5",
+          "covered": "no",
+          "fee": "no"
+        }
+      }
+    },
+    "access": {
+      "about": "A real nested Place with opening hours on the map. The fourteen days are the horizon the research resolved hours for (03-hours.json → horizons.ordinary); the value \"Mo-Su 10:00-19:00\" opens every day from 10:00 to 19:00, written here in minutes of the day. Sample: the English name (proposed, marked as generated), the transliteration (made by the rule of the national Latin alphabet, marked as such) and the check date.",
+      "osm": "way/38613542",
+      "raw": "Mo-Su 10:00-19:00",
+      "from": "2026-11-23",
+      "days": 14,
+      "open": [600, 1140],
+      "names": {
+        "local": {
+          "value": "Тэатральная каса",
+          "mark": "source"
+        },
+        "ru": {
+          "value": "Театральная касса",
+          "mark": "source"
+        },
+        "en": {
+          "value": "Theatre box office",
+          "mark": "generated"
+        },
+        "latin": {
+          "value": "Teatraĺnaja kasa",
+          "mark": "transliterated"
+        }
+      },
+      "trigger_radius_m": 20
+    },
+    "split": {
+      "about": "Real: two objects of OpenStreetMap that carry one Wikidata item, a theatre and the cinema building it is in. That the base holds them as one Place, to be split, is a sample of the state.",
+      "wikidata": "Q2227272",
+      "label": {
+        "ru": "Государственный театр кукол Республики Беларусь",
+        "en": "The State Puppet Theatre",
+        "local": "Беларускі дзяржаўны тэатр лялек"
+      },
+      "records": [
+        {
+          "osm": "node/281595916",
+          "subkind": "theatre",
+          "amenity": "theatre",
+          "name": {
+            "local": "Беларускі дзяржаўны тэатр лялек",
+            "ru": "Белорусский государственный театр кукол",
+            "en": null
+          },
+          "x": 5558,
+          "y": 2420
+        },
+        {
+          "osm": "way/25327626",
+          "subkind": "notable_building",
+          "amenity": "cinema",
+          "name": {
+            "local": "Піянер",
+            "ru": "Пионер",
+            "en": "Pioneer"
+          },
+          "x": 5516,
+          "y": 2400
+        }
+      ]
     }
   },
   "changes": {
@@ -730,6 +829,29 @@
       "material_changes": 324,
       "per_week_median": 78,
       "per_week_worst": 87
+    },
+    "held": {
+      "about": "Sample: a run held by the limit of ADR-0031, point 12. The share of the mass edit is real: in November 2024 one month holds the last edit of 20.9 % of the objects (22-freshness.json).",
+      "run": "2026-11-29",
+      "would_close": 41,
+      "limit_close": 20,
+      "would_change_share": 0.209,
+      "limit_share": 0.05,
+      "changes": {
+        "closed": 41,
+        "kind": 17,
+        "moved": 9,
+        "hours": 212,
+        "names": 388
+      },
+      "real_share": "20.9 %",
+      "real_month": "2024-11"
+    },
+    "later_edit": {
+      "about": "Sample: a later edit by a Curator of the same attribute, which is why an earlier change can no longer be undone.",
+      "on": "2026-11-20",
+      "by": "emma",
+      "value": "Mo-Su 10:00-22:00"
     }
   },
   "matches": {
@@ -1006,6 +1128,40 @@
       "dead": "21.1 %",
       "hours_in_markup": "8.5 %",
       "hours_in_text": "40.1 %"
+    },
+    "runs": {
+      "about": "Sample: the ledger of runs of one Freshness Check. The first line is real where the research measured it: the date of the extract, the objects read, and the material changes of thirty days.",
+      "items": [
+        {
+          "at": "2026-11-22",
+          "read": 44641,
+          "proposed": 324,
+          "applied": null,
+          "state": "ok",
+          "real": true
+        },
+        {
+          "at": "2026-11-15",
+          "read": 44598,
+          "proposed": 71,
+          "applied": 52,
+          "state": "ok"
+        },
+        {
+          "at": "2026-11-08",
+          "read": 44561,
+          "proposed": 83,
+          "applied": 60,
+          "state": "ok"
+        },
+        {
+          "at": "2026-11-01",
+          "read": 44502,
+          "proposed": 64,
+          "applied": 49,
+          "state": "held"
+        }
+      ]
     }
   },
   "venues": {
@@ -1637,6 +1793,126 @@
       "open": 1,
       "accepted": 4,
       "declined": 2
+    },
+    "product": {
+      "about": "Sample: the measures of ANL-2 by week, activations, ratings of Stories by Place and language, and Corrections by status and age; not measured. Nothing of it exists before the product runs.",
+      "weeks": ["w44", "w45", "w46", "w47"],
+      "measures": [
+        {
+          "id": "finished",
+          "unit": "share",
+          "values": [0.71, 0.74, 0.78, 0.8]
+        },
+        {
+          "id": "heard",
+          "unit": "share",
+          "values": [0.83, 0.85, 0.84, 0.88]
+        },
+        {
+          "id": "second_route",
+          "unit": "share",
+          "values": [0.22, 0.25, 0.24, 0.29]
+        },
+        {
+          "id": "auto_start",
+          "unit": "share",
+          "values": [0.86, 0.88, 0.9, 0.91]
+        },
+        {
+          "id": "duration_gap",
+          "unit": "minutes",
+          "values": [14, 12, 11, 9]
+        },
+        {
+          "id": "cost",
+          "unit": "money",
+          "values": [0.044, 0.041, 0.038, 0.036]
+        }
+      ],
+      "activations": {
+        "total": 46,
+        "values": [6, 9, 13, 18]
+      },
+      "stories": [
+        {
+          "stop_order": 2,
+          "ru": [41, 2],
+          "en": [12, 1]
+        },
+        {
+          "stop_order": 8,
+          "ru": [33, 4],
+          "en": [9, 0]
+        },
+        {
+          "stop_order": 11,
+          "ru": [29, 1],
+          "en": [7, 2]
+        },
+        {
+          "stop_order": 6,
+          "ru": [18, 6],
+          "en": [4, 1]
+        },
+        {
+          "stop_order": 1,
+          "ru": [22, 2],
+          "en": [5, 0]
+        }
+      ],
+      "corrections": {
+        "by_status": {
+          "new": 1,
+          "in_work": 2,
+          "accepted": 4,
+          "declined": 2
+        },
+        "by_age": [
+          {
+            "id": "day",
+            "new": 1,
+            "in_work": 0
+          },
+          {
+            "id": "three_days",
+            "new": 0,
+            "in_work": 1
+          },
+          {
+            "id": "week",
+            "new": 0,
+            "in_work": 1
+          },
+          {
+            "id": "older",
+            "new": 0,
+            "in_work": 0
+          }
+        ]
+      }
+    },
+    "coverage_regions": {
+      "about": "Sample: Key Places and verified Dossiers per city or region. Only the reference city has been looked at; the others are shown as reviewed by nobody. The counts of objects are real (areas → freshness).",
+      "items": [
+        {
+          "id": "city",
+          "key": 120,
+          "verified": 38,
+          "opened": true
+        },
+        {
+          "id": "regional_centres",
+          "key": 0,
+          "verified": 0,
+          "opened": false
+        },
+        {
+          "id": "rest",
+          "key": 0,
+          "verified": 0,
+          "opened": false
+        }
+      ]
     }
   },
   "admin": {
@@ -1762,7 +2038,55 @@
         "on": "person",
         "person": "olya"
       }
-    ]
+    ],
+    "rate_limits": {
+      "about": "Sample: the limits an Administrator can change (F-11, ADR-0028); not measured.",
+      "items": [
+        {
+          "id": "wish",
+          "where": "database",
+          "limit": 20,
+          "per": "day",
+          "key": "person"
+        },
+        {
+          "id": "route",
+          "where": "database",
+          "limit": 40,
+          "per": "day",
+          "key": "person"
+        },
+        {
+          "id": "preparation",
+          "where": "database",
+          "limit": 3,
+          "per": "month",
+          "key": "person"
+        },
+        {
+          "id": "code",
+          "where": "database",
+          "limit": 5,
+          "per": "hour",
+          "key": "address"
+        },
+        {
+          "id": "read",
+          "where": "process",
+          "limit": 120,
+          "per": "minute",
+          "key": "person"
+        },
+        {
+          "id": "write",
+          "where": "process",
+          "limit": 30,
+          "per": "minute",
+          "key": "person"
+        }
+      ],
+      "refused_today": 7
+    }
   },
   "corrections": {
     "about": "Sample: the Corrections of the inbox. The statement each is attached to is a sentence of the cited passage in story.json; the first is the one sent in SC-6 (story.json → playing). The claim is only its kind: no historical claim is written for a mockup. Place-data Corrections name Venues and changes that are real (see changes); that a person reported them is a sample.",
@@ -1837,5 +2161,805 @@
         "status": "declined"
       }
     ]
+  },
+  "places": {
+    "source": {
+      "file": "02-places.json (territories), 17-pageviews.json, 04-wikidata-items.json",
+      "what": "Places and Territories of the city as the research holds them: names (Wikidata labels, or the name on the map), nested Places, tagged Entrances and the points where walkable ways cross the boundary, opening hours, the heritage list, monthly page views, and whether the Place lies within 1.5 km of the centre.",
+      "licence": "© OpenStreetMap contributors, ODbL 1.0; Wikidata, CC0 1.0"
+    },
+    "states": {
+      "about": "Sample: which Places are Key Places and how each got on the list (seeded from page views, from the heritage list, or added by a Curator), and the status. The flag \"no_entrance\" marks a real Territory with no tagged Entrance on the map; that the product would flag it is a reading for the mockup: every Territory of the research has paths crossing its boundary."
+    },
+    "counts": {
+      "places": 7656,
+      "territories": 115,
+      "territories_without_tagged_entrance": 38,
+      "key": 120
+    },
+    "key_list": {
+      "about": "Sample: how the list of Key Places is made up; not measured.",
+      "from_views": 74,
+      "from_heritage": 38,
+      "by_curator": 8,
+      "removed_by_curator": 5
+    },
+    "items": [
+      {
+        "osm": null,
+        "wikidata": "Q2024954",
+        "name": {
+          "local": null,
+          "ru": "Яма",
+          "en": "Yama"
+        },
+        "kind": "monument",
+        "subkind": null,
+        "territory": false,
+        "nested": 0,
+        "entrances": null,
+        "crossings": null,
+        "hectares": null,
+        "opening_hours": null,
+        "in_centre": true,
+        "heritage": true,
+        "monthly_views": 929,
+        "status": "open",
+        "key": true,
+        "seeded": "views",
+        "flag": null
+      },
+      {
+        "osm": null,
+        "wikidata": "Q445830",
+        "name": {
+          "local": null,
+          "ru": "Ратуша (Минск)",
+          "en": "Minsk City Hall"
+        },
+        "kind": "building",
+        "subkind": null,
+        "territory": false,
+        "nested": 0,
+        "entrances": null,
+        "crossings": null,
+        "hectares": null,
+        "opening_hours": null,
+        "in_centre": true,
+        "heritage": true,
+        "monthly_views": 670,
+        "status": "open",
+        "key": true,
+        "seeded": "views",
+        "flag": null
+      },
+      {
+        "osm": null,
+        "wikidata": "Q2663664",
+        "name": {
+          "local": null,
+          "ru": "Военное кладбище",
+          "en": "Military cemetery in Minsk"
+        },
+        "kind": "monument",
+        "subkind": null,
+        "territory": false,
+        "nested": 0,
+        "entrances": null,
+        "crossings": null,
+        "hectares": null,
+        "opening_hours": null,
+        "in_centre": false,
+        "heritage": true,
+        "monthly_views": 511,
+        "status": "open",
+        "key": true,
+        "seeded": "views",
+        "flag": null
+      },
+      {
+        "osm": null,
+        "wikidata": "Q83944615",
+        "name": {
+          "local": null,
+          "ru": "Соборная мечеть",
+          "en": "Minsk Cathedral Mosque"
+        },
+        "kind": "church",
+        "subkind": null,
+        "territory": false,
+        "nested": 0,
+        "entrances": null,
+        "crossings": null,
+        "hectares": null,
+        "opening_hours": null,
+        "in_centre": false,
+        "heritage": false,
+        "monthly_views": 507,
+        "status": "open",
+        "key": true,
+        "seeded": "views",
+        "flag": null
+      },
+      {
+        "osm": "relation/222265",
+        "wikidata": "Q2376002",
+        "name": {
+          "local": "Батанічны сад",
+          "ru": "Центральный ботанический сад Национальной академии наук Белоруссии",
+          "en": "Central Botanical Garden, Minsk"
+        },
+        "kind": "park",
+        "subkind": "botanical_garden",
+        "territory": true,
+        "nested": 39,
+        "entrances": 7,
+        "crossings": 5,
+        "hectares": 90.8,
+        "opening_hours": "Mo off; Tu-Su 10:00-21:00",
+        "in_centre": false,
+        "heritage": true,
+        "monthly_views": null,
+        "status": "open",
+        "key": true,
+        "seeded": "heritage",
+        "flag": null
+      },
+      {
+        "osm": "relation/5696921",
+        "wikidata": "Q3809104",
+        "name": {
+          "local": "Аляксандраўскі сквер",
+          "ru": "Александровский сквер",
+          "en": "Aliaksandraŭski Garden Square"
+        },
+        "kind": "park",
+        "subkind": "park",
+        "territory": true,
+        "nested": 3,
+        "entrances": 9,
+        "crossings": 18,
+        "hectares": 2,
+        "opening_hours": null,
+        "in_centre": true,
+        "heritage": true,
+        "monthly_views": 242,
+        "status": "open",
+        "key": true,
+        "seeded": "views",
+        "flag": null
+      },
+      {
+        "osm": "relation/14605047",
+        "wikidata": "Q3918730",
+        "name": {
+          "local": "Парк Янкі Купалы",
+          "ru": "Парк им. Янки Купалы",
+          "en": "Yanka Kupala Park"
+        },
+        "kind": "park",
+        "subkind": "park",
+        "territory": true,
+        "nested": 31,
+        "entrances": 1,
+        "crossings": 9,
+        "hectares": 10.5,
+        "opening_hours": null,
+        "in_centre": true,
+        "heritage": true,
+        "monthly_views": null,
+        "status": "open",
+        "key": true,
+        "seeded": "curator",
+        "flag": null
+      },
+      {
+        "osm": "way/99881325",
+        "wikidata": "Q13031894",
+        "name": {
+          "local": "Парк Перамогі",
+          "ru": "Парк Победы (Минск)",
+          "en": null
+        },
+        "kind": "park",
+        "subkind": "park",
+        "territory": true,
+        "nested": 33,
+        "entrances": 4,
+        "crossings": 101,
+        "hectares": 147.4,
+        "opening_hours": null,
+        "in_centre": false,
+        "heritage": false,
+        "monthly_views": null,
+        "status": "open",
+        "key": false,
+        "seeded": null,
+        "flag": null
+      },
+      {
+        "osm": "relation/8433815",
+        "wikidata": "Q1102505",
+        "name": {
+          "local": "Лошыцкі парк",
+          "ru": "Лошица",
+          "en": null
+        },
+        "kind": "park",
+        "subkind": "park",
+        "territory": true,
+        "nested": 21,
+        "entrances": 6,
+        "crossings": 10,
+        "hectares": 93.2,
+        "opening_hours": null,
+        "in_centre": false,
+        "heritage": true,
+        "monthly_views": null,
+        "status": "open",
+        "key": false,
+        "seeded": null,
+        "flag": null
+      },
+      {
+        "osm": "way/1193316110",
+        "wikidata": null,
+        "name": {
+          "local": "Lakeside Park",
+          "ru": null,
+          "en": null
+        },
+        "kind": "park",
+        "subkind": "park",
+        "territory": true,
+        "nested": 18,
+        "entrances": 0,
+        "crossings": 19,
+        "hectares": 7.2,
+        "opening_hours": null,
+        "in_centre": false,
+        "heritage": false,
+        "monthly_views": null,
+        "status": "open",
+        "key": false,
+        "seeded": null,
+        "flag": "no_entrance"
+      },
+      {
+        "osm": null,
+        "wikidata": "Q4156665",
+        "name": {
+          "local": null,
+          "ru": "Дед",
+          "en": "Granddad"
+        },
+        "kind": "monument",
+        "subkind": null,
+        "territory": false,
+        "nested": 0,
+        "entrances": null,
+        "crossings": null,
+        "hectares": null,
+        "opening_hours": null,
+        "in_centre": false,
+        "heritage": false,
+        "monthly_views": 302,
+        "status": "open",
+        "key": false,
+        "seeded": null,
+        "flag": null
+      },
+      {
+        "osm": null,
+        "wikidata": "Q2395482",
+        "name": {
+          "local": null,
+          "ru": "Комсомольское озеро",
+          "en": "Kamsamoĺskaje Lake"
+        },
+        "kind": "park",
+        "subkind": null,
+        "territory": false,
+        "nested": 0,
+        "entrances": null,
+        "crossings": null,
+        "hectares": null,
+        "opening_hours": null,
+        "in_centre": false,
+        "heritage": false,
+        "monthly_views": 188,
+        "status": "open",
+        "key": false,
+        "seeded": null,
+        "flag": null
+      },
+      {
+        "osm": null,
+        "wikidata": "Q3916003",
+        "name": {
+          "local": null,
+          "ru": "Дом Ваньковичей",
+          "en": "House of Wańkowicz family in Minsk"
+        },
+        "kind": "building",
+        "subkind": null,
+        "territory": false,
+        "nested": 0,
+        "entrances": null,
+        "crossings": null,
+        "hectares": null,
+        "opening_hours": null,
+        "in_centre": true,
+        "heritage": true,
+        "monthly_views": 137,
+        "status": "open",
+        "key": true,
+        "seeded": "heritage",
+        "flag": null
+      }
+    ],
+    "no_entrance": [
+      {
+        "osm": "way/1193316110",
+        "wikidata": null,
+        "name": {
+          "local": "Lakeside Park",
+          "ru": null,
+          "en": null
+        },
+        "subkind": "park",
+        "nested": 18,
+        "crossings": 19,
+        "hectares": 7.2,
+        "opening_hours": null
+      },
+      {
+        "osm": "relation/15870348",
+        "wikidata": "Q30109006",
+        "name": {
+          "local": "Сквер Вілкаўшчына",
+          "ru": "Вилковщина",
+          "en": "Vilkaŭščyna"
+        },
+        "subkind": "park",
+        "nested": 10,
+        "crossings": 6,
+        "hectares": 4.1,
+        "opening_hours": null
+      },
+      {
+        "osm": "way/66832236",
+        "wikidata": "Q32288967",
+        "name": {
+          "local": "Сквер Сімона Балівара",
+          "ru": "Сквер имени Симона Боливара",
+          "en": "Simona Balivara Garden Square"
+        },
+        "subkind": "park",
+        "nested": 8,
+        "crossings": 15,
+        "hectares": 2.3,
+        "opening_hours": null
+      },
+      {
+        "osm": "way/689138683",
+        "wikidata": "Q3919319",
+        "name": {
+          "local": "Музей валуноў",
+          "ru": "Музей валунов",
+          "en": "Museum of boulders"
+        },
+        "subkind": "park",
+        "nested": 7,
+        "crossings": 6,
+        "hectares": 6.8,
+        "opening_hours": null
+      },
+      {
+        "osm": "way/584462715",
+        "wikidata": null,
+        "name": {
+          "local": "Авіямузей пад адкрытым небам",
+          "ru": null,
+          "en": null
+        },
+        "subkind": "park",
+        "nested": 7,
+        "crossings": 3,
+        "hectares": 4.4,
+        "opening_hours": null
+      },
+      {
+        "osm": "way/41179005",
+        "wikidata": "Q17354979",
+        "name": {
+          "local": "Тучынскі сквер",
+          "ru": null,
+          "en": null
+        },
+        "subkind": "park",
+        "nested": 6,
+        "crossings": 16,
+        "hectares": 5.6,
+        "opening_hours": null
+      },
+      {
+        "osm": "way/80243457",
+        "wikidata": "Q13031895",
+        "name": {
+          "local": "Парк Міхаіла Паўлава",
+          "ru": "Парк Павлова",
+          "en": null
+        },
+        "subkind": "park",
+        "nested": 5,
+        "crossings": 49,
+        "hectares": 42.7,
+        "opening_hours": null
+      },
+      {
+        "osm": "relation/9577160",
+        "wikidata": null,
+        "name": {
+          "local": "Бульвар Талбухіна",
+          "ru": null,
+          "en": null
+        },
+        "subkind": "park",
+        "nested": 4,
+        "crossings": 23,
+        "hectares": 4.1,
+        "opening_hours": null
+      }
+    ]
+  },
+  "fragments": {
+    "source": {
+      "file": "24-websites.json (per_object), 03-hours.json (not_resolved), minsk.duckdb",
+      "what": "Places of the city whose own website was reached and showed opening hours in its text: the Place, the host, the opening hours the base has from the map, and whether the parser could resolve that value.",
+      "read": "2026-11-24",
+      "licence": "© OpenStreetMap contributors, ODbL 1.0"
+    },
+    "fragment": {
+      "about": "Sample: the research keeps no text of a page, so no fragment exists. Where a fragment would stand, the mockup shows the opening-hours value the map already has, labelled as a sample of the form of a fragment; the hash of the page is a sample too.",
+      "hash": "9f2c…a41e"
+    },
+    "items": [
+      {
+        "osm": "node/4521584904",
+        "host": "www.nlb.by",
+        "name": {
+          "local": "Лабірынт",
+          "ru": "Лабиринт",
+          "en": null
+        },
+        "subkind": "gallery",
+        "current": "Mo-Fr:10:00-21:00,St-Su:10:00-18:00",
+        "in_markup": false,
+        "in_text": true,
+        "read": "2026-11-24",
+        "current_resolves": false
+      },
+      {
+        "osm": "node/5604949102",
+        "host": "loshytsa.museum.by",
+        "name": {
+          "local": "Лошыцкая сядзіба",
+          "ru": "Лошицкая усадьба",
+          "en": "Lošyca manor"
+        },
+        "subkind": "museum",
+        "current": "Oct-Apr We-Sa 11:00-19:00; May-Sep We-Sa 10:00-18:00",
+        "in_markup": false,
+        "in_text": true,
+        "read": "2026-11-24",
+        "current_resolves": true
+      },
+      {
+        "osm": "node/11607737050",
+        "host": "uzorhram.by",
+        "name": {
+          "local": "Храм святой Анастасіі Фармакалітрыі",
+          "ru": "Храм святой Анастасии Узорешительницы",
+          "en": null
+        },
+        "subkind": "place_of_worship",
+        "current": null,
+        "in_markup": false,
+        "in_text": true,
+        "read": "2026-11-24",
+        "current_resolves": null
+      },
+      {
+        "osm": "node/13758896309",
+        "host": "embassy.by",
+        "name": {
+          "local": "Coffee Embassy",
+          "ru": null,
+          "en": null
+        },
+        "subkind": "cafe",
+        "current": "Mo-Su 08:00-22:00",
+        "in_markup": false,
+        "in_text": true,
+        "read": "2026-11-24",
+        "current_resolves": true
+      }
+    ]
+  },
+  "in_person": {
+    "source": {
+      "file": "24-websites.json (per_object), minsk.duckdb",
+      "what": "Places to check in person: those whose website no longer answers, and Venues near the sixth Place of the reference Outing that have no website; with the check date the map carries, if any.",
+      "licence": "© OpenStreetMap contributors, ODbL 1.0"
+    },
+    "order": {
+      "about": "Sample: the order (by age of confirmation and importance) is a reading for the mockup."
+    },
+    "items": [
+      {
+        "osm": "node/6444857434",
+        "name": {
+          "local": "YUMMY",
+          "ru": null,
+          "en": null
+        },
+        "subkind": "cafe",
+        "why": "site_gone",
+        "host": "yummycoffee.by",
+        "check_date": null,
+        "opening_hours": "Mo-Fr 08:00-18:00"
+      },
+      {
+        "osm": "node/4479080798",
+        "name": {
+          "local": "Суши Весла",
+          "ru": "Суши Весла",
+          "en": null
+        },
+        "subkind": "restaurant",
+        "why": "site_gone",
+        "host": "sushivesla.by",
+        "check_date": null,
+        "opening_hours": "Su-Th 11:00-23:00; Fr-Sa 11:00-00:00"
+      },
+      {
+        "osm": "node/5700047222",
+        "name": {
+          "local": "Чебуречная",
+          "ru": null,
+          "en": null
+        },
+        "subkind": "cafe",
+        "why": "no_site",
+        "host": null,
+        "check_date": "2025-01-27",
+        "opening_hours": "Mo-Su 10:00-23:00"
+      },
+      {
+        "osm": "node/5104008725",
+        "name": {
+          "local": "Beershow",
+          "ru": null,
+          "en": null
+        },
+        "subkind": "bar",
+        "why": "no_site",
+        "host": null,
+        "check_date": null,
+        "opening_hours": null
+      },
+      {
+        "osm": "node/12469222401",
+        "name": {
+          "local": "Панский драник",
+          "ru": null,
+          "en": null
+        },
+        "subkind": "cafe",
+        "why": "no_site",
+        "host": null,
+        "check_date": null,
+        "opening_hours": "Mo-Su 10:00-00:00"
+      },
+      {
+        "osm": "node/6508253585",
+        "name": {
+          "local": "Bubble_Cofee.by",
+          "ru": null,
+          "en": null
+        },
+        "subkind": "cafe",
+        "why": "no_site",
+        "host": null,
+        "check_date": "2026-08-05",
+        "opening_hours": null
+      },
+      {
+        "osm": "node/3270433157",
+        "name": {
+          "local": "Минск",
+          "ru": "Минск",
+          "en": "Minsk"
+        },
+        "subkind": "restaurant",
+        "why": "no_site",
+        "host": null,
+        "check_date": "2024-05-07",
+        "opening_hours": null
+      }
+    ]
+  },
+  "areas": {
+    "source": {
+      "file": "08-material.json, 02-places.json, 18-country.json, 22-freshness.json",
+      "what": "Candidate Places in the box of the centre, in the rest of the city and in the rest of the country; and, for the city, the regional centres and the rest, the objects of the five kinds on the map with how many were edited within a year.",
+      "licence": "© OpenStreetMap contributors, ODbL 1.0"
+    },
+    "opened": {
+      "about": "Sample: which area is opened to a Curator, by whom and when; not measured.",
+      "by": "pavel",
+      "on": "2026-11-25"
+    },
+    "items": [
+      {
+        "id": "centre",
+        "places": 709,
+        "opened": true
+      },
+      {
+        "id": "city_rest",
+        "places": 6947,
+        "opened": false
+      },
+      {
+        "id": "country_rest",
+        "places": 37409,
+        "opened": false
+      }
+    ],
+    "freshness": [
+      {
+        "id": "city",
+        "objects": 7012,
+        "edited_in_the_last_year": 1567,
+        "edited_in_the_last_30_days": 118,
+        "not_edited_for_5_years": 488,
+        "median_years": 2
+      },
+      {
+        "id": "regional_centres",
+        "objects": 5384,
+        "edited_in_the_last_year": 810,
+        "edited_in_the_last_30_days": 57,
+        "not_edited_for_5_years": 643,
+        "median_years": 2
+      },
+      {
+        "id": "rest",
+        "objects": 32245,
+        "edited_in_the_last_year": 4971,
+        "edited_in_the_last_30_days": 262,
+        "not_edited_for_5_years": 4876,
+        "median_years": 2
+      }
+    ],
+    "country": {
+      "places": 45065,
+      "with_hours": 5382
+    }
+  },
+  "operations": {
+    "about": "Sample: the operations view; not measured. Nothing runs in the cloud yet. The allowances of instance time and storage are the estimates of ADR-0024; every other number, date and result is a sample.",
+    "refreshed": "2026-11-25",
+    "resets": "2026-12-01",
+    "allowances": [
+      {
+        "id": "instances",
+        "used": 31.4,
+        "of": 50,
+        "unit": "hours",
+        "held_by_connections": 4.2
+      },
+      {
+        "id": "db_compute",
+        "used": 58,
+        "of": 100,
+        "unit": "hours"
+      },
+      {
+        "id": "db_transfer",
+        "used": 1.1,
+        "of": 5,
+        "unit": "gb"
+      },
+      {
+        "id": "storage",
+        "used": 2.3,
+        "of": 10,
+        "unit": "gb"
+      }
+    ],
+    "runs": [
+      {
+        "id": "backup",
+        "every": "week",
+        "last": "2026-11-23",
+        "result": "ok",
+        "took": "2 min",
+        "detail": "backup_ok",
+        "size_mb": 48
+      },
+      {
+        "id": "rehearsal",
+        "every": "month",
+        "last": "2026-11-24",
+        "result": "ok",
+        "took": "6 min",
+        "detail": "rehearsal_ok",
+        "first": true
+      },
+      {
+        "id": "export",
+        "every": "day",
+        "last": "2026-11-25",
+        "result": "ok",
+        "took": "40 s",
+        "detail": "export_ok"
+      },
+      {
+        "id": "hours",
+        "every": "day",
+        "last": "2026-11-25",
+        "result": "ok",
+        "took": "25 s",
+        "detail": "hours_ok"
+      },
+      {
+        "id": "freshness",
+        "every": "week",
+        "last": "2026-11-22",
+        "result": "ok",
+        "took": "9 min",
+        "detail": "freshness_ok"
+      }
+    ],
+    "backlogs": {
+      "outbox": {
+        "waiting": 0,
+        "oldest": null
+      },
+      "journal": {
+        "waiting": 3,
+        "oldest_minutes": 2
+      }
+    },
+    "alerts": {
+      "platform": ["api_down", "server_errors", "db_compute"],
+      "recent": [
+        {
+          "at": "2026-11-25 13:40",
+          "what": "budget_near",
+          "state": "sent"
+        },
+        {
+          "at": "2026-11-19 07:00",
+          "what": "rehearsal_failed",
+          "state": "closed"
+        }
+      ]
+    },
+    "failed": {
+      "rehearsal_check": "audit_unreadable",
+      "journal_waiting": 214,
+      "journal_oldest_minutes": 95,
+      "db_compute_used": 92
+    }
+  },
+  "sign_in": {
+    "about": "Sample: the account that is refused is the sample person of samples.json; the version numbers of \"update required\" are samples.",
+    "client": "1.4.0",
+    "minimum": "1.5.0",
+    "refused_at": "14:52"
   }
 }

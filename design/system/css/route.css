@@ -823,3 +823,11 @@
 .tt-chart-window .tt-chart {
   margin-top: 0;
 }
+
+/* A warning about the way ahead has a sign as well as its colour. */
+.tt-ahead-far .icon {
+  width: var(--size-icon-s);
+  height: var(--size-icon-s);
+  margin-right: var(--space-4);
+  vertical-align: -3px;
+}

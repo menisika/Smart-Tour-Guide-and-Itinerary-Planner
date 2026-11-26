@@ -73,3 +73,12 @@ export const messenger = ({ title, people, messages }) =>
       )
       .join('')}</ol>
   </div>`;
+
+/**
+ * A letter the product sends, as a mail application shows it: who it is
+ * from, its subject, and the letter itself. The frame is the mail
+ * application's; the letter is ours.
+ * @param {{ from: string, address: string, subject: string, mark: string, body: string }} mail
+ */
+export const letter = ({ from, address, subject, mark, body }) =>
+  `<article class="tt-letter"><header><span class="tt-msgr-face">${icons.mail}</span><span><b>${from}</b><small>${address}</small></span></header><h1>${subject}</h1><div class="tt-letter-body"><img src="${mark}" alt="Promenade" />${body}</div></article>`;

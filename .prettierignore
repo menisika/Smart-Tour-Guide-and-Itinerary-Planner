@@ -25,3 +25,6 @@ design/data/map.json
 design/system/tokens.css
 design/system/map/style.*.json
 design/system/mark/*.svg
+
+# Written by design/tools/export-approved.mjs: the index of the approved screens
+design/approved/README.md

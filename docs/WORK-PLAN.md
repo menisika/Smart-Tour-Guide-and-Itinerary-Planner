@@ -41,7 +41,7 @@ flowchart LR
   classDef todo fill:#f1f3f5,stroke:#868e96,color:#000
   classDef outside fill:#ffffff,stroke:#868e96,stroke-dasharray:4 3,color:#000
   subgraph ZERO["Stage zero — the design, approved by the owner"]
-    D["<b>D</b> · Design, stage zero<br/>5 of 9 done"]:::progress
+    D["<b>D</b> · Design, stage zero<br/>6 of 9 done"]:::progress
   end
   subgraph ONE["Stage S1 — a solo Outing on foot"]
     direction TB
@@ -72,7 +72,7 @@ Generated from the packages; change a status in its package, never here.
 
 <!-- generated:board -->
 <!-- prettier-ignore-start -->
-182 work packages: 175 todo · 1 in progress · 0 blocked · 6 done · 0 dropped.
+182 work packages: 174 todo · 1 in progress · 0 blocked · 7 done · 0 dropped.
 
 | Package | Title | Status | Depends on |
 |---|---|---|---|
@@ -81,7 +81,7 @@ Generated from the packages; change a status in its package, never here.
 | D-03 | Screens of the solo Outing on iOS and Android | **done** | D-02 |
 | D-04 | Screens of the web and of the console | **done** | D-02 |
 | D-09 | Key screens of the Party and of the Catalog | **done** | D-02 |
-| D-05 | Walk-through and the owner's approval | todo | D-03, D-04, D-09 |
+| D-05 | Walk-through and the owner's approval | **done** | D-03, D-04, D-09 |
 | D-06 | Screens of the Party in full | todo | D-05 |
 | D-07 | Screens of the Catalog in full | todo | D-05 |
 | D-08 | Screens of bicycle and car, and of other cities | todo | D-05 |
@@ -281,7 +281,7 @@ flowchart LR
   D_03["<b>D-03</b><br/>Screens of the solo Outing on iOS and Android"]:::done
   D_04["<b>D-04</b><br/>Screens of the web and of the console"]:::done
   D_09["<b>D-09</b><br/>Key screens of the Party and of the Catalog"]:::done
-  D_05["<b>D-05</b><br/>Walk-through and the owner's approval"]:::todo
+  D_05["<b>D-05</b><br/>Walk-through and the owner's approval"]:::done
   D_06["<b>D-06</b><br/>Screens of the Party in full"]:::todo
   D_07["<b>D-07</b><br/>Screens of the Catalog in full"]:::todo
   D_08["<b>D-08</b><br/>Screens of bicycle and car, and of other cities"]:::todo
@@ -422,7 +422,7 @@ flowchart LR
 
 ### D-05 · Walk-through and the owner's approval
 
-- **Status:** todo
+- **Status:** done
 - **Depends on:** D-03, D-04, D-09
 - **Requirements:** —
 - **Decisions:** ADR-0005, ADR-0007
@@ -431,13 +431,13 @@ flowchart LR
 
 **Tasks**
 
-- [ ] Link the screens into click-through walks of scenarios SC-1, SC-2, SC-4, SC-5, SC-6 and SC-7 under `design/walkthrough/`, opened with one command.
-- [ ] Review every screen against the brief's list of what the product must never look like, and against the usual marks of generated design: stock gradients, glass panels for their own sake, pictographic characters as icons, interchangeable grids of cards, filler copy. Correct what is found.
-- [ ] Have an independent reviewer do the same review without being told the reasoning behind the direction, and settle each of its findings.
-- [ ] Check that every package of stage S1 with a screen to build has that screen among the mockups; draw what is missing.
-- [ ] Serve the walks over the local network, so that they open at real size on the owner's iPhone and Android phone, outdoors as well as indoors.
-- [ ] Walk the owner through. Sort every remark into a change of design, made here, or a place where the specification was understood differently, listed for the owner to decide.
-- [ ] Export each approved screen as an image under `design/approved/`, as the fixed reference that built screens are later compared with.
+- [x] Link the screens into click-through walks of scenarios SC-1, SC-2, SC-4, SC-5, SC-6 and SC-7 under `design/walkthrough/`, opened with one command.
+- [x] Review every screen against the brief's list of what the product must never look like, and against the usual marks of generated design: stock gradients, glass panels for their own sake, pictographic characters as icons, interchangeable grids of cards, filler copy. Correct what is found.
+- [x] Have an independent reviewer do the same review without being told the reasoning behind the direction, and settle each of its findings.
+- [x] Check that every package of stage S1 with a screen to build has that screen among the mockups; draw what is missing.
+- [x] Serve the walks over the local network, so that they open at real size on the owner's iPhone and Android phone, outdoors as well as indoors.
+- [x] Walk the owner through. Sort every remark into a change of design, made here, or a place where the specification was understood differently, listed for the owner to decide.
+- [x] Export each approved screen as an image under `design/approved/`, as the fixed reference that built screens are later compared with.
 
 **Done when**
 
@@ -5907,6 +5907,11 @@ What was made better than a package asked for. One line each; the pull request h
 | D-09    | A screen that the web has too is one function: a sheet over the map on a phone, a page in a browser — options, voting, the Chat, the Catalog and a published Route are drawn for both phones and at both widths of the web                                                         | the pull request of D-09 |
 | D-09    | The shared Outing with Visits ticking off is drawn too, so that SC-2 runs to its last step, through the Invitation pages of `D-04`                                                                                                                                                 | the pull request of D-09 |
 | D-09    | The Party's Routes are those of the reference Outing, so the line on what is in a Route for whom is written from what is really there — and says who gets least                                                                                                                    | the pull request of D-09 |
+| D-05    | A walk with hints off keeps, on the device, every tap that led nowhere with the name of what was tapped: the stumbles of a first-time walker are a list, not a memory                                                                                                              | the pull request of D-05 |
+| D-05    | The check of the walks finds a dead end by itself — a way on that is missing, outside the screen or under another pane — for both phones and both languages                                                                                                                        | the pull request of D-05 |
+| D-05    | Every package of stage S1 was read against the mockups: some thirty states and eleven screens that a package builds and no mockup showed are drawn, and five places where a mockup and a package disagreed are settled                                                             | the pull request of D-05 |
+| D-05    | The independent review's twenty-two findings are each corrected or kept with the reason written down (`design/walkthrough/README.md`)                                                                                                                                              | the pull request of D-05 |
+| D-05    | The approved screens are exported by a tool, with a headless Chrome, so that the reference can be made again after a change                                                                                                                                                        | the pull request of D-05 |
 
 ## Plan change log
 

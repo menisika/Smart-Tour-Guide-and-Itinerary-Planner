@@ -616,3 +616,32 @@
   font: var(--type-body-strong);
   letter-spacing: var(--type-body-strong-tracking);
 }
+
+/* ── A "More" block of a Story ─────────────────────────────────────────── */
+
+.tt-more {
+  margin-top: var(--space-16);
+  padding-top: var(--space-12);
+  box-shadow: inset 0 0.5px 0 var(--rule);
+}
+
+.tt-more h2 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  margin-bottom: var(--space-6);
+  font: var(--type-label-strong);
+  letter-spacing: var(--type-label-strong-tracking);
+  color: var(--accent-ink);
+}
+
+.tt-more h2 .icon {
+  width: var(--size-icon-s);
+  height: var(--size-icon-s);
+}
+
+.tt-more-others {
+  margin-top: var(--space-12);
+  font: var(--type-label);
+  color: var(--ink-2);
+}

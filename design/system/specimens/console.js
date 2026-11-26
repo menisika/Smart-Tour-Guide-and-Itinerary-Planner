@@ -65,6 +65,9 @@ import {
   timeline,
   tree,
   workMap,
+  fortnight,
+  gate,
+  statement,
 } from '../parts/console.js';
 import { state } from '../parts/states.js';
 
@@ -84,7 +87,7 @@ function cite({ data, lang }) {
   return sourceLine({
     work: from.work,
     article: lang === 'ru' ? `«${from.article}»` : `“${from.article}”`,
-    revision: `№ ${from.revision} · ${day(from.revision_date, lang)}`,
+    revision: `${c.number(from.revision)} · ${day(from.revision_date, lang)}`,
     licence: from.licence,
     name: c.openSource,
   });
@@ -208,7 +211,7 @@ export const consoleSpecimens = [
         })}${table({
           name: c.navPlacesList,
           columns: [
-            { label: '№', sort: 'ascending', width: '64px' },
+            { label: c.numberSign, sort: 'ascending', width: '72px' },
             { label: c.place, sort: 'none' },
             { label: c.kind, width: '180px' },
             { label: c.sensitivity, width: '160px' },
@@ -744,6 +747,83 @@ export const consoleSpecimens = [
             }),
           ],
           '960px minmax(0, 1fr)',
+        ),
+        'flush',
+      );
+    },
+  },
+  {
+    id: 'console-gate',
+    group: 'Console',
+    title: 'In place of the console: sign-in, a refusal, “update required”',
+    note: 'When a person is not let in, or the tab cannot go on, nothing of the console is shown: the lockup with the word “console”, one thing said plainly, what can be done, and under the card what is recorded. A refusal has a red outline, a lock and its own words — never the colour alone. The marks of Apple and Google are not reproduced.',
+    height: 520,
+    wide: true,
+    render: ({ theme, lang }) => {
+      const c = C[lang];
+      return gate({
+        theme,
+        word: c.console,
+        title: c.signInTitle,
+        text: c.signInNote,
+        body: `${input({ name: c.email, hint: 'name@promenade.example', icon: icons.mail })}${button(c.getCode, { kind: 'main' })}${button(c.withApple)}${button(c.withGoogle)}`,
+        note: c.signInFoot,
+      });
+    },
+  },
+  {
+    id: 'console-hours',
+    group: 'Console',
+    title: 'Opening hours as they resolve, and a statement with its source',
+    note: 'Two weeks, a day to a line of twenty-four hours: the open part is filled and its times stand under it; today is underlined; a closed day is empty and says “closed”, a day nobody knows is hatched and says so. Beside it a statement of the guide under the accent bar, with its source as pairs of a name and a value. The hours are a sample of the form: the Places of the reference Outing are seen from outside and have none. The statement is the cited passage.',
+    height: 236,
+    wide: true,
+    render: ({ lang, data }) => {
+      const c = C[lang];
+      const passage = data.outingNow.story[lang];
+      const start = new Date(`${data.map.source.extract}T00:00:00Z`);
+      const days = Array.from({ length: 14 }, (_, i) => {
+        const date = new Date(start.getTime() + i * 86_400_000);
+        const label = `${c.weekdays[date.getUTCDay()]} ${date.getUTCDate()}`;
+        if (date.getUTCDay() === 1)
+          return {
+            label,
+            note: c.placeStatus.closed_temporarily,
+            is: /** @type {const} */ ('off'),
+          };
+        if (i === 13)
+          return { label, note: c.hoursUnknownShort, is: /** @type {const} */ ('unknown') };
+        return {
+          label,
+          open: /** @type {[number, number][]} */ ([[600, 1140]]),
+          note: '10:00–19:00',
+          is: /** @type {'today' | undefined} */ (i === 3 ? 'today' : undefined),
+        };
+      });
+      return sample(
+        split(
+          [
+            pane({
+              title: c.resolved,
+              note: c.resolvedNote(day(data.map.source.extract, lang), 14),
+              body: fortnight({ name: c.resolved, days }),
+            }),
+            pane({
+              title: c.statement,
+              body: statement({
+                quote: passage.sentences[0].text,
+                rows: [
+                  { label: c.source, value: `${passage.source.work}, ${passage.source.article}` },
+                  {
+                    label: c.revisionWord,
+                    value: `${day(passage.source.revision_date, lang)} · ${c.number(passage.source.revision)}`,
+                  },
+                  { label: c.licence, value: passage.source.licence },
+                ],
+              }),
+            }),
+          ],
+          'minmax(0, 1fr) 520px',
         ),
         'flush',
       );
