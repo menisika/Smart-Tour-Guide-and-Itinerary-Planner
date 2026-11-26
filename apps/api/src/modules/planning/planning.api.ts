@@ -1,4 +1,4 @@
-import type { PlanningRequest, RouteDraft } from '@promenade/contracts';
+import type { PlanningAnswer, PlanningProblem } from '@promenade/contracts';
 
 import type { CityVersionRef } from '../places/index.ts';
 
@@ -16,10 +16,11 @@ export type PlanningOutcome =
       readonly kind: 'planned';
       /** Part of what makes the Route reproducible (`NFR-2`). */
       readonly cityVersion: CityVersionRef;
-      readonly route: RouteDraft;
+      /** A verified Route, or what to relax when nothing fits. */
+      readonly answer: PlanningAnswer;
     }
   | { readonly kind: 'city-not-published'; readonly cityId: string };
 
 export interface PlanningApi {
-  plan(cityId: string, request: PlanningRequest): Promise<PlanningOutcome>;
+  plan(cityId: string, problem: PlanningProblem): Promise<PlanningOutcome>;
 }
