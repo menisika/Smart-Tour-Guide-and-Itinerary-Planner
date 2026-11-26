@@ -50,7 +50,7 @@ flowchart LR
     S1_PLC["<b>S1-PLC</b> · The base of Places and the data of a city<br/>0 of 19 done"]:::todo
     S1_KNW["<b>S1-KNW</b> · Knowledge: Preparation, Dossier, Story, Narration<br/>0 of 22 done"]:::todo
     S1_CUR["<b>S1-CUR</b> · The internal console for stage S1<br/>0 of 14 done"]:::todo
-    S1_RTE["<b>S1-RTE</b> · From a request to a Route a person can keep<br/>0 of 17 done"]:::todo
+    S1_RTE["<b>S1-RTE</b> · From a request to a Route a person can keep<br/>0 of 17 done"]:::progress
     S1_OUT["<b>S1-OUT</b> · The Outing on the device<br/>0 of 22 done"]:::todo
     S1_ACC["<b>S1-ACC</b> · Accounts and access in S1<br/>0 of 11 done"]:::todo
     S1_FBK["<b>S1-FBK</b> · Feedback, notifications and measurement in S1<br/>0 of 7 done"]:::todo
@@ -72,7 +72,7 @@ Generated from the packages; change a status in its package, never here.
 
 <!-- generated:board -->
 <!-- prettier-ignore-start -->
-182 work packages: 174 todo · 0 in progress · 0 blocked · 8 done · 0 dropped.
+182 work packages: 173 todo · 1 in progress · 0 blocked · 8 done · 0 dropped.
 
 | Package | Title | Status | Depends on |
 |---|---|---|---|
@@ -159,7 +159,7 @@ Generated from the packages; change a status in its package, never here.
 | S1-CUR-12 | Dashboards | todo | S1-CUR-01, S1-PLC-17, S1-KNW-02, D-05, F-12 |
 | S1-CUR-13 | Administration | todo | S1-CUR-01, S1-KNW-02, D-05, F-11, S1-ACC-03, S1-ACC-08, F-12 |
 | S1-CUR-14 | SC-5 and SC-6 through the console | todo | S1-CUR-02, S1-CUR-03, S1-CUR-04, S1-CUR-05, S1-CUR-06, S1-CUR-08, S1-CUR-09, S1-CUR-10, S1-CUR-11, S1-CUR-12, S1-CUR-13, S1-PLC-18 |
-| S1-RTE-01 | Shared description of a planning problem | todo | — |
+| S1-RTE-01 | Shared description of a planning problem | **in progress** | — |
 | S1-RTE-02 | Pedestrian travel times in `routing` | todo | S1-RTE-01 |
 | S1-RTE-03 | Independent verifier of every hard constraint | todo | S1-RTE-01 |
 | S1-RTE-04 | Candidate preselection and scoring | todo | S1-RTE-01 |
@@ -2682,7 +2682,7 @@ flowchart LR
   classDef blocked fill:#ffe3e3,stroke:#c92a2a,color:#000
   classDef todo fill:#f1f3f5,stroke:#868e96,color:#000
   classDef outside fill:#ffffff,stroke:#868e96,stroke-dasharray:4 3,color:#000
-  S1_RTE_01["<b>S1-RTE-01</b><br/>Shared description of a planning problem"]:::todo
+  S1_RTE_01["<b>S1-RTE-01</b><br/>Shared description of a planning problem"]:::progress
   S1_RTE_02["<b>S1-RTE-02</b><br/>Pedestrian travel times in `routing`"]:::todo
   S1_RTE_03["<b>S1-RTE-03</b><br/>Independent verifier of every hard constraint"]:::todo
   S1_RTE_04["<b>S1-RTE-04</b><br/>Candidate preselection and scoring"]:::todo
@@ -2770,7 +2770,7 @@ flowchart LR
 
 ### S1-RTE-01 · Shared description of a planning problem
 
-- **Status:** todo
+- **Status:** in progress
 - **Depends on:** —
 - **Requirements:** `RTE-1`, `RTE-4`, `NFR-37`, `PTY-1`
 - **Decisions:** ADR-0006 (points 2, 3, 4, 7, 11, 12), ADR-0009 (point 1), ADR-0015 (points 1–3, 7), ADR-0025 (points 2, 3, 5), ADR-0029 (points 3, 5)
