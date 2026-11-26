@@ -3,6 +3,7 @@ pnpm-lock.yaml
 **/dist
 **/coverage
 **/.expo
+.cache
 infra/.terraform
 infra/.terraform.lock.hcl
 

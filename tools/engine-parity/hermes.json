@@ -1,0 +1,7 @@
+{
+  "reactNative": "0.88.1",
+  "tag": "hermes-v260318099.0.5",
+  "repository": "https://github.com/facebook/hermes.git",
+  "commit": "9a115f15785851f4ff2747ebb090ddd066fc8ad2",
+  "tree": "08059b08ded6b8b6ba7e74e6845500eb77d7036d"
+}

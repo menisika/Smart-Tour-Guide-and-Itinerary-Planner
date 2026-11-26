@@ -1,0 +1,22 @@
+{
+  "name": "@promenade/engine-parity",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Runs a corpus of planning requests on the server's JavaScript engine and on the phone's, and compares the outputs byte for byte (ADR-0006).",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "check": "node src/check.ts",
+    "corpus": "node --conditions=@promenade/source scripts/generate-corpus.ts"
+  },
+  "devDependencies": {
+    "@promenade/contracts": "workspace:*",
+    "@promenade/planner": "workspace:*",
+    "@promenade/routing": "workspace:*",
+    "@promenade/verifier": "workspace:*",
+    "@types/node": "catalog:",
+    "fast-check": "catalog:",
+    "rolldown": "1.2.19",
+    "typescript": "catalog:"
+  }
+}

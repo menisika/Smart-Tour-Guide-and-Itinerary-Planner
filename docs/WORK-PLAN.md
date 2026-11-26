@@ -45,7 +45,7 @@ flowchart LR
   end
   subgraph ONE["Stage S1 — a solo Outing on foot"]
     direction TB
-    F["<b>F</b> · Foundation<br/>3 of 12 done"]:::progress
+    F["<b>F</b> · Foundation<br/>4 of 12 done"]:::progress
     C["<b>C</b> · Checks before building<br/>0 of 7 done"]:::todo
     S1_PLC["<b>S1-PLC</b> · The base of Places and the data of a city<br/>0 of 19 done"]:::todo
     S1_KNW["<b>S1-KNW</b> · Knowledge: Preparation, Dossier, Story, Narration<br/>0 of 22 done"]:::todo
@@ -72,7 +72,7 @@ Generated from the packages; change a status in its package, never here.
 
 <!-- generated:board -->
 <!-- prettier-ignore-start -->
-182 work packages: 170 todo · 1 in progress · 0 blocked · 11 done · 0 dropped.
+182 work packages: 170 todo · 0 in progress · 0 blocked · 12 done · 0 dropped.
 
 | Package | Title | Status | Depends on |
 |---|---|---|---|
@@ -91,7 +91,7 @@ Generated from the packages; change a status in its package, never here.
 | F-04 | Module schemas, transactions and domain events | **done** | — |
 | F-05 | Job launcher port | todo | F-04 |
 | F-06 | Planner in a pool of worker threads | todo | F-03 |
-| F-07 | Planner on the phone's engine in the pipeline | **in progress** | — |
+| F-07 | Planner on the phone's engine in the pipeline | **done** | — |
 | F-08 | Object-store port, S3 adapter and signed links | todo | — |
 | F-09 | Observability baseline | todo | F-03, F-05 |
 | F-10 | Fault-injecting doubles for every external adapter | todo | F-08, F-05 |
@@ -544,7 +544,7 @@ flowchart LR
   F_04["<b>F-04</b><br/>Module schemas, transactions and domain events"]:::done
   F_05["<b>F-05</b><br/>Job launcher port"]:::todo
   F_06["<b>F-06</b><br/>Planner in a pool of worker threads"]:::todo
-  F_07["<b>F-07</b><br/>Planner on the phone's engine in the pipeline"]:::progress
+  F_07["<b>F-07</b><br/>Planner on the phone's engine in the pipeline"]:::done
   F_08["<b>F-08</b><br/>Object-store port, S3 adapter and signed links"]:::todo
   F_09["<b>F-09</b><br/>Observability baseline"]:::todo
   F_10["<b>F-10</b><br/>Fault-injecting doubles for every external adapter"]:::todo
@@ -717,7 +717,7 @@ flowchart LR
 
 ### F-07 · Planner on the phone's engine in the pipeline
 
-- **Status:** in progress
+- **Status:** done
 - **Depends on:** —
 - **Needs:** The planner, verifier and routing packages and the generator of planning requests used by the property suite (the stubs are enough to set the job up).
 - **Requirements:** `NFR-2`, `NFR-38`
@@ -727,19 +727,19 @@ flowchart LR
 
 **Tasks**
 
-- [ ] Bundle `planner`, `verifier` and `routing` with a small command-line driver into one script for each engine, from the same sources.
-- [ ] Keep the fixed set of planning requests as a corpus in the repository, with the hash of each expected answer; `S1-RTE-08` extends it.
-- [ ] Obtain the phone's engine as a command-line binary in the pipeline at the version the pinned React Native ships, pinned and checksummed, without a device or emulator.
-- [ ] Commit a fixed corpus of planning requests (generated once from a seed, including Party-shaped and edge-case requests as they appear) and run it on both engines, writing canonical JSON.
-- [ ] Compare the outputs byte for byte; on mismatch print the first differing request and the two results.
-- [ ] Add the job to `.github/workflows/ci.yml` as a required check.
+- [x] Bundle `planner`, `verifier` and `routing` with a small command-line driver into one script for each engine, from the same sources.
+- [x] Keep the fixed set of planning requests as a corpus in the repository, with the hash of each expected answer; `S1-RTE-08` extends it.
+- [x] Obtain the phone's engine as a command-line binary in the pipeline at the version the pinned React Native ships, pinned and checksummed, without a device or emulator. No such binary is published for this version of Hermes, so the pipeline builds it from the pinned commit, whose hash and tree hash are checked, and keeps it in its cache.
+- [x] Commit a fixed corpus of planning requests (generated once from a seed, including Party-shaped and edge-case requests as they appear) and run it on both engines, writing canonical JSON.
+- [x] Compare the outputs byte for byte; on mismatch print the first differing request and the two results.
+- [x] Add the job to `.github/workflows/ci.yml` as a required check.
 
 **Done when**
 
 - The new pipeline job passes on `main` and is listed among the required checks.
 - A deliberately introduced engine-dependent expression (for example an iteration order that differs between engines) makes the job fail, shown by a test in `tools/architecture-tests`.
 
-**Owner only.** Adding the new job to the required checks in the repository settings on GitHub.
+**Required check.** The session that closes the package adds the job's name to the required checks of the ruleset of `main`, once the job has passed on `main` — by the owner's standing permission of 26 November 2026.
 
 ### F-08 · Object-store port, S3 adapter and signed links
 
@@ -5794,7 +5794,6 @@ Collected from the packages; each line is the "Owner only" of its package.
 - **D-07** — The walk-through and the approval.
 - **D-08** — The walk-through and the approval.
 - **F-02** — Switching on the protection of `main` in the repository's settings, and logging the repository's account into the `gh` command so that sessions can open pull requests themselves.
-- **F-07** — Adding the new job to the required checks in the repository settings on GitHub.
 - **F-09** — Choosing the crash reporter's provider, which needs an account; until then the no-op adapter stays.
 - **F-12** — Accepting a seventh shared package, if the tokens and components need one: ADR-0005 lists six.
 - **C-01** — Installing the check build — on the iPhone through the owner's Mac — and walking for an hour with each phone, screen locked.
@@ -5922,11 +5921,15 @@ What was made better than a package asked for. One line each; the pull request h
 | S1-OUT-03 | The state of the rules is plain data that survives JSON, so an Outing resumes after a restart with the same events (`OUT-13`), and a "yes" to "are you at …?" is a second pure function, `confirmArrival`                                                                                      | #13          |
 | S1-OUT-03 | Where the radii of two scenes overlap at poor accuracy, a fix speaks for the nearer scene only, and leaving is registered only on a fix that can be trusted: one position never arrives at two scenes, and a thrown fix never ends a presence                                                  | #13          |
 | S1-OUT-03 | The tests were run against nine deliberately broken variants of the rules, and a fixture was added for the one that survived                                                                                                                                                                   | #13          |
+| F-07      | A test fails when React Native is upgraded and the pin of the phone's engine is not: the pin is compared with the Hermes tag that the application's React Native names                                                                                                                         | #PR          |
+| F-07      | The hashes of the expected answers are checked in `pnpm test` too, on Node.js alone, so a change of the planner's answers shows on a developer's machine before the pipeline; the corpus holds named edge cases beside the generated requests                                                  | #PR          |
+| F-07      | The canonical JSON refuses a fraction or a missing value instead of writing it, and the bundled planner holds no schema library                                                                                                                                                                | #PR          |
 
 ## Plan change log
 
 Packages added, split, reordered or dropped, and why.
 
-| Change               | Why                                                      | Pull request  |
-| -------------------- | -------------------------------------------------------- | ------------- |
-| The plan was written | Stage zero (design) was put first at the owner's request | first version |
+| Change                                  | Why                                                                                                                              | Pull request  |
+| --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| The plan was written                    | Stage zero (design) was put first at the owner's request                                                                         | first version |
+| `F-07` no longer has an owner-only step | The owner's standing permission of 26 November 2026 lets a session add the job to the required checks once it is green on `main` | #PR           |

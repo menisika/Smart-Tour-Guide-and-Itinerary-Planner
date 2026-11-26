@@ -9,7 +9,7 @@ How a change gets into this repository. There is one developer, and Claude sessi
 1. **One piece of work, one branch, one pull request.** A piece of work is normally one work package of [docs/WORK-PLAN.md](docs/WORK-PLAN.md).
 2. **Name the branch** `<type>/<work-package-id>-<short-slug>`, for example `feat/s1-rte-03-verifier`. Work outside the plan: `<type>/<short-slug>`.
 3. **Title the pull request as a commit header** (see below). It becomes the one commit on `main`: pull requests are squash-merged and the branch is deleted.
-4. **Merge when the three checks pass:** `Lint and tests`, `Compose smoke test`, `Terraform format and validation`. No review by a second person is required; the session that did the work merges, by squash, with the package's `Refs:` line as the description. A ruleset on `main` refuses a direct push, a merge with a check failing, and any merge method but squash.
+4. **Merge when the four checks pass:** `Lint and tests`, `Planner on both engines`, `Compose smoke test`, `Terraform format and validation`. No review by a second person is required; the session that did the work merges, by squash, with the package's `Refs:` line as the description. A ruleset on `main` refuses a direct push, a merge with a check failing, and any merge method but squash.
 
 Parallel sessions each work in their own worktree, on their own branch.
 

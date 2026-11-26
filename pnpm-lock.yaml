@@ -490,6 +490,9 @@ importers:
 
   tools/architecture-tests:
     devDependencies:
+      '@promenade/engine-parity':
+        specifier: workspace:*
+        version: link:../engine-parity
       '@types/node':
         specifier: 'catalog:'
         version: 26.6.6
@@ -508,6 +511,33 @@ importers:
       typescript-eslint:
         specifier: 'catalog:'
         version: 8.74.0(eslint@10.15.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@6.0.3)
+
+  tools/engine-parity:
+    devDependencies:
+      '@promenade/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@promenade/planner':
+        specifier: workspace:*
+        version: link:../../packages/planner
+      '@promenade/routing':
+        specifier: workspace:*
+        version: link:../../packages/routing
+      '@promenade/verifier':
+        specifier: workspace:*
+        version: link:../../packages/verifier
+      '@types/node':
+        specifier: 'catalog:'
+        version: 26.6.6
+      fast-check:
+        specifier: 'catalog:'
+        version: 4.11.0
+      rolldown:
+        specifier: 1.2.19
+        version: 1.2.19
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
 
   tools/eslint-plugin:
     devDependencies:

@@ -45,6 +45,45 @@ jobs:
       # rule fails on a deliberate violation.
       - run: pnpm test
 
+  engines:
+    name: Planner on both engines
+    runs-on: ubuntu-latest
+    # Minutes when the phone's engine is in the cache; it is built once per
+    # version of React Native, which takes most of this limit.
+    timeout-minutes: 45
+    env:
+      HERMES_BIN: ${{ github.workspace }}/.cache/hermes/hermes
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # The phone's engine: Hermes at the commit the pinned React Native
+      # ships, as a command-line binary. No such binary is published, so it is
+      # built from the pinned sources and kept until the pin changes.
+      - name: Restore the phone's engine
+        id: hermes
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .cache/hermes
+          key: hermes-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('tools/engine-parity/hermes.json', 'tools/engine-parity/scripts/build-hermes.sh') }}
+      - name: Build the phone's engine from the pinned sources
+        if: steps.hermes.outputs.cache-hit != 'true'
+        run: pnpm engines:hermes
+      - name: Check the binary against its checksum
+        working-directory: .cache/hermes
+        run: sha256sum --check hermes.sha256
+      # The committed corpus on Node.js and on Hermes, compared byte for byte
+      # (ADR-0006, point 9; ADR-0027, point 2).
+      - name: Run the corpus on both engines
+        run: pnpm engines
+      # The proof that this job can fail: an engine-dependent expression.
+      - name: Fail on a deliberately engine-dependent expression
+        run: pnpm vitest run tools/architecture-tests/src/engine-parity.test.ts
+
   smoke:
     name: Compose smoke test
     runs-on: ubuntu-latest

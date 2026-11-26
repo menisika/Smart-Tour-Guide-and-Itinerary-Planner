@@ -22,6 +22,8 @@
     "plan:update": "node scripts/check-work-plan.mjs --write",
     "test": "vitest run",
     "test:watch": "vitest",
+    "engines": "node tools/engine-parity/src/check.ts",
+    "engines:hermes": "tools/engine-parity/scripts/build-hermes.sh .cache/hermes",
     "test:integration": "vitest run --config apps/api/vitest.integration.config.ts",
     "dev:packages": "tsc -b tsconfig.build.json --watch --preserveWatchOutput",
     "dev:api": "pnpm --filter @promenade/api dev",

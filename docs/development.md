@@ -9,6 +9,7 @@ How the repository is put together and how to work in it. The decisions behind i
 - [The rules and how each one fails](#the-rules-and-how-each-one-fails)
 - [The description of a planning problem](#the-description-of-a-planning-problem)
 - [The trigger rules](#the-trigger-rules)
+- [The planner on both engines](#the-planner-on-both-engines)
 - [Modules of the API](#modules-of-the-api)
 - [Schema migrations](#schema-migrations)
 - [Integration tests](#integration-tests)
@@ -34,6 +35,7 @@ packages/
 tools/
   eslint-plugin/        the `promenade/no-floating-point` lint rule
   architecture-tests/   proves that each rule fails on a deliberate violation
+  engine-parity/        runs a corpus of planning requests on Node.js and on Hermes and compares the bytes
 docker/       configuration of the local stand-ins for cloud services
 infra/        Terraform: providers pinned, no resources
 scripts/      the smoke test of the local environment
@@ -157,6 +159,37 @@ const step = advance(state, fix); // → { state, events }
 A recorded track (`src/track.ts`) is a JSON object with a header — format, version, `origin`, a description, the Travel Mode — and the fixes. `origin` is `synthetic` or `test-walk`; there is no value for a person using the product, and `parseRecordedTrack` refuses a track without a known origin. `syntheticTrack` draws a track on a flat plan in metres from walks, stops, jumps, gaps and changes of accuracy, the same for the same seed. The plan lies at a point of open sea: tracks and fixtures belong to no city.
 
 The named fixtures are in `src/testing/fixtures.ts`, one or more per rule, and the generator of whole Outings for the property tests in `src/testing/track-arbitraries.ts`.
+
+## The planner on both engines
+
+The same planning request must give the same bytes on the server's JavaScript engine and on the phone's (ADR-0006, point 9). `tools/engine-parity` proves it, and the pipeline job `Planner on both engines` runs it on every change:
+
+1. `src/driver.ts` is bundled with `planner`, `verifier`, `routing` and the corpus into one script per engine, from the same TypeScript sources.
+2. Each script answers every request of `corpus/problems.jsonl` and writes one line of canonical JSON per request — keys sorted, whole numbers only.
+3. The two outputs are compared byte for byte. On a difference the job prints the first differing request with both results and fails.
+4. The hash of each answer is compared with `corpus/expected.sha256`, so a change of the planner's answers is always a visible change of that file.
+
+**The phone's engine** is Hermes at the version the pinned React Native ships, named in `tools/engine-parity/hermes.json` by tag, commit and tree. No command-line binary of the virtual machine is published for it — the releases on GitHub stop at v0.13.0, and the npm package `hermes-compiler` holds only the compiler, which does not execute a script. So `scripts/build-hermes.sh` fetches the pinned commit, checks the commit and its tree, and builds the `hermes` binary without a device or an emulator. The pipeline keeps the binary in its cache until the pin changes. A test fails when React Native is upgraded and the pin is not.
+
+To run the check on your machine (git, cmake and a C++ compiler; the build takes a few minutes, once):
+
+```bash
+pnpm engines:hermes
+```
+
+```bash
+HERMES_BIN=.cache/hermes/hermes pnpm engines
+```
+
+**When the planner's answers change on purpose**, accept them and commit the file:
+
+```bash
+HERMES_BIN=.cache/hermes/hermes pnpm engines --update-hashes
+```
+
+**The corpus** was generated once from fixed seeds by `scripts/generate-corpus.ts` and is committed; the pipeline never generates it. It holds solo requests, Party-shaped requests and edge cases. To extend it, add entries in that script, run `pnpm --filter @promenade/engine-parity corpus`, then update the hashes.
+
+`pnpm test` checks the hashes on Node.js alone and the comparison itself; the tests that need Hermes — the corpus on both engines, and a driver with a deliberately engine-dependent comparator that must make the check fail — run when `HERMES_BIN` is set, as in the pipeline job.
 
 ## Modules of the API
 

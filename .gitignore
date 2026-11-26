@@ -4,6 +4,9 @@ dist/
 coverage/
 *.tsbuildinfo
 
+# The phone's JavaScript engine, built by `pnpm engines:hermes`
+.cache/
+
 # Expo
 .expo/
 expo-env.d.ts
