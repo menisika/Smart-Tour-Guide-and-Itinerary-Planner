@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import type { PlanningRequest, RouteViolation } from '@promenade/contracts';
+import type { PlanningProblem, RouteViolation } from '@promenade/contracts';
 import { planRoute } from '@promenade/planner';
 import { verifyRoute } from '@promenade/verifier';
 
@@ -25,16 +25,18 @@ export class PlanningService implements PlanningApi {
    * point 4 puts it in a pool of worker threads, so that a second of planning
    * does not freeze everyone connected to the instance.
    */
-  async plan(cityId: string, request: PlanningRequest): Promise<PlanningOutcome> {
+  async plan(cityId: string, problem: PlanningProblem): Promise<PlanningOutcome> {
     const cityVersion = await this.places.publishedCityVersion(cityId);
     if (cityVersion === null) return { kind: 'city-not-published', cityId };
 
-    const route = planRoute(request);
+    const answer = planRoute(problem);
 
     // Every plan is checked by code that shares nothing with the planner.
-    const violations = verifyRoute(request, route);
-    if (violations.length > 0) throw new RouteRejectedError(violations);
+    if (answer.outcome === 'route') {
+      const violations = verifyRoute(problem, answer.route);
+      if (violations.length > 0) throw new RouteRejectedError(violations);
+    }
 
-    return { kind: 'planned', cityVersion, route };
+    return { kind: 'planned', cityVersion, answer };
   }
 }

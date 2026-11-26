@@ -166,6 +166,22 @@ describe('import boundaries fail on a deliberate violation', () => {
     });
   });
 
+  describe('the test-only generators stay out of shipped code (ADR-0006)', () => {
+    it('catches a source file that imports them', () => {
+      expect(
+        reported(
+          'testing-entry-only-from-tests',
+          'packages/planner/src/ships-the-generator.ts',
+          'packages/contracts/src/testing/index.ts',
+        ),
+      ).toBe(true);
+    });
+
+    it('accepts a test that imports them', () => {
+      expect(reportedFrom('packages/planner/src/uses-the-generator.test.ts')).toEqual([]);
+    });
+  });
+
   describe('a module reaches the database through the platform only (ADR-0003)', () => {
     it('catches a module that takes the pool', () => {
       expect(

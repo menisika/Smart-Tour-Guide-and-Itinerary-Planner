@@ -36,6 +36,18 @@ module.exports = {
       },
     },
 
+    {
+      name: 'testing-entry-only-from-tests',
+      comment:
+        'The generators of `@promenade/contracts/testing` are for tests and tools: they need fast-check and are not built into `dist`, so shipped code cannot load them (ADR-0006, point 7).',
+      severity: 'error',
+      from: {
+        path: '^(apps|packages)/',
+        pathNot: ['\\.test\\.tsx?$', '^packages/contracts/src/testing/'],
+      },
+      to: { path: ['^packages/contracts/src/testing/', '^@promenade/contracts/testing($|/)'] },
+    },
+
     // ── ADR-0003, point 5 ────────────────────────────────────────────────
     {
       name: 'api-module-internals',

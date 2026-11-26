@@ -7,6 +7,7 @@ How the repository is put together and how to work in it. The decisions behind i
 - [Layout](#layout)
 - [TypeScript conventions](#typescript-conventions)
 - [The rules and how each one fails](#the-rules-and-how-each-one-fails)
+- [The description of a planning problem](#the-description-of-a-planning-problem)
 - [Modules of the API](#modules-of-the-api)
 - [Schema migrations](#schema-migrations)
 - [Integration tests](#integration-tests)
@@ -72,12 +73,13 @@ This is what Node.js expects when it runs TypeScript directly; `tsc` rewrites th
 
 ## The rules and how each one fails
 
-Five architecture rules are enforced by tools, and each has tests that feed it a deliberate violation.
+Six architecture rules are enforced by tools, and each has tests that feed it a deliberate violation.
 
 | Rule                                                                                                                            | Decision                 | Enforced by                                                                                                                                                                                                                                    | Proven by                                                                                                                   |
 | ------------------------------------------------------------------------------------------------------------------------------- | ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | The verifier may not import the planner — directly, by package name, or through another package                                 | ADR-0006, point 7        | `.dependency-cruiser.cjs`: `verifier-not-to-planner`, `verifier-only-on-contracts`; ESLint `no-restricted-imports` for the message in the editor; `packages/verifier/package.json` does not declare the planner, so pnpm does not even link it | `tools/architecture-tests/src/import-boundaries.test.ts`, `lint-rules.test.ts`, `manifests.test.ts`                         |
-| No floating-point code in `planner`, `verifier` and `routing`                                                                   | ADR-0006, point 2        | ESLint rule `promenade/no-floating-point` (`tools/eslint-plugin`), with inline disabling switched off for those files                                                                                                                          | `tools/eslint-plugin/src/rules/no-floating-point.test.js`, `tools/architecture-tests/src/lint-rules.test.ts`                |
+| No floating-point code in `planner`, `verifier`, `routing` and the planning files of `contracts`                                | ADR-0006, point 2        | ESLint rule `promenade/no-floating-point` (`tools/eslint-plugin`), with inline disabling switched off for those files                                                                                                                          | `tools/eslint-plugin/src/rules/no-floating-point.test.js`, `tools/architecture-tests/src/lint-rules.test.ts`                |
+| The test-only generators of `contracts` are imported by tests and tools only                                                    | ADR-0006, point 7        | `.dependency-cruiser.cjs`: `testing-entry-only-from-tests`; the entry point `@promenade/contracts/testing` has no build in `dist`, so Node.js cannot load it at run time                                                                       | `tools/architecture-tests/src/import-boundaries.test.ts`                                                                    |
 | A module of the API is used only through its `index.ts`                                                                         | ADR-0003, point 5        | `.dependency-cruiser.cjs`: `api-module-internals`, `api-module-internals-from-outside`, `api-platform-not-to-modules`                                                                                                                          | `tools/architecture-tests/src/import-boundaries.test.ts`                                                                    |
 | A module of the API reads and writes only the tables of its own Postgres schema, and sends SQL only through `platform/database` | ADR-0003, point 5        | `tools/architecture-tests/src/sql/module-queries.ts` reads every `sql` template of every module with PostgreSQL's own parser; `.dependency-cruiser.cjs`: `api-modules-database-through-index`, `api-modules-not-to-pg`                         | `tools/architecture-tests/src/schema-ownership.test.ts`, `import-boundaries.test.ts`                                        |
 | A migration touches only the schema of the module it is named for, only adds, and can be applied twice                          | ADR-0026, points 2 and 5 | `tools/architecture-tests/src/sql/migration-rules.ts`, with the same parser                                                                                                                                                                    | `tools/architecture-tests/src/schema-ownership.test.ts`; against a real database, `apps/api/integration/migrations.test.ts` |
@@ -123,6 +125,20 @@ A migration of one module altering the table of another:
 ```bash
 echo 'ALTER TABLE places.place ADD COLUMN IF NOT EXISTS rank integer;' > apps/api/migrations/20991231000000000_planning_tmp-violation.sql; pnpm test; rm apps/api/migrations/20991231000000000_planning_tmp-violation.sql
 ```
+
+## The description of a planning problem
+
+`packages/contracts` holds what the planner and the verifier are both written against, in three files:
+
+| File                    | Holds                                                                                                                                        |
+| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/planning.ts`       | the planning problem and its answer as zod schemas with their types, the closed list of violation codes, the error codes of the planning API |
+| `src/planning-rules.ts` | what both sides must compute the same way — the fixed-point scale, the numbering of nodes, the rounding of pace; it imports nothing          |
+| `src/planning-wire.ts`  | the Route request and its answer as they travel; the only planning shape that may hold a coordinate                                          |
+
+All three are under `promenade/no-floating-point`. A problem is integers only: instants in whole seconds since the Unix epoch, durations in seconds, scores in fixed point (`SCORE_SCALE`), and travel times as a matrix among the start (index 0), the finish (index 1) and the candidates, with `null` for "no path".
+
+`@promenade/contracts/testing` is a second entry point with fast-check generators of problems, answers and wire requests, shared by the suites of the planner and the verifier. It is published as sources only — a test or a tool can import it, shipped code cannot. `samplePlanningProblems(seed, count)` gives the same problems for the same seed.
 
 ## Modules of the API
 
