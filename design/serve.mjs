@@ -141,12 +141,22 @@ server.listen(port, host, () => {
   console.log(`Design: http://localhost:${port}/`);
   console.log(`  the system   /system/\n  the screens  /screens/\n  the walks    /walkthrough/`);
   if (lan) {
-    for (const addresses of Object.values(networkInterfaces())) {
+    // A phone reaches this machine by the address of its Wi-Fi or cable, never
+    // by that of a bridge a container runtime made: those are left out.
+    const virtual = /^(docker|br-|veth|virbr|vmnet|tailscale|utun|llw|awdl|bridge)/;
+    /** @type {string[]} */
+    const reachable = [];
+    for (const [name, addresses] of Object.entries(networkInterfaces())) {
+      if (virtual.test(name)) continue;
       for (const address of addresses ?? []) {
-        if (address.family === 'IPv4' && !address.internal) {
-          console.log(`On this network: http://${address.address}:${port}/`);
-        }
+        if (address.family === 'IPv4' && !address.internal) reachable.push(address.address);
       }
+    }
+    if (reachable.length === 0) {
+      console.log('On this network: no address — this machine is on no Wi-Fi and no cable.');
+    }
+    for (const address of reachable) {
+      console.log(`On a phone in the same network: http://${address}:${port}/walkthrough/`);
     }
   }
 });
