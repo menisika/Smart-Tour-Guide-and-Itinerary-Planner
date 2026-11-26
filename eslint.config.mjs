@@ -29,6 +29,9 @@ export default defineConfig(
     'spikes/**',
     'docs/**',
     'infra/.terraform/**',
+    // Worktrees of sessions: each is a whole copy of the repository on
+    // another branch, linted where it is checked out.
+    '.claude/worktrees/**',
   ]),
 
   { linterOptions: { reportUnusedDisableDirectives: 'error' } },
