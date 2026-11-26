@@ -158,6 +158,6 @@ The skeleton stops where features begin. Notably absent, and named in the decisi
 - the planner in a pool of worker threads (ADR-0003) — the stub runs in the request's thread;
 - the suite that runs the planner on the phone's JavaScript engine as well as the server's (ADR-0006, ADR-0027);
 - cloud adapters for language models and speech (ADR-0004, ADR-0014), and real recordings made with them;
-- token verification, the `ObjectStore` port, the notification outbox, the durable workflows of Preparation, OpenTelemetry;
+- token verification, the notification outbox, the durable workflows of Preparation, OpenTelemetry;
 - the error envelope of ADR-0025 applied to every error answer — its schema is in `contracts`, but the API still answers errors in the framework's default shape;
 - building and publishing the image in the pipeline, and any cloud resource.

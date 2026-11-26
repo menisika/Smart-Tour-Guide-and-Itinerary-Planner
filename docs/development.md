@@ -9,6 +9,7 @@ How the repository is put together and how to work in it. The decisions behind i
 - [The rules and how each one fails](#the-rules-and-how-each-one-fails)
 - [The description of a planning problem](#the-description-of-a-planning-problem)
 - [Modules of the API](#modules-of-the-api)
+- [Files: the object store](#files-the-object-store)
 - [Schema migrations](#schema-migrations)
 - [Integration tests](#integration-tests)
 - [Recorded responses](#recorded-responses)
@@ -73,7 +74,7 @@ This is what Node.js expects when it runs TypeScript directly; `tsc` rewrites th
 
 ## The rules and how each one fails
 
-Six architecture rules are enforced by tools, and each has tests that feed it a deliberate violation.
+Seven architecture rules are enforced by tools, and each has tests that feed it a deliberate violation.
 
 | Rule                                                                                                                            | Decision                 | Enforced by                                                                                                                                                                                                                                    | Proven by                                                                                                                   |
 | ------------------------------------------------------------------------------------------------------------------------------- | ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
@@ -83,6 +84,7 @@ Six architecture rules are enforced by tools, and each has tests that feed it a 
 | A module of the API is used only through its `index.ts`                                                                         | ADR-0003, point 5        | `.dependency-cruiser.cjs`: `api-module-internals`, `api-module-internals-from-outside`, `api-platform-not-to-modules`                                                                                                                          | `tools/architecture-tests/src/import-boundaries.test.ts`                                                                    |
 | A module of the API reads and writes only the tables of its own Postgres schema, and sends SQL only through `platform/database` | ADR-0003, point 5        | `tools/architecture-tests/src/sql/module-queries.ts` reads every `sql` template of every module with PostgreSQL's own parser; `.dependency-cruiser.cjs`: `api-modules-database-through-index`, `api-modules-not-to-pg`                         | `tools/architecture-tests/src/schema-ownership.test.ts`, `import-boundaries.test.ts`                                        |
 | A migration touches only the schema of the module it is named for, only adds, and can be applied twice                          | ADR-0026, points 2 and 5 | `tools/architecture-tests/src/sql/migration-rules.ts`, with the same parser                                                                                                                                                                    | `tools/architecture-tests/src/schema-ownership.test.ts`; against a real database, `apps/api/integration/migrations.test.ts` |
+| Every file the API writes or serves goes through the `ObjectStore` port                                                         | ADR-0010, points 3 and 5 | `.dependency-cruiser.cjs`: `api-s3-client-only-in-object-store`, `api-object-store-through-index`, `api-modules-not-to-filesystem`                                                                                                             | `tools/architecture-tests/src/import-boundaries.test.ts`                                                                    |
 
 `pnpm lint` runs the rules over the repository; `pnpm test` runs the proofs.
 
@@ -147,12 +149,57 @@ The convention — `index.ts` as the public interface, everything else internal 
 Around the modules:
 
 - `platform/` — configuration, the database pool, the health endpoints, the mounting of the public web;
-- `ports/` — the `LanguageModel`, `SpeechSynthesis` and `SpeechRecognition` ports with their adapters;
+- `ports/` — the `LanguageModel`, `SpeechSynthesis` and `SpeechRecognition` ports with their adapters, and the `ObjectStore` port ([below](#files-the-object-store));
 - `jobs/` — the batch jobs.
 
 **A module owns a Postgres schema** named after it, and both its migrations and its code touch that schema only. How a module queries, shares a transaction with other modules and publishes domain events is in the same README; the rules for migrations are in [`apps/api/migrations/README.md`](../apps/api/migrations/README.md).
 
 **Runtime rules of ADR-0024 that code must keep**, by review: no timer and no polling loop in the service; no work after the response is sent; the database is not queried periodically. The unit of work and the event bus help with the second: a transaction refuses to be used after its unit of work has ended, and every event handler is awaited before the request returns. `GET /health` queries the database and therefore must not be used as a periodic probe in the cloud; `GET /health/live` exists for that.
+
+## Files: the object store
+
+Every file the system writes or serves goes through the `ObjectStore` port, [`apps/api/src/ports/object-store`](../apps/api/src/ports/object-store/object-store.port.ts) (ADR-0010). A module injects it by its token and never sees the S3 client:
+
+```ts
+constructor(@Inject(OBJECT_STORE) private readonly files: ObjectStore) {}
+
+const stored = await this.files.put({
+  bucket: 'private',
+  prefix: 'narrations',
+  content: audio,
+  mediaType: 'audio/mp4',
+  extension: 'm4a',
+});
+const link = await this.files.signedLink(stored.key);
+```
+
+- **Two buckets.** `public` for what anyone may fetch (maps, glyphs, sprites, photos); `private` for what is gated or ours alone (Narrations, dumps).
+- **The store names the object**: `<prefix>/<SHA-256 of the content>[.<extension>]`. The same content is the same object, so `put` is idempotent — `written: false` says that nothing was sent — and an object never changes. Keep the returned `key` and `sha256`; a device verifies the hash after download.
+- **Links.** `publicLink(key)` is permanent. `signedLink(key, lifetime)` works without credentials for about a day by default; each call issues a fresh one, which is how a download that outlived its link resumes. Both are computed, no server is asked.
+- **Also:** `head`, `get` with a byte range, `delete`, `list` by prefix in pages.
+- **Whole objects in memory.** `put` and `get` take and return bytes, not streams. That fits Narrations, photos and map parts; the first file that does not fit — a database dump — adds a streaming operation to the port.
+
+One adapter serves every environment: the standard S3 client against SeaweedFS locally and Cloudflare R2 in the cloud, by configuration.
+
+| Variable                                                       | Meaning                                                                                                                                                                |
+| -------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OBJECT_STORE_ENDPOINT`                                        | where the API reaches the store                                                                                                                                        |
+| `OBJECT_STORE_LINK_ENDPOINT`                                   | the address of the store as devices see it, for signed links; defaults to the endpoint. A signature covers the host, so a link signed for one address fails on another |
+| `OBJECT_STORE_REGION`                                          | `auto` unless the provider says otherwise                                                                                                                              |
+| `OBJECT_STORE_ACCESS_KEY_ID`, `OBJECT_STORE_SECRET_ACCESS_KEY` | the credentials; in the cloud they come from the secret store, never from a file of the repository                                                                     |
+| `OBJECT_STORE_PUBLIC_BUCKET`, `OBJECT_STORE_PRIVATE_BUCKET`    | the names of the two buckets                                                                                                                                           |
+| `OBJECT_STORE_PUBLIC_BASE_URL`                                 | the address under which the public bucket is served                                                                                                                    |
+
+**In tests**, `ports/object-store/testing` holds two doubles: `InMemoryObjectStore`, which keeps the promises of the port with nothing running, and `FaultyObjectStore`, which wraps a store and can be told to fail, to time out or to answer slowly:
+
+```ts
+const files = new FaultyObjectStore(new InMemoryObjectStore());
+files.inject('put', { kind: 'fail' }); // the next put fails
+files.inject('get', { kind: 'slow', delayMs: 200 }, Infinity);
+files.injectAll({ kind: 'time-out', afterMs: 30_000 }); // the store is gone
+```
+
+The promises of the port are one suite, `testing/object-store.contract.ts`, run against the in-memory store in `pnpm test` and against the S3 adapter with the compose storage in `pnpm test:integration`; a new adapter or double runs it too.
 
 ## Schema migrations
 
@@ -175,14 +222,14 @@ docker compose run --rm migrate
 `pnpm test` needs nothing running. What can only be shown against a real service lives in `apps/api/integration/` and runs with:
 
 ```bash
-docker compose up --wait postgres
+docker compose up --wait postgres object-storage
 ```
 
 ```bash
 pnpm test:integration
 ```
 
-Each test file creates a database of its own on the compose Postgres and drops it afterwards, so the tests see what a fresh volume sees and never touch the `promenade` database. In the pipeline they run in the `Compose smoke test` job, after the smoke test.
+Each test file creates a database of its own on the compose Postgres and drops it afterwards, so the tests see what a fresh volume sees and never touch the `promenade` database. The object-store tests write under a prefix of their own, `integration-test/` and `contract-test/`, in the two local buckets. In the pipeline they run in the `Compose smoke test` job, after the smoke test.
 
 ## Recorded responses
 

@@ -7,6 +7,12 @@ const complete = {
   LANGUAGE_MODEL_ADAPTER: 'replay',
   SPEECH_SYNTHESIS_ADAPTER: 'replay',
   SPEECH_RECOGNITION_ADAPTER: 'replay',
+  OBJECT_STORE_ENDPOINT: 'http://object-storage:8333',
+  OBJECT_STORE_ACCESS_KEY_ID: 'key',
+  OBJECT_STORE_SECRET_ACCESS_KEY: 'secret',
+  OBJECT_STORE_PUBLIC_BUCKET: 'promenade-public',
+  OBJECT_STORE_PRIVATE_BUCKET: 'promenade-private',
+  OBJECT_STORE_PUBLIC_BASE_URL: 'http://localhost:8333/promenade-public/',
 };
 
 describe('loadAppConfig', () => {
@@ -42,5 +48,24 @@ describe('loadAppConfig', () => {
     expect(() => loadAppConfig({ ...complete, SPEECH_SYNTHESIS_ADAPTER: 'cloud' })).toThrow(
       /SPEECH_SYNTHESIS_ADAPTER/,
     );
+  });
+
+  it('signs links for the address of the store itself unless devices reach it elsewhere', () => {
+    expect(loadAppConfig(complete).objectStore).toMatchObject({
+      endpoint: 'http://object-storage:8333',
+      linkEndpoint: 'http://object-storage:8333',
+      region: 'auto',
+      publicBaseUrl: 'http://localhost:8333/promenade-public',
+    });
+    expect(
+      loadAppConfig({ ...complete, OBJECT_STORE_LINK_ENDPOINT: 'http://localhost:8333' })
+        .objectStore.linkEndpoint,
+    ).toBe('http://localhost:8333');
+  });
+
+  it('refuses to start without the credentials of the object store', () => {
+    const { OBJECT_STORE_SECRET_ACCESS_KEY: _omitted, ...withoutSecret } = complete;
+
+    expect(() => loadAppConfig(withoutSecret)).toThrow(/OBJECT_STORE_SECRET_ACCESS_KEY/);
   });
 });

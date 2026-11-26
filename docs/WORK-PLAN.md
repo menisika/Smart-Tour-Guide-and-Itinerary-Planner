@@ -45,7 +45,7 @@ flowchart LR
   end
   subgraph ONE["Stage S1 — a solo Outing on foot"]
     direction TB
-    F["<b>F</b> · Foundation<br/>3 of 12 done"]:::progress
+    F["<b>F</b> · Foundation<br/>4 of 12 done"]:::progress
     C["<b>C</b> · Checks before building<br/>0 of 7 done"]:::todo
     S1_PLC["<b>S1-PLC</b> · The base of Places and the data of a city<br/>0 of 19 done"]:::todo
     S1_KNW["<b>S1-KNW</b> · Knowledge: Preparation, Dossier, Story, Narration<br/>0 of 22 done"]:::todo
@@ -72,7 +72,7 @@ Generated from the packages; change a status in its package, never here.
 
 <!-- generated:board -->
 <!-- prettier-ignore-start -->
-182 work packages: 171 todo · 1 in progress · 0 blocked · 10 done · 0 dropped.
+182 work packages: 171 todo · 0 in progress · 0 blocked · 11 done · 0 dropped.
 
 | Package | Title | Status | Depends on |
 |---|---|---|---|
@@ -92,7 +92,7 @@ Generated from the packages; change a status in its package, never here.
 | F-05 | Job launcher port | todo | F-04 |
 | F-06 | Planner in a pool of worker threads | todo | F-03 |
 | F-07 | Planner on the phone's engine in the pipeline | todo | — |
-| F-08 | Object-store port, S3 adapter and signed links | **in progress** | — |
+| F-08 | Object-store port, S3 adapter and signed links | **done** | — |
 | F-09 | Observability baseline | todo | F-03, F-05 |
 | F-10 | Fault-injecting doubles for every external adapter | todo | F-08, F-05 |
 | F-11 | Rate limits and abuse protection | todo | F-03, F-04, S1-ACC-01 |
@@ -545,7 +545,7 @@ flowchart LR
   F_05["<b>F-05</b><br/>Job launcher port"]:::todo
   F_06["<b>F-06</b><br/>Planner in a pool of worker threads"]:::todo
   F_07["<b>F-07</b><br/>Planner on the phone's engine in the pipeline"]:::todo
-  F_08["<b>F-08</b><br/>Object-store port, S3 adapter and signed links"]:::progress
+  F_08["<b>F-08</b><br/>Object-store port, S3 adapter and signed links"]:::done
   F_09["<b>F-09</b><br/>Observability baseline"]:::todo
   F_10["<b>F-10</b><br/>Fault-injecting doubles for every external adapter"]:::todo
   F_11["<b>F-11</b><br/>Rate limits and abuse protection"]:::todo
@@ -743,7 +743,7 @@ flowchart LR
 
 ### F-08 · Object-store port, S3 adapter and signed links
 
-- **Status:** in progress
+- **Status:** done
 - **Depends on:** —
 - **Requirements:** `NFR-23`, `NFR-31`, `NFR-33`
 - **Decisions:** ADR-0010 (points 3, 5), ADR-0002 (point 3)
@@ -752,16 +752,18 @@ flowchart LR
 
 **Tasks**
 
-- [ ] Define the `ObjectStore` port: put by content hash (idempotent: an existing key is not rewritten), head, get with byte ranges, delete (for account deletion and dump retention), list by prefix, and `signedLink(key, lifetime)` for the private bucket.
-- [ ] Write the S3 adapter with the standard S3 client; endpoint, buckets and credentials are configuration; works with the local emulator and with R2.
-- [ ] Return public links for the public bucket and signed links (about a day) for the private bucket; issue fresh links on request so that a resumed download can continue.
-- [ ] Write a fault-injecting double for the port (fails, times out, answers slowly) for other packages' tests.
-- [ ] Add integration tests against the compose object storage: anonymous read of public, refusal of private, signed link works, altered or expired link is refused, range request returns the range, putting the same content twice writes once.
+- [x] Define the `ObjectStore` port: put by content hash (idempotent: an existing key is not rewritten), head, get with byte ranges, delete (for account deletion and dump retention), list by prefix, and `signedLink(key, lifetime)` for the private bucket.
+- [x] Write the S3 adapter with the standard S3 client; endpoint, buckets and credentials are configuration; works with the local emulator and with R2.
+- [x] Return public links for the public bucket and signed links (about a day) for the private bucket; issue fresh links on request so that a resumed download can continue.
+- [x] Write a fault-injecting double for the port (fails, times out, answers slowly) for other packages' tests.
+- [x] Add integration tests against the compose object storage: anonymous read of public, refusal of private, signed link works, altered or expired link is refused, range request returns the range, putting the same content twice writes once.
 
 **Done when**
 
 - The integration tests above pass in the compose environment in the pipeline.
 - No module writes files except through the port (import rule in `.dependency-cruiser.cjs`, proven by an architecture test).
+
+**Room to improve.** `put` and `get` hold a whole object in memory; the first file too large for that (a database dump, `S1-OPS-06`) adds a streaming operation to the port. A conditional write (`If-None-Match`) instead of looking the object up first, once both the local emulator and R2 are known to honour it.
 
 ### F-09 · Observability baseline
 
@@ -5919,6 +5921,10 @@ What was made better than a package asked for. One line each; the pull request h
 | F-04      | A module cannot send SQL the check does not see: the database layer accepts only `sql` templates, and two import rules keep the pool and the driver out of the modules                                                                                                                         | #12          |
 | F-04      | Integration tests run in the pipeline against the compose Postgres, each file in a database of its own (`pnpm test:integration`), so later packages have a place for theirs                                                                                                                    | #12          |
 | F-04      | A transaction kept past its unit of work refuses to be used, and a single statement inside a unit of work joins its transaction, so a read sees what the unit has written                                                                                                                      | #12          |
+| F-08      | The promises of the port are one suite run against every implementation: the in-memory double in `pnpm test`, the S3 adapter with the compose storage in the pipeline                                                                                                                          | #PR          |
+| F-08      | An in-memory store beside the fault-injecting double, so that other packages test their file handling with nothing running                                                                                                                                                                     | #PR          |
+| F-08      | A module or a batch job cannot write to the disk of the container either: a third import rule, beside the two that keep the S3 client behind the port                                                                                                                                          | #PR          |
+| F-08      | Signed links are made for the address a device reaches, set apart from the address the API uses, so that they work from the host in the compose environment                                                                                                                                    | #PR          |
 
 ## Plan change log
 

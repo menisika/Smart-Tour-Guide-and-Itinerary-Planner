@@ -206,6 +206,39 @@ describe('import boundaries fail on a deliberate violation', () => {
     });
   });
 
+  describe('files go through the ObjectStore port only (ADR-0010)', () => {
+    const knowledge = 'apps/api/src/modules/knowledge/internal';
+
+    it('catches a module that talks to the S3 client', () => {
+      expect(reportedFrom(`${knowledge}/uses-the-s3-client.ts`)).toContain(
+        'api-s3-client-only-in-object-store',
+      );
+    });
+
+    it('catches a module that takes the adapter instead of the port', () => {
+      expect(
+        reported(
+          'api-object-store-through-index',
+          `${knowledge}/takes-the-adapter.ts`,
+          'apps/api/src/ports/object-store/s3-object-store.adapter.ts',
+        ),
+      ).toBe(true);
+    });
+
+    it('catches a module that writes a file to the disk', () => {
+      expect(reportedFrom(`${knowledge}/writes-a-file.ts`)).toContain(
+        'api-modules-not-to-filesystem',
+      );
+    });
+
+    it('accepts the port, and the S3 client inside the adapter', () => {
+      expect(reportedFrom(`${knowledge}/uses-the-port.ts`)).toEqual([]);
+      expect(
+        reportedFrom('apps/api/src/ports/object-store/s3-object-store.adapter.ts'),
+      ).not.toContain('api-s3-client-only-in-object-store');
+    });
+  });
+
   it('catches a shared package that imports an application (ADR-0005)', () => {
     expect(
       reported(

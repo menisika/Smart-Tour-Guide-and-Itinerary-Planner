@@ -1,4 +1,3 @@
-import { defaultServerConditions } from 'vite';
 import { defineConfig } from 'vitest/config';
 
 /**
@@ -12,7 +11,10 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   ssr: {
     resolve: {
-      conditions: ['@promenade/source', ...defaultServerConditions],
+      // As Node.js resolves at run time, plus our sources. Vite's default list
+      // adds `module`, a bundler's condition: under it the S3 client resolves
+      // to a build that only a bundler can load.
+      conditions: ['@promenade/source', 'node'],
     },
   },
   test: {

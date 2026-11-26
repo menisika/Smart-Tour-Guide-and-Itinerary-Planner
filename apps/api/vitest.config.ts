@@ -1,5 +1,4 @@
 import swc from 'unplugin-swc';
-import { defaultServerConditions } from 'vite';
 import { defineProject } from 'vitest/config';
 
 /**
@@ -22,7 +21,10 @@ export default defineProject({
   ],
   ssr: {
     resolve: {
-      conditions: ['@promenade/source', ...defaultServerConditions],
+      // As Node.js resolves at run time, plus our sources. Vite's default list
+      // adds `module`, a bundler's condition: under it the S3 client resolves
+      // to a build that only a bundler can load.
+      conditions: ['@promenade/source', 'node'],
     },
   },
   test: {
