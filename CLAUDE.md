@@ -21,4 +21,12 @@ A planner of city outings; this is its monorepo. One developer owns it, and Clau
 
 ## Pushing
 
-`origin` is reached through the SSH alias `github-mac`. When `ssh -o BatchMode=yes -T git@github-mac` does not greet the owner's account, stop and ask the owner to load the key. Pull requests are opened under the owner's account: push the branch and hand over the link.
+`origin` is reached through the SSH alias `github-mac`. When `ssh -o BatchMode=yes -T git@github-mac` does not greet the owner's account, stop and ask the owner to load the key. A session carries its work to `main` itself: it pushes the branch, opens the pull request, merges it by squash once the three checks pass, and reports. It never merges with a check failing and never goes round the rules of `main`.
+
+`gh` on the owner's machine holds two accounts, and the active one is not this repository's. Take the repository's token for each command and leave the active account alone (no `gh auth switch`):
+
+```sh
+GH_TOKEN=$(gh auth token --hostname github.com --user menisika) gh pr create -R menisika/Smart-Tour-Guide-and-Itinerary-Planner …
+```
+
+When that token is missing, or `gh api user --jq .login` under it is not `menisika`, stop and ask the owner to log the account in.

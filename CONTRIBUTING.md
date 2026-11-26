@@ -9,7 +9,7 @@ How a change gets into this repository. There is one developer, and Claude sessi
 1. **One piece of work, one branch, one pull request.** A piece of work is normally one work package of [docs/WORK-PLAN.md](docs/WORK-PLAN.md).
 2. **Name the branch** `<type>/<work-package-id>-<short-slug>`, for example `feat/s1-rte-03-verifier`. Work outside the plan: `<type>/<short-slug>`.
 3. **Title the pull request as a commit header** (see below). It becomes the one commit on `main`: pull requests are squash-merged and the branch is deleted.
-4. **Merge when the three checks pass:** `Lint and tests`, `Compose smoke test`, `Terraform format and validation`. No review by a second person is required; the owner merges.
+4. **Merge when the three checks pass:** `Lint and tests`, `Compose smoke test`, `Terraform format and validation`. No review by a second person is required; the session that did the work merges, by squash, with the package's `Refs:` line as the description. A ruleset on `main` refuses a direct push, a merge with a check failing, and any merge method but squash.
 
 Parallel sessions each work in their own worktree, on their own branch.
 
@@ -71,4 +71,4 @@ When a hook is wrong, fix the hook in a commit of its own; `--no-verify` leaves 
 
 - Any change to [the specification](docs/PRODUCT-SPEC.md), [a decision record](docs/adr/README.md), [the glossary](GLOSSARY.md) or `CONCEPT.md`.
 - Anything that costs money or creates an account or a cloud resource.
-- Repository settings on GitHub, and every merge into `main`.
+- A change to the rules of `main` or to who may reach it. Sessions merge their own pull requests and keep the repository's settings as this file describes them.
