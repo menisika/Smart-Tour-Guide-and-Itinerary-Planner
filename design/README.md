@@ -54,6 +54,7 @@ directions/
   index.html, one.html, check.html, timetable.html and their scripts
 screens/             every screen, arranged from the system's components: a registry, the index, the check — see its README
 walkthrough/         the click-through walks, their check, and the record of the reviews — see its README
+approved/            the approved screens as images, with an index: written by tools/export-approved.mjs, never by hand
 tools/
   export-approved.mjs  photographs every approved screen into design/approved/ with a headless Chrome
   build-map.mjs      builds data/map.json from OpenStreetMap data
@@ -72,6 +73,8 @@ Recorded in full in the [screens' README](screens/README.md#the-owners-acceptanc
 - **`D-03` — accepted on 25 November 2026.** The owner accepted the screens of the solo Outing on iOS and Android as they were shown, without asking for another round.
 - **`D-04` — accepted on 25 November 2026.** The owner accepted the pages of the public web and the screens of the console as they were shown, without asking for another round.
 - **`D-09` — accepted on 25 November 2026.** The owner accepted the key screens of the Party and of the Catalog as they were shown, without asking for another round.
+
+**The design is approved: 26 November 2026.** The owner walked through the six scenarios on the mockups (`D-05`) and approved the design as it stands. The approved screens — every screen in every state and system, 401 drawings — are listed and kept as images in [`approved/`](approved/README.md); they are the fixed reference that built screens are compared with. The reviews and the record of the walk are in the [walk-through's README](walkthrough/README.md).
 
 ## Rules of the folder
 

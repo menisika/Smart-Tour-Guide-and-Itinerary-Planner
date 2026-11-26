@@ -215,4 +215,6 @@ A mockup is a claim about what the specification means. These are the places whe
 
 **`D-09` — accepted on 25 November 2026.** The owner accepted the key screens of the Party and of the Catalog as they were shown, without asking for another round.
 
+**`D-05` — the design approved on 26 November 2026.** The owner went through the click-through walks and approved the design as it stands, with no remark; the approved screens are exported to [`design/approved/`](../approved/README.md). The record is in the [walk-through's README](../walkthrough/README.md#the-owners-approval).
+
 The readings of the specification listed above were shown to the owner together with the screens; the owner accepted the screens without changing any of them. What was left to `D-05` stays there: the click-through walks, the review against the brief, the independent review, and the check on real phones.

@@ -41,7 +41,7 @@ flowchart LR
   classDef todo fill:#f1f3f5,stroke:#868e96,color:#000
   classDef outside fill:#ffffff,stroke:#868e96,stroke-dasharray:4 3,color:#000
   subgraph ZERO["Stage zero — the design, approved by the owner"]
-    D["<b>D</b> · Design, stage zero<br/>5 of 9 done"]:::progress
+    D["<b>D</b> · Design, stage zero<br/>6 of 9 done"]:::progress
   end
   subgraph ONE["Stage S1 — a solo Outing on foot"]
     direction TB
@@ -72,7 +72,7 @@ Generated from the packages; change a status in its package, never here.
 
 <!-- generated:board -->
 <!-- prettier-ignore-start -->
-182 work packages: 174 todo · 2 in progress · 0 blocked · 6 done · 0 dropped.
+182 work packages: 174 todo · 1 in progress · 0 blocked · 7 done · 0 dropped.
 
 | Package | Title | Status | Depends on |
 |---|---|---|---|
@@ -81,7 +81,7 @@ Generated from the packages; change a status in its package, never here.
 | D-03 | Screens of the solo Outing on iOS and Android | **done** | D-02 |
 | D-04 | Screens of the web and of the console | **done** | D-02 |
 | D-09 | Key screens of the Party and of the Catalog | **done** | D-02 |
-| D-05 | Walk-through and the owner's approval | **in progress** | D-03, D-04, D-09 |
+| D-05 | Walk-through and the owner's approval | **done** | D-03, D-04, D-09 |
 | D-06 | Screens of the Party in full | todo | D-05 |
 | D-07 | Screens of the Catalog in full | todo | D-05 |
 | D-08 | Screens of bicycle and car, and of other cities | todo | D-05 |
@@ -281,7 +281,7 @@ flowchart LR
   D_03["<b>D-03</b><br/>Screens of the solo Outing on iOS and Android"]:::done
   D_04["<b>D-04</b><br/>Screens of the web and of the console"]:::done
   D_09["<b>D-09</b><br/>Key screens of the Party and of the Catalog"]:::done
-  D_05["<b>D-05</b><br/>Walk-through and the owner's approval"]:::progress
+  D_05["<b>D-05</b><br/>Walk-through and the owner's approval"]:::done
   D_06["<b>D-06</b><br/>Screens of the Party in full"]:::todo
   D_07["<b>D-07</b><br/>Screens of the Catalog in full"]:::todo
   D_08["<b>D-08</b><br/>Screens of bicycle and car, and of other cities"]:::todo
@@ -422,7 +422,7 @@ flowchart LR
 
 ### D-05 · Walk-through and the owner's approval
 
-- **Status:** in progress
+- **Status:** done
 - **Depends on:** D-03, D-04, D-09
 - **Requirements:** —
 - **Decisions:** ADR-0005, ADR-0007
@@ -436,8 +436,8 @@ flowchart LR
 - [x] Have an independent reviewer do the same review without being told the reasoning behind the direction, and settle each of its findings.
 - [x] Check that every package of stage S1 with a screen to build has that screen among the mockups; draw what is missing.
 - [x] Serve the walks over the local network, so that they open at real size on the owner's iPhone and Android phone, outdoors as well as indoors.
-- [ ] Walk the owner through. Sort every remark into a change of design, made here, or a place where the specification was understood differently, listed for the owner to decide.
-- [ ] Export each approved screen as an image under `design/approved/`, as the fixed reference that built screens are later compared with.
+- [x] Walk the owner through. Sort every remark into a change of design, made here, or a place where the specification was understood differently, listed for the owner to decide.
+- [x] Export each approved screen as an image under `design/approved/`, as the fixed reference that built screens are later compared with.
 
 **Done when**
 

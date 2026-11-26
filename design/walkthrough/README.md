@@ -131,7 +131,7 @@ Every package of stage S1 in the work plan was read against the registry of the 
 
 ## The export of approved screens
 
-`design/tools/export-approved.mjs` photographs every screen in every state and system, alone and at its exact size, with a headless Chrome, and writes them under `design/approved/` with an index. It runs once the owner has approved: until then the folder does not exist, so that nothing in it can be taken for approved.
+`design/tools/export-approved.mjs` photographs every screen in every state and system, alone and at its exact size, with a headless Chrome, and writes them under [`design/approved/`](../approved/README.md) with an index: 401 drawings, light theme, Russian, one pixel to a point, as WebP — about a tenth of a megabyte each at most. It was run on the day of the approval. A run that is cut short goes on where it stopped; `--fresh` photographs everything anew, which is what a change approved later asks for.
 
 ```sh
 pnpm design                                # in one terminal
@@ -140,4 +140,10 @@ node design/tools/export-approved.mjs      # in another
 
 ## The owner's approval
 
-Not yet given. What is the owner's, by the work plan: the walk on an iPhone and on an Android phone, indoors and outdoors; the approval; asking two or three people who have never seen the product to go through SC-1 with hints off; any change to the specification the walk suggests.
+**Approved on 26 November 2026.** The owner opened the walks on a phone over the local network, went through them, and approved the design as it stands: "Мне всё понравилось". No remark was made, so nothing was sorted into a change of design or a question about the specification.
+
+What the approval covers: every screen of the registry in every state — the screens of `D-03`, `D-04` and `D-09` and what this package added — as exported to [`design/approved/`](../approved/README.md) on that day.
+
+What was put to the owner with the walks and drew no remark: the small secondary text in daylight, the words of the first screen, the equal weight of the three Routes offered, and the plainer Android. The readings of the specification in the [screens' README](../screens/README.md#how-the-specification-was-read) stand as written.
+
+What was not reported, and so is not claimed here: on which phones the walk was made and whether outdoors; and a first-time walk — no one who had never seen the product is known to have gone through SC-1, and no stumble was recorded. The first-time mode stays in place for it: a stumble found later is a change to the screens, exported again.
