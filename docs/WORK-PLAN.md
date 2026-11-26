@@ -72,7 +72,7 @@ Generated from the packages; change a status in its package, never here.
 
 <!-- generated:board -->
 <!-- prettier-ignore-start -->
-182 work packages: 174 todo · 0 in progress · 0 blocked · 8 done · 0 dropped.
+182 work packages: 173 todo · 1 in progress · 0 blocked · 8 done · 0 dropped.
 
 | Package | Title | Status | Depends on |
 |---|---|---|---|
@@ -88,7 +88,7 @@ Generated from the packages; change a status in its package, never here.
 | F-01 | Repository skeleton | **done** | — |
 | F-02 | Repository on GitHub with hooks and a green pipeline | **done** | F-01 |
 | F-03 | Error envelope, validation and client version | todo | — |
-| F-04 | Module schemas, transactions and domain events | todo | — |
+| F-04 | Module schemas, transactions and domain events | **in progress** | — |
 | F-05 | Job launcher port | todo | F-04 |
 | F-06 | Planner in a pool of worker threads | todo | F-03 |
 | F-07 | Planner on the phone's engine in the pipeline | todo | — |
@@ -541,7 +541,7 @@ flowchart LR
   F_01["<b>F-01</b><br/>Repository skeleton"]:::done
   F_02["<b>F-02</b><br/>Repository on GitHub with hooks and a green pipeline"]:::done
   F_03["<b>F-03</b><br/>Error envelope, validation and client version"]:::todo
-  F_04["<b>F-04</b><br/>Module schemas, transactions and domain events"]:::todo
+  F_04["<b>F-04</b><br/>Module schemas, transactions and domain events"]:::progress
   F_05["<b>F-05</b><br/>Job launcher port"]:::todo
   F_06["<b>F-06</b><br/>Planner in a pool of worker threads"]:::todo
   F_07["<b>F-07</b><br/>Planner on the phone's engine in the pipeline"]:::todo
@@ -644,7 +644,7 @@ flowchart LR
 
 ### F-04 · Module schemas, transactions and domain events
 
-- **Status:** todo
+- **Status:** in progress
 - **Depends on:** —
 - **Requirements:** `NFR-38`, `NFR-29`
 - **Decisions:** ADR-0003 (points 1, 5), ADR-0026 (points 1, 2, 5, 7)
