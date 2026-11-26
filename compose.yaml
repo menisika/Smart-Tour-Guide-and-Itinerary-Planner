@@ -27,17 +27,21 @@ x-app: &app
     LANGUAGE_MODEL_ADAPTER: replay
     SPEECH_SYNTHESIS_ADAPTER: replay
     SPEECH_RECOGNITION_ADAPTER: replay
-    # Addresses of the stand-ins. The skeleton does not read them yet; they are
-    # here so that the first module that needs one finds it under a known name.
-    FIREBASE_PROJECT_ID: demo-promenade
-    FIREBASE_AUTH_EMULATOR_HOST: firebase-auth:9099
+    # The object store (ADR-0010, point 3). Containers reach it by its service
+    # name; a signed link is opened from the host, so it is made for the
+    # published address — a signature covers the host it was made for.
     OBJECT_STORE_ENDPOINT: http://object-storage:8333
+    OBJECT_STORE_LINK_ENDPOINT: http://localhost:${PROMENADE_OBJECT_STORAGE_PORT:-8333}
     OBJECT_STORE_REGION: auto
     OBJECT_STORE_ACCESS_KEY_ID: promenade-local
     OBJECT_STORE_SECRET_ACCESS_KEY: promenade-local-secret
     OBJECT_STORE_PUBLIC_BUCKET: promenade-public
     OBJECT_STORE_PRIVATE_BUCKET: promenade-private
     OBJECT_STORE_PUBLIC_BASE_URL: http://localhost:${PROMENADE_OBJECT_STORAGE_PORT:-8333}/promenade-public
+    # Addresses of the other stand-ins. Nothing reads them yet; they are here
+    # so that the first module that needs one finds it under a known name.
+    FIREBASE_PROJECT_ID: demo-promenade
+    FIREBASE_AUTH_EMULATOR_HOST: firebase-auth:9099
     SMTP_URL: smtp://mail:1025
 
 services:

@@ -12,12 +12,23 @@ import { APP_CONFIG, type AppConfig } from './platform/config/app-config.ts';
 import { DATABASE_POOL } from './platform/database/pool.ts';
 import { LANGUAGE_MODEL } from './ports/language-model/language-model.port.ts';
 import { ReplayLanguageModel } from './ports/language-model/replay-language-model.adapter.ts';
+import { OBJECT_STORE } from './ports/object-store/index.ts';
 
 const config: AppConfig = {
   port: 0,
   databaseUrl: 'postgres://unused',
   databaseUrlDirect: 'postgres://unused',
   adapters: { languageModel: 'replay', speechSynthesis: 'replay', speechRecognition: 'replay' },
+  objectStore: {
+    endpoint: 'http://unused.test',
+    linkEndpoint: 'http://unused.test',
+    region: 'auto',
+    accessKeyId: 'unused',
+    secretAccessKey: 'unused',
+    publicBucket: 'public',
+    privateBucket: 'private',
+    publicBaseUrl: 'http://unused.test/public',
+  },
   recordingsDir: '/nonexistent',
   publicWebDir: null,
 };
@@ -75,6 +86,7 @@ describe('the API as a whole', () => {
 
     expect(app?.get(PLANNING_API, { strict: false })).toBeDefined();
     expect(app?.get(LANGUAGE_MODEL, { strict: false })).toBeInstanceOf(ReplayLanguageModel);
+    expect(app?.get(OBJECT_STORE, { strict: false })).toBeDefined();
   });
 
   it('GET /health reports the database and the PostGIS version', async () => {

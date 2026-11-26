@@ -22,6 +22,14 @@ const environmentSchema = z.object({
   LANGUAGE_MODEL_ADAPTER: adapterSchema,
   SPEECH_SYNTHESIS_ADAPTER: adapterSchema,
   SPEECH_RECOGNITION_ADAPTER: adapterSchema,
+  OBJECT_STORE_ENDPOINT: z.url(),
+  OBJECT_STORE_LINK_ENDPOINT: z.url().optional(),
+  OBJECT_STORE_REGION: z.string().min(1).default('auto'),
+  OBJECT_STORE_ACCESS_KEY_ID: z.string().min(1),
+  OBJECT_STORE_SECRET_ACCESS_KEY: z.string().min(1),
+  OBJECT_STORE_PUBLIC_BUCKET: z.string().min(1),
+  OBJECT_STORE_PRIVATE_BUCKET: z.string().min(1),
+  OBJECT_STORE_PUBLIC_BASE_URL: z.url(),
   RECORDINGS_DIR: z.string().min(1).optional(),
   PUBLIC_WEB_DIR: z.string().min(1).optional(),
 });
@@ -36,6 +44,20 @@ export interface AppConfig {
     readonly languageModel: AdapterName;
     readonly speechSynthesis: AdapterName;
     readonly speechRecognition: AdapterName;
+  };
+  /** The S3-compatible store behind the `ObjectStore` port (ADR-0010, point 3). */
+  readonly objectStore: {
+    /** Where the API reaches the store. */
+    readonly endpoint: string;
+    /** The address of the store as devices see it; signed links are made for it. */
+    readonly linkEndpoint: string;
+    readonly region: string;
+    readonly accessKeyId: string;
+    readonly secretAccessKey: string;
+    readonly publicBucket: string;
+    readonly privateBucket: string;
+    /** The address under which the public bucket is served, without a trailing slash. */
+    readonly publicBaseUrl: string;
   };
   /** Where the replay adapters find recorded responses. */
   readonly recordingsDir: string;
@@ -72,6 +94,16 @@ export function loadAppConfig(environment: NodeJS.ProcessEnv): AppConfig {
       languageModel: values.LANGUAGE_MODEL_ADAPTER,
       speechSynthesis: values.SPEECH_SYNTHESIS_ADAPTER,
       speechRecognition: values.SPEECH_RECOGNITION_ADAPTER,
+    },
+    objectStore: {
+      endpoint: values.OBJECT_STORE_ENDPOINT,
+      linkEndpoint: values.OBJECT_STORE_LINK_ENDPOINT ?? values.OBJECT_STORE_ENDPOINT,
+      region: values.OBJECT_STORE_REGION,
+      accessKeyId: values.OBJECT_STORE_ACCESS_KEY_ID,
+      secretAccessKey: values.OBJECT_STORE_SECRET_ACCESS_KEY,
+      publicBucket: values.OBJECT_STORE_PUBLIC_BUCKET,
+      privateBucket: values.OBJECT_STORE_PRIVATE_BUCKET,
+      publicBaseUrl: values.OBJECT_STORE_PUBLIC_BASE_URL.replace(/\/+$/, ''),
     },
     recordingsDir: values.RECORDINGS_DIR ?? defaultRecordingsDir,
     publicWebDir: values.PUBLIC_WEB_DIR ?? null,

@@ -97,6 +97,38 @@ module.exports = {
       to: { path: ['(^|/)node_modules/pg/', '^pg($|/)'] },
     },
 
+    // ── ADR-0010, points 3 and 5 ─────────────────────────────────────────
+    {
+      name: 'api-s3-client-only-in-object-store',
+      comment:
+        'Every file the system writes or serves goes through the `ObjectStore` port; only its adapter in `ports/object-store` talks to the S3 client (ADR-0010, point 3).',
+      severity: 'error',
+      from: { path: '^apps/api/', pathNot: '^apps/api/src/ports/object-store/' },
+      to: { path: ['(^|/)node_modules/@aws-sdk/', '^@aws-sdk/'] },
+    },
+    {
+      name: 'api-object-store-through-index',
+      comment:
+        'The object store is used through `ports/object-store/index.ts` — the port and its module — never through the adapter. Tests may also take the doubles of `ports/object-store/testing` (ADR-0010, point 3).',
+      severity: 'error',
+      from: {
+        path: '^apps/api/src/',
+        pathNot: ['^apps/api/src/ports/object-store/', '\\.test\\.ts$'],
+      },
+      to: {
+        path: '^apps/api/src/ports/object-store/',
+        pathNot: '^apps/api/src/ports/object-store/index\\.ts$',
+      },
+    },
+    {
+      name: 'api-modules-not-to-filesystem',
+      comment:
+        'A module or a batch job keeps no file on the disk of the container, which is gone with the instance: what it writes goes through the `ObjectStore` port (ADR-0010, points 3 and 5).',
+      severity: 'error',
+      from: { path: '^apps/api/src/(modules|jobs)/', pathNot: '\\.test\\.ts$' },
+      to: { dependencyTypes: ['core'], path: '^(node:)?fs(/promises)?$' },
+    },
+
     // ── ADR-0005, point 2 ────────────────────────────────────────────────
     {
       name: 'packages-not-to-apps',
