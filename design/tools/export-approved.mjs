@@ -11,11 +11,12 @@
  * It needs a Chrome on the machine: `--chrome <path>`, the variable `CHROME`,
  * or `google-chrome` on the path. Each drawing is photographed alone at its
  * exact size — `screens/one.html?bare` — in a headless window, and saved as
- * `<package>/<screen>--<state>--<system>.png` beside an index of what was
- * exported and when.
+ * `<package>/<screen>--<state>--<system>.webp` beside an index of what was
+ * exported and when. A drawing that is already there is kept, so that a run
+ * that was cut short goes on where it stopped; `--fresh` photographs all anew.
  */
 import { execFile } from 'node:child_process';
-import { mkdir, writeFile } from 'node:fs/promises';
+import { access, mkdir, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 
@@ -37,6 +38,10 @@ const only = option('only', '').split(',').filter(Boolean);
 // hundred drawings at twice the size would weigh a quarter of a gigabyte.
 const scale = option('scale', '1');
 const chrome = option('chrome', process.env.CHROME ?? 'google-chrome');
+const fresh = args.includes('--fresh');
+// Chrome writes the format the file's name asks for. WebP keeps four hundred
+// drawings near fifteen megabytes; `--format png` is five times that.
+const format = option('format', 'webp');
 const out = fileURLToPath(new URL('../approved/', import.meta.url));
 
 const chosen = only.length
@@ -62,19 +67,27 @@ for (const screen of chosen) {
   for (const state of Object.keys(screen.states)) {
     for (const system of screen.on) {
       const size = SIZES[/** @type {keyof typeof SIZES} */ (system)];
-      const file = `${screen.pkg}/${screen.id}--${state}--${system}.png`;
+      const file = `${screen.pkg}/${screen.id}--${state}--${system}.${format}`;
       const address = `http://localhost:${port}/screens/one.html?bare#screen=${screen.id}&state=${state}&os=${system}&theme=${theme}&lang=${lang}`;
-      await run(chrome, [
-        '--headless=new',
-        '--disable-gpu',
-        '--hide-scrollbars',
-        `--force-device-scale-factor=${scale}`,
-        `--window-size=${size.width},${size.height}`,
-        // The page draws after its data and its fonts have come: give it time.
-        '--virtual-time-budget=6000',
-        `--screenshot=${out}${file}`,
-        address,
-      ]);
+      const kept =
+        !fresh &&
+        (await access(`${out}${file}`).then(
+          () => true,
+          () => false,
+        ));
+      if (!kept) {
+        await run(chrome, [
+          '--headless=new',
+          '--disable-gpu',
+          '--hide-scrollbars',
+          `--force-device-scale-factor=${scale}`,
+          `--window-size=${size.width},${size.height}`,
+          // The page draws after its data and its fonts have come: give it time.
+          '--virtual-time-budget=6000',
+          `--screenshot=${out}${file}`,
+          address,
+        ]);
+      }
       exported.push({ file, screen: screen.id, state, system });
       process.stdout.write(`\r${exported.length} drawings`);
     }
