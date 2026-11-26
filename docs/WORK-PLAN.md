@@ -72,7 +72,7 @@ Generated from the packages; change a status in its package, never here.
 
 <!-- generated:board -->
 <!-- prettier-ignore-start -->
-182 work packages: 171 todo · 0 in progress · 0 blocked · 11 done · 0 dropped.
+182 work packages: 170 todo · 1 in progress · 0 blocked · 11 done · 0 dropped.
 
 | Package | Title | Status | Depends on |
 |---|---|---|---|
@@ -91,7 +91,7 @@ Generated from the packages; change a status in its package, never here.
 | F-04 | Module schemas, transactions and domain events | **done** | — |
 | F-05 | Job launcher port | todo | F-04 |
 | F-06 | Planner in a pool of worker threads | todo | F-03 |
-| F-07 | Planner on the phone's engine in the pipeline | todo | — |
+| F-07 | Planner on the phone's engine in the pipeline | **in progress** | — |
 | F-08 | Object-store port, S3 adapter and signed links | todo | — |
 | F-09 | Observability baseline | todo | F-03, F-05 |
 | F-10 | Fault-injecting doubles for every external adapter | todo | F-08, F-05 |
@@ -544,7 +544,7 @@ flowchart LR
   F_04["<b>F-04</b><br/>Module schemas, transactions and domain events"]:::done
   F_05["<b>F-05</b><br/>Job launcher port"]:::todo
   F_06["<b>F-06</b><br/>Planner in a pool of worker threads"]:::todo
-  F_07["<b>F-07</b><br/>Planner on the phone's engine in the pipeline"]:::todo
+  F_07["<b>F-07</b><br/>Planner on the phone's engine in the pipeline"]:::progress
   F_08["<b>F-08</b><br/>Object-store port, S3 adapter and signed links"]:::todo
   F_09["<b>F-09</b><br/>Observability baseline"]:::todo
   F_10["<b>F-10</b><br/>Fault-injecting doubles for every external adapter"]:::todo
@@ -717,7 +717,7 @@ flowchart LR
 
 ### F-07 · Planner on the phone's engine in the pipeline
 
-- **Status:** todo
+- **Status:** in progress
 - **Depends on:** —
 - **Needs:** The planner, verifier and routing packages and the generator of planning requests used by the property suite (the stubs are enough to set the job up).
 - **Requirements:** `NFR-2`, `NFR-38`
