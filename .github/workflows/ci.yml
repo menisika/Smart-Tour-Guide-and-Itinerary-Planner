@@ -51,14 +51,21 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .node-version
+          cache: pnpm
       # The same environment a developer starts (ADR-0027, point 5).
       - name: Start the environment
         run: docker compose up --build --wait --wait-timeout 300
       - name: Ask every service one question
         run: node scripts/smoke.mjs
+      # What only a real service can show: transactions and migrations
+      # against Postgres, each test file in a database of its own.
+      - run: pnpm install --frozen-lockfile
+      - name: Run the integration tests
+        run: pnpm test:integration
       - name: Run the worker entry point
         run: docker compose run --rm worker
       - name: Run a batch job entry point

@@ -11,6 +11,7 @@
     "@types/node": "catalog:",
     "dependency-cruiser": "catalog:",
     "eslint": "catalog:",
+    "libpg-query": "18.2.4",
     "typescript": "catalog:",
     "typescript-eslint": "catalog:"
   }

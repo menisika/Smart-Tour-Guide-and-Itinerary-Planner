@@ -1,7 +1,7 @@
 import { Logger } from '@nestjs/common';
 import type { Pool } from 'pg';
 
-import { DATABASE_POOL } from '../platform/database/database.module.ts';
+import { DATABASE_POOL } from '../platform/database/pool.ts';
 import { MIGRATIONS_TABLE } from '../platform/database/migrations.ts';
 import type { BatchJob } from './batch-job.ts';
 

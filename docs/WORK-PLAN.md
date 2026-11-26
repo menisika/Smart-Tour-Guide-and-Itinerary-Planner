@@ -45,7 +45,7 @@ flowchart LR
   end
   subgraph ONE["Stage S1 — a solo Outing on foot"]
     direction TB
-    F["<b>F</b> · Foundation<br/>2 of 12 done"]:::progress
+    F["<b>F</b> · Foundation<br/>3 of 12 done"]:::progress
     C["<b>C</b> · Checks before building<br/>0 of 7 done"]:::todo
     S1_PLC["<b>S1-PLC</b> · The base of Places and the data of a city<br/>0 of 19 done"]:::todo
     S1_KNW["<b>S1-KNW</b> · Knowledge: Preparation, Dossier, Story, Narration<br/>0 of 22 done"]:::todo
@@ -72,7 +72,7 @@ Generated from the packages; change a status in its package, never here.
 
 <!-- generated:board -->
 <!-- prettier-ignore-start -->
-182 work packages: 172 todo · 0 in progress · 0 blocked · 10 done · 0 dropped.
+182 work packages: 171 todo · 0 in progress · 0 blocked · 11 done · 0 dropped.
 
 | Package | Title | Status | Depends on |
 |---|---|---|---|
@@ -88,7 +88,7 @@ Generated from the packages; change a status in its package, never here.
 | F-01 | Repository skeleton | **done** | — |
 | F-02 | Repository on GitHub with hooks and a green pipeline | **done** | F-01 |
 | F-03 | Error envelope, validation and client version | todo | — |
-| F-04 | Module schemas, transactions and domain events | todo | — |
+| F-04 | Module schemas, transactions and domain events | **done** | — |
 | F-05 | Job launcher port | todo | F-04 |
 | F-06 | Planner in a pool of worker threads | todo | F-03 |
 | F-07 | Planner on the phone's engine in the pipeline | todo | — |
@@ -541,7 +541,7 @@ flowchart LR
   F_01["<b>F-01</b><br/>Repository skeleton"]:::done
   F_02["<b>F-02</b><br/>Repository on GitHub with hooks and a green pipeline"]:::done
   F_03["<b>F-03</b><br/>Error envelope, validation and client version"]:::todo
-  F_04["<b>F-04</b><br/>Module schemas, transactions and domain events"]:::todo
+  F_04["<b>F-04</b><br/>Module schemas, transactions and domain events"]:::done
   F_05["<b>F-05</b><br/>Job launcher port"]:::todo
   F_06["<b>F-06</b><br/>Planner in a pool of worker threads"]:::todo
   F_07["<b>F-07</b><br/>Planner on the phone's engine in the pipeline"]:::todo
@@ -644,7 +644,7 @@ flowchart LR
 
 ### F-04 · Module schemas, transactions and domain events
 
-- **Status:** todo
+- **Status:** done
 - **Depends on:** —
 - **Requirements:** `NFR-38`, `NFR-29`
 - **Decisions:** ADR-0003 (points 1, 5), ADR-0026 (points 1, 2, 5, 7)
@@ -653,12 +653,12 @@ flowchart LR
 
 **Tasks**
 
-- [ ] Give each existing module (`places`, `planning`) a Postgres schema named after it in a migration, and document the convention in `apps/api/migrations/README.md` and `apps/api/src/modules/README.md`.
-- [ ] Add an automated check (in `tools/architecture-tests`) that a migration named `<module>_…` creates and alters objects only in schema `<module>`, and that module code queries only its own schema — the rule "a module reads and writes only its own tables" stops being review-only.
-- [ ] Write the transaction helper in `platform/database`: a unit of work that a request opens and passes to the interfaces of several modules, committed once; nested use joins the outer transaction.
-- [ ] Write the in-process domain-event bus: a module publishes a typed event (schema in `contracts` or in the module's interface) inside a transaction; handlers registered by other modules run inside the same transaction or, when marked so, right after commit within the same request — never after the response (ADR-0024, rule 2).
-- [ ] Add tests: a rolled-back transaction publishes nothing after commit; a handler's failure inside the transaction rolls the whole unit back; no handler runs after the response is sent.
-- [ ] Add a test that each migration applied twice in the local environment is a no-op and that migrations only add in the release they appear in (expand), with removals allowed only for objects marked deprecated in an earlier release (contract).
+- [x] Give each existing module (`places`, `planning`) a Postgres schema named after it in a migration, and document the convention in `apps/api/migrations/README.md` and `apps/api/src/modules/README.md`.
+- [x] Add an automated check (in `tools/architecture-tests`) that a migration named `<module>_…` creates and alters objects only in schema `<module>`, and that module code queries only its own schema — the rule "a module reads and writes only its own tables" stops being review-only.
+- [x] Write the transaction helper in `platform/database`: a unit of work that a request opens and passes to the interfaces of several modules, committed once; nested use joins the outer transaction.
+- [x] Write the in-process domain-event bus: a module publishes a typed event (schema in `contracts` or in the module's interface) inside a transaction; handlers registered by other modules run inside the same transaction or, when marked so, right after commit within the same request — never after the response (ADR-0024, rule 2).
+- [x] Add tests: a rolled-back transaction publishes nothing after commit; a handler's failure inside the transaction rolls the whole unit back; no handler runs after the response is sent.
+- [x] Add a test that each migration applied twice in the local environment is a no-op and that migrations only add in the release they appear in (expand), with removals allowed only for objects marked deprecated in an earlier release (contract).
 
 **Done when**
 
@@ -666,7 +666,7 @@ flowchart LR
 - The transaction and event tests above pass in `pnpm test` and against the compose database in the integration run.
 - `docker compose up` applies every migration on a fresh volume and the smoke test passes.
 
-**Room to improve.** A Postgres role per module with grants on its own schema only, so that the rule is enforced by the database as well.
+**Room to improve.** A Postgres role per module with grants on its own schema only, so that the rule is enforced by the database as well. "Marked deprecated in an earlier release" is checked as "in an earlier migration file" until deployment (`S1-OPS-04`) records which migration each release ended with.
 
 ### F-05 · Job launcher port
 
@@ -5915,6 +5915,10 @@ What was made better than a package asked for. One line each; the pull request h
 | S1-RTE-01 | The planning files of `contracts` are under `promenade/no-floating-point` themselves, and the rules both sides must compute alike — pace rounding, node numbering, the fixed-point scale — live in one file that imports nothing, so the planner and the verifier run without a schema library | #11          |
 | S1-RTE-01 | The test-only generators cannot reach shipped code: an import boundary with its proof in `tools/architecture-tests`, and an entry point that has no build in `dist`                                                                                                                            | #11          |
 | S1-RTE-01 | A test per schema lists every integer field it tried a fraction in, so a field added later without the integer constraint fails by name; the stub planner is checked for order-independence with the matrix permuted                                                                           | #11          |
+| F-04      | SQL is read with PostgreSQL's own parser, not with patterns over text, and the check fails closed: a statement it does not know is refused until the check is taught about it                                                                                                                  | #12          |
+| F-04      | A module cannot send SQL the check does not see: the database layer accepts only `sql` templates, and two import rules keep the pool and the driver out of the modules                                                                                                                         | #12          |
+| F-04      | Integration tests run in the pipeline against the compose Postgres, each file in a database of its own (`pnpm test:integration`), so later packages have a place for theirs                                                                                                                    | #12          |
+| F-04      | A transaction kept past its unit of work refuses to be used, and a single statement inside a unit of work joins its transaction, so a read sees what the unit has written                                                                                                                      | #12          |
 | S1-OUT-03 | The state of the rules is plain data that survives JSON, so an Outing resumes after a restart with the same events (`OUT-13`), and a "yes" to "are you at …?" is a second pure function, `confirmArrival`                                                                                      | #13          |
 | S1-OUT-03 | Where the radii of two scenes overlap at poor accuracy, a fix speaks for the nearer scene only, and leaving is registered only on a fix that can be trusted: one position never arrives at two scenes, and a thrown fix never ends a presence                                                  | #13          |
 | S1-OUT-03 | The tests were run against nine deliberately broken variants of the rules, and a fixture was added for the one that survived                                                                                                                                                                   | #13          |
