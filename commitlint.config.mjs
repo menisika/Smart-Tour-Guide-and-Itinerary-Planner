@@ -7,7 +7,21 @@
  */
 export default {
   extends: ['@commitlint/config-conventional'],
+  plugins: [
+    {
+      rules: {
+        // The owner's rule: a commit is the owner's alone. No co-author line and
+        // no line naming the tool that wrote the change.
+        'no-attribution': ({ raw }) => [
+          !/^co-authored-by:|generated with \[?claude/im.test(raw),
+          'the message may not carry a Co-Authored-By line or a tool attribution',
+        ],
+      },
+    },
+  ],
   rules: {
+    'no-attribution': [2, 'always'],
+
     'type-enum': [
       2,
       'always',
@@ -35,6 +49,7 @@ export default {
         'docker',
         'ci',
         'docs',
+        'design',
         'spikes',
         'deps',
         'repo',
