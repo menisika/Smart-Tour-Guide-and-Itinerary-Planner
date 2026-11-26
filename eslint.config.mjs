@@ -14,6 +14,9 @@ const INTEGER_ONLY_SOURCES = [
   'packages/planner/src/**/*.ts',
   'packages/verifier/src/**/*.ts',
   'packages/routing/src/**/*.ts',
+  // The description of a planning problem that the three are written against,
+  // with the rules they share. Its test-only generator lies in `src/testing`.
+  'packages/contracts/src/planning*.ts',
 ];
 
 export default defineConfig(
