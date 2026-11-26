@@ -36,6 +36,8 @@ export default defineConfig({
           testTimeout: 60_000,
         },
       },
+      // The Expo application: its screens are rendered as the web renders them.
+      'apps/mobile/vitest.config.mts',
       // The API needs a transformer that emits decorator metadata for NestJS.
       'apps/api/vitest.config.ts',
     ],

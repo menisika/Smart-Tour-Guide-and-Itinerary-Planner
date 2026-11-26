@@ -4,9 +4,12 @@ dist/
 coverage/
 *.tsbuildinfo
 
-# Expo
+# Expo. The native projects are generated from app.json by `expo prebuild`
+# and are never edited by hand.
 .expo/
 expo-env.d.ts
+apps/mobile/android/
+apps/mobile/ios/
 
 # Local settings; `.env.example` files are kept
 .env

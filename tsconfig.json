@@ -10,6 +10,7 @@
     "vitest.config.ts",
     "apps/api/vitest.config.ts",
     "apps/api/vitest.integration.config.ts",
+    "apps/mobile/vitest.config.mts",
     "scripts/**/*.mjs"
   ],
   "exclude": ["**/node_modules", "**/dist"]
