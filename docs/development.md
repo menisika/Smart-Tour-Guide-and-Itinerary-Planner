@@ -8,6 +8,7 @@ How the repository is put together and how to work in it. The decisions behind i
 - [TypeScript conventions](#typescript-conventions)
 - [The rules and how each one fails](#the-rules-and-how-each-one-fails)
 - [The description of a planning problem](#the-description-of-a-planning-problem)
+- [The trigger rules](#the-trigger-rules)
 - [Modules of the API](#modules-of-the-api)
 - [Schema migrations](#schema-migrations)
 - [Integration tests](#integration-tests)
@@ -139,6 +140,23 @@ echo 'ALTER TABLE places.place ADD COLUMN IF NOT EXISTS rank integer;' > apps/ap
 All three are under `promenade/no-floating-point`. A problem is integers only: instants in whole seconds since the Unix epoch, durations in seconds, scores in fixed point (`SCORE_SCALE`), and travel times as a matrix among the start (index 0), the finish (index 1) and the candidates, with `null` for "no path".
 
 `@promenade/contracts/testing` is a second entry point with fast-check generators of problems, answers and wire requests, shared by the suites of the planner and the verifier. It is published as sources only — a test or a tool can import it, shipped code cannot. `samplePlanningProblems(seed, count)` gives the same problems for the same seed.
+
+## The trigger rules
+
+`packages/triggers` decides arrival at a Place from the stream of position fixes, as a pure function over plain data:
+
+```ts
+let state = startOuting({ travelMode, config: defaultTriggerConfig, places });
+const step = advance(state, fix); // → { state, events }
+```
+
+- The numbers — radius bounds, confirmation, the uncertainty limit, the leave factor — are data, keyed by Travel Mode (`src/config.ts`); a Place may carry a radius of its own.
+- Places closer than two radii are grouped into scenes when the Outing starts. An `arrived` event names the scene, the Places whose Stories start by themselves (each at most once per Outing) and the manual Places to prompt for. With accuracy worse than the limit the event is `ask`, and `confirmArrival` takes the person's "yes".
+- The state is plain data, so the app can store it and resume an Outing after a restart.
+
+A recorded track (`src/track.ts`) is a JSON object with a header — format, version, `origin`, a description, the Travel Mode — and the fixes. `origin` is `synthetic` or `test-walk`; there is no value for a person using the product, and `parseRecordedTrack` refuses a track without a known origin. `syntheticTrack` draws a track on a flat plan in metres from walks, stops, jumps, gaps and changes of accuracy, the same for the same seed. The plan lies at a point of open sea: tracks and fixtures belong to no city.
+
+The named fixtures are in `src/testing/fixtures.ts`, one or more per rule, and the generator of whole Outings for the property tests in `src/testing/track-arbitraries.ts`.
 
 ## Modules of the API
 

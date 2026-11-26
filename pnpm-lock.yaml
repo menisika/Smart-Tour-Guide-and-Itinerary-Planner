@@ -468,6 +468,9 @@ importers:
 
   packages/triggers:
     devDependencies:
+      fast-check:
+        specifier: 'catalog:'
+        version: 4.11.0
       typescript:
         specifier: 'catalog:'
         version: 6.0.3
