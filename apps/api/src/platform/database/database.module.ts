@@ -3,46 +3,14 @@ import {
   Global,
   Inject,
   Injectable,
-  Logger,
   Module,
   type OnApplicationShutdown,
 } from '@nestjs/common';
-import { Pool } from 'pg';
+import type { Pool } from 'pg';
 
 import { APP_CONFIG, type AppConfig } from '../config/app-config.ts';
-
-export const DATABASE_POOL = Symbol('DATABASE_POOL');
-
-/**
- * Which address the pool uses (ADR-0010, point 9): the API goes through the
- * pooler, the worker and the batch jobs connect directly.
- */
-export type DatabaseConnection = 'pooled' | 'direct';
-
-const logger = new Logger('Database');
-
-/**
- * The pool opens a connection only when a query asks for one and closes it
- * after ten idle seconds. Nothing here pings the database, so an idle service
- * lets it suspend (ADR-0024, rule 1).
- */
-function createPool(connectionString: string): Pool {
-  const pool = new Pool({
-    connectionString,
-    max: 5,
-    idleTimeoutMillis: 10_000,
-    connectionTimeoutMillis: 5_000,
-    allowExitOnIdle: true,
-  });
-
-  // An idle connection dropped by the server — a suspended database does
-  // this — must not take the process down.
-  pool.on('error', (error) => {
-    logger.warn(`Idle database connection failed: ${error.message}`);
-  });
-
-  return pool;
-}
+import { createPool, DATABASE_POOL, type DatabaseConnection } from './pool.ts';
+import { Database, UnitOfWork } from './unit-of-work.ts';
 
 @Injectable()
 class DatabaseLifecycle implements OnApplicationShutdown {
@@ -54,11 +22,12 @@ class DatabaseLifecycle implements OnApplicationShutdown {
 }
 
 /**
- * Offers one `pg` pool as `DATABASE_POOL`.
+ * Offers the database to the whole application: `UnitOfWork` and `Database`
+ * to the modules, and the `pg` pool itself, as `DATABASE_POOL`, to the
+ * platform layer only.
  *
- * Each module of the API reads and writes only its own tables through it
- * (ADR-0003, point 5). That rule is not checkable by imports; it is kept by
- * review until the modules get schemas of their own.
+ * Each module of the API reads and writes only the tables of its own schema
+ * through them (ADR-0003, point 5), which `tools/architecture-tests` checks.
  */
 @Global()
 @Module({})
@@ -74,8 +43,10 @@ export class DatabaseModule {
             createPool(connection === 'direct' ? config.databaseUrlDirect : config.databaseUrl),
         },
         DatabaseLifecycle,
+        UnitOfWork,
+        Database,
       ],
-      exports: [DATABASE_POOL],
+      exports: [DATABASE_POOL, UnitOfWork, Database],
     };
   }
 }

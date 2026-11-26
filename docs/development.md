@@ -9,6 +9,7 @@ How the repository is put together and how to work in it. The decisions behind i
 - [The rules and how each one fails](#the-rules-and-how-each-one-fails)
 - [Modules of the API](#modules-of-the-api)
 - [Schema migrations](#schema-migrations)
+- [Integration tests](#integration-tests)
 - [Recorded responses](#recorded-responses)
 - [The container image](#the-container-image)
 - [The local environment](#the-local-environment)
@@ -71,13 +72,15 @@ This is what Node.js expects when it runs TypeScript directly; `tsc` rewrites th
 
 ## The rules and how each one fails
 
-Three architecture rules are enforced by tools, and each has tests that feed it a deliberate violation.
+Five architecture rules are enforced by tools, and each has tests that feed it a deliberate violation.
 
-| Rule                                                                                            | Decision          | Enforced by                                                                                                                                                                                                                                    | Proven by                                                                                                    |
-| ----------------------------------------------------------------------------------------------- | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| The verifier may not import the planner — directly, by package name, or through another package | ADR-0006, point 7 | `.dependency-cruiser.cjs`: `verifier-not-to-planner`, `verifier-only-on-contracts`; ESLint `no-restricted-imports` for the message in the editor; `packages/verifier/package.json` does not declare the planner, so pnpm does not even link it | `tools/architecture-tests/src/import-boundaries.test.ts`, `lint-rules.test.ts`, `manifests.test.ts`          |
-| No floating-point code in `planner`, `verifier` and `routing`                                   | ADR-0006, point 2 | ESLint rule `promenade/no-floating-point` (`tools/eslint-plugin`), with inline disabling switched off for those files                                                                                                                          | `tools/eslint-plugin/src/rules/no-floating-point.test.js`, `tools/architecture-tests/src/lint-rules.test.ts` |
-| A module of the API is used only through its `index.ts`                                         | ADR-0003, point 5 | `.dependency-cruiser.cjs`: `api-module-internals`, `api-module-internals-from-outside`, `api-platform-not-to-modules`                                                                                                                          | `tools/architecture-tests/src/import-boundaries.test.ts`                                                     |
+| Rule                                                                                                                            | Decision                 | Enforced by                                                                                                                                                                                                                                    | Proven by                                                                                                                   |
+| ------------------------------------------------------------------------------------------------------------------------------- | ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| The verifier may not import the planner — directly, by package name, or through another package                                 | ADR-0006, point 7        | `.dependency-cruiser.cjs`: `verifier-not-to-planner`, `verifier-only-on-contracts`; ESLint `no-restricted-imports` for the message in the editor; `packages/verifier/package.json` does not declare the planner, so pnpm does not even link it | `tools/architecture-tests/src/import-boundaries.test.ts`, `lint-rules.test.ts`, `manifests.test.ts`                         |
+| No floating-point code in `planner`, `verifier` and `routing`                                                                   | ADR-0006, point 2        | ESLint rule `promenade/no-floating-point` (`tools/eslint-plugin`), with inline disabling switched off for those files                                                                                                                          | `tools/eslint-plugin/src/rules/no-floating-point.test.js`, `tools/architecture-tests/src/lint-rules.test.ts`                |
+| A module of the API is used only through its `index.ts`                                                                         | ADR-0003, point 5        | `.dependency-cruiser.cjs`: `api-module-internals`, `api-module-internals-from-outside`, `api-platform-not-to-modules`                                                                                                                          | `tools/architecture-tests/src/import-boundaries.test.ts`                                                                    |
+| A module of the API reads and writes only the tables of its own Postgres schema, and sends SQL only through `platform/database` | ADR-0003, point 5        | `tools/architecture-tests/src/sql/module-queries.ts` reads every `sql` template of every module with PostgreSQL's own parser; `.dependency-cruiser.cjs`: `api-modules-database-through-index`, `api-modules-not-to-pg`                         | `tools/architecture-tests/src/schema-ownership.test.ts`, `import-boundaries.test.ts`                                        |
+| A migration touches only the schema of the module it is named for, only adds, and can be applied twice                          | ADR-0026, points 2 and 5 | `tools/architecture-tests/src/sql/migration-rules.ts`, with the same parser                                                                                                                                                                    | `tools/architecture-tests/src/schema-ownership.test.ts`; against a real database, `apps/api/integration/migrations.test.ts` |
 
 `pnpm lint` runs the rules over the repository; `pnpm test` runs the proofs.
 
@@ -115,6 +118,12 @@ One module of the API reaching into another:
 echo "export { PlacesService } from '../../places/internal/places.service.ts';" > apps/api/src/modules/planning/internal/tmp-violation.ts; pnpm lint:boundaries; rm apps/api/src/modules/planning/internal/tmp-violation.ts
 ```
 
+A migration of one module altering the table of another:
+
+```bash
+echo 'ALTER TABLE places.place ADD COLUMN IF NOT EXISTS rank integer;' > apps/api/migrations/20991231000000000_planning_tmp-violation.sql; pnpm test; rm apps/api/migrations/20991231000000000_planning_tmp-violation.sql
+```
+
 ## Modules of the API
 
 The convention — `index.ts` as the public interface, everything else internal — and the steps for adding a module are in [`apps/api/src/modules/README.md`](../apps/api/src/modules/README.md).
@@ -125,9 +134,9 @@ Around the modules:
 - `ports/` — the `LanguageModel`, `SpeechSynthesis` and `SpeechRecognition` ports with their adapters;
 - `jobs/` — the batch jobs.
 
-**One rule is not checked by a tool:** a module reads and writes only its own tables. It cannot be seen in imports. It is kept in review until the modules get database schemas of their own.
+**A module owns a Postgres schema** named after it, and both its migrations and its code touch that schema only. How a module queries, shares a transaction with other modules and publishes domain events is in the same README; the rules for migrations are in [`apps/api/migrations/README.md`](../apps/api/migrations/README.md).
 
-**Runtime rules of ADR-0024 that code must keep**, also by review for now: no timer and no polling loop in the service; no work after the response is sent; the database is not queried periodically. `GET /health` queries the database and therefore must not be used as a periodic probe in the cloud; `GET /health/live` exists for that.
+**Runtime rules of ADR-0024 that code must keep**, by review: no timer and no polling loop in the service; no work after the response is sent; the database is not queried periodically. The unit of work and the event bus help with the second: a transaction refuses to be used after its unit of work has ended, and every event handler is awaited before the request returns. `GET /health` queries the database and therefore must not be used as a periodic probe in the cloud; `GET /health/live` exists for that.
 
 ## Schema migrations
 
@@ -144,6 +153,20 @@ It is applied the next time the environment starts, or at once with:
 ```bash
 docker compose run --rm migrate
 ```
+
+## Integration tests
+
+`pnpm test` needs nothing running. What can only be shown against a real service lives in `apps/api/integration/` and runs with:
+
+```bash
+docker compose up --wait postgres
+```
+
+```bash
+pnpm test:integration
+```
+
+Each test file creates a database of its own on the compose Postgres and drops it afterwards, so the tests see what a fresh volume sees and never touch the `promenade` database. In the pipeline they run in the `Compose smoke test` job, after the smoke test.
 
 ## Recorded responses
 

@@ -8,3 +8,8 @@ export const packageRoot = fileURLToPath(new URL('../', import.meta.url));
 
 /** A tree laid out like the repository, with imports that break the rules. */
 export const violationsRoot = fileURLToPath(new URL('../fixtures/violations/', import.meta.url));
+
+/** A tree laid out like the repository, with migrations and queries that break the schema rules. */
+export const sqlViolationsRoot = fileURLToPath(
+  new URL('../fixtures/sql-violations/', import.meta.url),
+);

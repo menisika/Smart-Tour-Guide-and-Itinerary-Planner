@@ -22,6 +22,7 @@
     "plan:update": "node scripts/check-work-plan.mjs --write",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:integration": "vitest run --config apps/api/vitest.integration.config.ts",
     "dev:packages": "tsc -b tsconfig.build.json --watch --preserveWatchOutput",
     "dev:api": "pnpm --filter @promenade/api dev",
     "dev:console": "pnpm --filter @promenade/console dev",

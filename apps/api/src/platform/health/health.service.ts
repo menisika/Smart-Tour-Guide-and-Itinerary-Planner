@@ -2,7 +2,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import type { HealthReport } from '@promenade/contracts';
 import type { Pool } from 'pg';
 
-import { DATABASE_POOL } from '../database/database.module.ts';
+import { DATABASE_POOL } from '../database/pool.ts';
 
 interface VersionsRow {
   postgres_version: string;
