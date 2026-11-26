@@ -415,11 +415,14 @@ function place(ctx) {
   };
 }
 
-/** @param {Ctx} ctx */
-function edit(ctx) {
-  const { os, lang, data, state: is } = ctx;
-  const { t, w } = words(lang);
-  const broken = is === 'error';
+/**
+ * A Route being edited: its Places as rows, and the times it now has. Without
+ * a break it is the Route with one Place removed, which is measured; broken,
+ * it has a Custom Place whose visit makes it longer than the budget.
+ * @param {{ lang: 'ru' | 'en', data: any }} ctx @param {boolean} broken
+ */
+export function editing({ lang, data }, broken) {
+  const { w } = words(lang);
   const sample = data.samples.custom_place;
   const again = data.recalculated;
   const over = sample.visit_min - data.route.reserveMinutes;
@@ -457,6 +460,15 @@ function edit(ctx) {
         totalMinutes: data.route.totalMinutes + sample.visit_min,
       }
     : again.route;
+  return { rows, budget };
+}
+
+/** @param {Ctx} ctx */
+function edit(ctx) {
+  const { os, lang, data, state: is } = ctx;
+  const { t, w } = words(lang);
+  const broken = is === 'error';
+  const { rows, budget } = editing(ctx, broken);
   const top = underTop(os) + 6;
   return {
     clock: data.route.nowBeforeStart,

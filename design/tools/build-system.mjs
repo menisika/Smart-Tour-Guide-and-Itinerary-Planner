@@ -99,6 +99,10 @@ export function tokensCss(tokens) {
     fixed.push(`--spring-${name}-dur: ${curve.duration}ms;`);
   }
   fixed.push('--text-scale: 1;');
+  // The measures of the console: one set, for a desk.
+  for (const [name, measure] of Object.entries(tokens.console)) {
+    if (name !== 'about') fixed.push(`--cs-${name}: ${measure.value}px;`);
+  }
   block(':root', fixed);
 
   // The type scale answers the text size of the system, so it is worked out

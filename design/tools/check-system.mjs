@@ -89,6 +89,19 @@ for (const [os, minimum] of Object.entries(PLATFORM_MINIMUM)) {
   }
 }
 
+// The console is used with a pointer: its least target is that of WCAG 2.2,
+// criterion 2.5.8, and nothing clicked in it is declared smaller.
+const POINTER_MINIMUM = 24;
+if (tokens.console.target.value < POINTER_MINIMUM) {
+  problems.push(
+    `console.target is ${tokens.console.target.value}; WCAG 2.2 asks for ${POINTER_MINIMUM}`,
+  );
+}
+for (const name of ['control', 'row']) {
+  if (tokens.console[name].value < tokens.console.target.value)
+    problems.push(`console.${name} is below console.target`);
+}
+
 // ── Type ────────────────────────────────────────────────────────────────────
 for (const [name, role] of Object.entries(tokens.type)) {
   if (name === 'about') continue;

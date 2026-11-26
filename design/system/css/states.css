@@ -367,3 +367,11 @@
   font: var(--type-label-strong);
   color: var(--accent-ink);
 }
+
+.tt-banner.is-ok {
+  background: var(--ok-tint);
+}
+
+.tt-banner.is-ok > .icon {
+  color: var(--accent-ink);
+}

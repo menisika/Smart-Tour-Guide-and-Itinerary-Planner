@@ -24,7 +24,7 @@ import {
   walkMap,
 } from './parts/map.js';
 import { settle } from './parts/story.js';
-import { GROUPS, specimens, stage } from './specimens.js';
+import { GROUPS, faceOf, specimens, stage, wideWidth } from './specimens.js';
 import { T } from './strings.js';
 import { accessibilityRules, platformDifferences, reach } from './words.js';
 
@@ -413,6 +413,16 @@ const slot = (specimen, os, variant, label) =>
 /** @param {any} specimen */
 function specimenBlock(specimen) {
   const variants = specimen.variants ?? [{ id: '', label: '' }];
+  if (specimen.wide) {
+    // A component of the web or of the console: once, at the width of a desk.
+    return `<h3>${specimen.title}</h3><p class="sys-note">${specimen.note}</p>
+    ${variants
+      .map(
+        (/** @type {any} */ v) =>
+          `<div class="sys-slot"><p class="sys-slot-label"><b>${faceOf(specimen) === 'console' ? 'Console' : 'Web'}</b>${v.label}</p><div class="sys-fit" data-stage="${specimen.id}" data-os="wide" data-variant="${v.id}" style="min-height:${Math.round(specimen.height / 2)}px"></div></div>`,
+      )
+      .join('')}`;
+  }
   if (specimen.device) {
     return `<h3>${specimen.title}</h3><p class="sys-note">${specimen.note}</p>
     <div class="sys-devices">${['ios', 'android']
@@ -444,7 +454,7 @@ function componentsSection() {
     'components',
     5,
     'Components',
-    'Each component stands in a piece of a screen, on real content, with the map or the solid page behind it — for iOS on the left and Android on the right. Use the switches above for the theme, the language and the text size; the check page draws every one of them in every combination and measures it.',
+    'Each component stands in a piece of a screen, on real content, with the map or the solid page behind it — for iOS on the left and Android on the right. The components of the public web and of the console are drawn once, at the width of a desk. Use the switches above for the theme, the language and the text size; the check page draws every one of them in every combination and measures it.',
     groups.map((group) => `<h2 class="sys-group">${group}</h2>${shown(group)}`).join(''),
   );
 }
@@ -608,7 +618,14 @@ function fill(data) {
         const specimen = specimens.find((s) => s.id === place.dataset.stage);
         if (!specimen) continue;
         const os = /** @type {'ios' | 'android'} */ (place.dataset.os);
-        const c = ctx(data, os);
+        const c = specimen.wide
+          ? {
+              ...ctx(data, 'ios'),
+              os: /** @type {any} */ (faceOf(specimen)),
+              text: 1,
+              width: wideWidth(specimen),
+            }
+          : ctx(data, os);
         const variant = place.dataset.variant || undefined;
         place.innerHTML = specimen.device
           ? frame({

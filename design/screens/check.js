@@ -21,14 +21,12 @@ const CONTROLS =
   'button, a[href], input, textarea, [role="button"], [role="switch"], [role="radio"], [role="menuitem"], [role="textbox"], [role="slider"], [tabindex]';
 /** What is set on one line and may not be cut. */
 const ONE_LINE =
-  '.tt-action span, .tt-action b, .tt-action small, .tt-title b, .tt-status b, .tt-frame b, .tt-stepper output, .tt-seg span, .tt-chip span, .tt-tabs button, .tt-bar-title, .tt-variant-times, .tt-figures dd, .tt-ahead-far b, .tt-saved-times, .tt-guide-chip, .tt-row-end .tt-row-name';
+  '.tt-action span, .tt-action b, .tt-action small, .tt-title b, .tt-status b, .tt-frame b, .tt-stepper output, .tt-seg span, .tt-chip span, .tt-tabs button, .tt-bar-title, .tt-variant-times, .tt-figures dd, .tt-ahead-far b, .tt-saved-times, .tt-guide-chip, .tt-row-end .tt-row-name, .cs-btn span, .cs-tag span, .cs-seg span, .cs-tabs button, .cs-chip span, .cs-sort span, .cs-figures b, .cs-stepper output, .cs-audio-time, .cs-num';
 /** What has to lie wholly inside its screen. */
 const WHOLE =
-  'h1, .tt-sheet, .tt-over, .tt-guide, .tt-player, .tt-mini, .tt-board, .tt-dock, .tt-dialog, .tt-menu, .tt-toast, .tt-tabs, .tt-banner, .tt-bar, .tt-top, .tt-ahead, .tt-hero, .tt-band, .tt-state, .tt-heading';
+  'h1, .tt-sheet, .tt-over, .tt-guide, .tt-player, .tt-mini, .tt-board, .tt-dock, .tt-dialog, .tt-menu, .tt-toast, .tt-tabs, .tt-banner, .tt-bar, .tt-top, .tt-ahead, .tt-hero, .tt-band, .tt-state, .tt-heading, .tt-webnav, .tt-webcard, .tt-panel, .tt-panel-foot, .tt-link, .tt-msgr li, .cs-nav, .cs-bar, .cs-head, .cs-pane-head, .cs-pane-foot, .cs-filters, .cs-band, .cs-tabs, .cs-notice, .cs-map, .cs-audio, .cs-run, .cs-pair, .cs-fact, .cs-diff';
 /** A pane that waits for an answer: what is behind it is covered on purpose. */
 const MODAL = '.tt-scrim, .tt-dialog, .tt-menu, .tt-over, .tt-guide.is-place';
-
-const TARGET = { ios: 'ios', android: 'android', web: 'web', webphone: 'web', console: 'web' };
 
 const report = /** @type {HTMLElement} */ (document.getElementById('report'));
 // Drawn at a quarter of its size, so that a whole screen lies inside the
@@ -98,7 +96,11 @@ async function check(screen, state, os, theme, lang) {
   const bounds = frame.getBoundingClientRect();
   const what = `${screen.id}/${state}`;
   const where = `${os} ${theme} ${lang}`;
-  const minimum = tokens.size.target[TARGET[/** @type {keyof typeof TARGET} */ (os)]];
+  // A finger on a phone and in a phone's browser; a pointer at a desk.
+  const minimum =
+    os === 'console'
+      ? tokens.console.target.value
+      : tokens.size.target[os === 'webphone' ? 'web' : os];
   const short = (/** @type {string} */ text) => text.slice(0, 44);
 
   for (const element of frame.querySelectorAll(CONTROLS)) {
@@ -235,7 +237,7 @@ const lines = [...problems].map(([problem, where]) => {
 });
 report.textContent =
   problems.size === 0
-    ? `${drawn} drawings of ${chosen.length} screens, ${controls} controls measured.\n\nEvery control is at least its platform’s target (${tokens.size.target.ios} pt on iOS, ${tokens.size.target.android} dp on Android, ${tokens.size.target.web} px on the web) and has a name.\nNo control is cut by its pane or covered by another; nothing leaves its screen; no line of text is cut.`
+    ? `${drawn} drawings of ${chosen.length} screens, ${controls} controls measured.\n\nEvery control is at least its platform’s target (${tokens.size.target.ios} pt on iOS, ${tokens.size.target.android} dp on Android, ${tokens.size.target.web} px on the web, ${tokens.console.target.value} px in the console) and has a name.\nNo control is cut by its pane or covered by another; nothing leaves its screen; no line of text is cut.`
     : `${drawn} drawings of ${chosen.length} screens, ${controls} controls measured, ${problems.size} to look at:\n\n${lines.join('\n\n')}`;
 document.body.dataset.ready = 'true';
 document.body.dataset.problems = String(problems.size);

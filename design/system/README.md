@@ -30,13 +30,13 @@ The live map on the system's page is drawn by MapLibre GL JS, which needs WebGL 
 ## What is here
 
 ```
-tokens.json          the one source: colour in three themes, type, space, radii, sizes, elevation, motion, sound, the map's measures
+tokens.json          the one source: colour in three themes, type, space, radii, sizes, the console's measures, elevation, motion, sound, the map's measures
 tokens.css           generated: the tokens as CSS custom properties
 map/style.*.json     generated: the MapLibre style of the map, one per theme
 mark/                generated: the sign, the application's icon, the wordmark — and outline.json, the letters of the name as outlines
 icons.js             the product's own icons, with the name of each in both languages
 strings.js           every word the components say, in Russian and English
-parts/               the components: functions that return markup — map, route, story, controls, sheets, lists, states, platform, layout
+parts/               the components: functions that return markup — map, route, story, controls, sheets, lists, states, platform, layout, web, console
 css/                 their style sheets, one per kind, written from the tokens alone
 system.css           all of the above as one style sheet: what a page of screens links
 specimens.js         every component as a specimen: a piece of a screen with real content; the one list behind the page and the check

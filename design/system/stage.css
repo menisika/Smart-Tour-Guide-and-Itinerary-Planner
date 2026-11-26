@@ -123,3 +123,14 @@
   font-style: normal;
   font-weight: 600;
 }
+
+/* A stage of the web or of the console: a browser's window, not a phone. */
+.stage.stage-wide,
+.screen[data-os='android'].stage.stage-wide {
+  border-radius: 10px;
+}
+
+/* Someone else's messenger in a stage has no system bar to clear. */
+.stage .tt-msgr {
+  padding-top: 0;
+}

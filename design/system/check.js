@@ -10,7 +10,7 @@
 import { SIZES, frame } from '../directions/shared/frames.js';
 import { ready } from '../directions/viewer.js';
 import { settle } from './parts/story.js';
-import { specimens, stage } from './specimens.js';
+import { faceOf, specimens, stage, wideWidth } from './specimens.js';
 
 /** Anything a person can act on. */
 const CONTROLS =
@@ -27,7 +27,7 @@ const IN_REACH =
 
 const report = /** @type {HTMLElement} */ (document.getElementById('report'));
 const host = document.createElement('div');
-host.style.cssText = 'position:absolute;left:0;top:0;width:1400px;visibility:hidden';
+host.style.cssText = 'position:absolute;left:0;top:0;width:1500px;visibility:hidden';
 document.body.append(host);
 
 const data = await ready();
@@ -61,7 +61,16 @@ function nameOf(element) {
  * @param {'ios' | 'android'} os @param {'light' | 'dark' | 'sun'} theme @param {'ru' | 'en'} lang @param {number} text
  */
 async function check(specimen, variant, os, theme, lang, text) {
-  const ctx = { os, theme, lang, text, data, width: SIZES[os].width };
+  const ctx = specimen.wide
+    ? {
+        os: /** @type {any} */ (faceOf(specimen)),
+        theme,
+        lang,
+        text,
+        data,
+        width: wideWidth(specimen),
+      }
+    : { os, theme, lang, text, data, width: SIZES[os].width };
   host.innerHTML = specimen.device
     ? frame({
         os,
@@ -81,8 +90,13 @@ async function check(specimen, variant, os, theme, lang, text) {
   const screen = /** @type {HTMLElement} */ (host.querySelector('.screen'));
   const bounds = screen.getBoundingClientRect();
   const what = `${specimen.id}${variant ? `/${variant}` : ''}`;
-  const where = `${os} ${theme} ${lang}${text === 1 ? '' : ` ${Math.round(text * 100)}%`}`;
-  const minimum = tokens.size.target[os];
+  const where = `${specimen.wide ? faceOf(specimen) : os} ${theme} ${lang}${text === 1 ? '' : ` ${Math.round(text * 100)}%`}`;
+  // A finger on a phone and on the web; a pointer in the console.
+  const minimum = !specimen.wide
+    ? tokens.size.target[os]
+    : faceOf(specimen) === 'console'
+      ? tokens.console.target.value
+      : tokens.size.target.web;
 
   for (const element of screen.querySelectorAll(CONTROLS)) {
     if (element.closest('[aria-hidden="true"]')) continue;
@@ -153,6 +167,15 @@ async function check(specimen, variant, os, theme, lang, text) {
 
 for (const specimen of specimens) {
   for (const variant of specimen.variants ?? [{ id: '' }]) {
+    if (specimen.wide) {
+      // Drawn once, at the width of a desk: neither phone, and one text size.
+      for (const theme of /** @type {const} */ (['light', 'dark', 'sun'])) {
+        for (const lang of /** @type {const} */ (['ru', 'en'])) {
+          await check(specimen, variant.id, 'ios', theme, lang, 1);
+        }
+      }
+      continue;
+    }
     for (const os of /** @type {const} */ (['ios', 'android'])) {
       for (const theme of /** @type {const} */ (['light', 'dark', 'sun'])) {
         for (const lang of /** @type {const} */ (['ru', 'en'])) {
@@ -177,7 +200,7 @@ const lines = [...problems].map(([problem, where]) => {
 });
 report.textContent =
   problems.size === 0
-    ? `${drawn} drawings of ${specimens.length} components, ${controls} controls measured.\n\nEvery control is at least its platform’s target (${tokens.size.target.ios} pt on iOS, ${tokens.size.target.android} dp on Android) and has a name.\nNothing is cut, clipped or leaves its screen, at 100 %, 130 % and 200 % of the text size.\nOn whole screens, what is used on the move lies in the lower ${Math.round(reach * 100)} %.`
+    ? `${drawn} drawings of ${specimens.length} components, ${controls} controls measured.\n\nEvery control is at least its platform’s target (${tokens.size.target.ios} pt on iOS, ${tokens.size.target.android} dp on Android, ${tokens.console.target.value} px in the console) and has a name.\nNothing is cut, clipped or leaves its screen, at 100 %, 130 % and 200 % of the text size.\nOn whole screens, what is used on the move lies in the lower ${Math.round(reach * 100)} %.`
     : `${drawn} drawings of ${specimens.length} components, ${controls} controls measured, ${problems.size} to look at:\n\n${lines.join('\n\n')}`;
 document.body.dataset.ready = 'true';
 document.body.dataset.problems = String(problems.size);

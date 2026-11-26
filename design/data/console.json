@@ -1,0 +1,1841 @@
+{
+  "about": "What the screens of the internal console show (work package D-04). Each block says where it comes from. A block whose `about` begins with \"Sample:\" is not measured: it stands for a state of the product that does not exist yet. Everything else is copied from the research spike spikes/minsk-city-data (docs/research/06-minsk-city-data.md) and is data of OpenStreetMap (ODbL 1.0), Wikidata (CC0 1.0) or Wikipedia (CC BY-SA 4.0).",
+  "today": "2026-11-25",
+  "city": {
+    "source": {
+      "file": "02-places.json, 12-heritage.json, 17-pageviews.json",
+      "licence": "© OpenStreetMap contributors, ODbL 1.0; Wikidata, CC0 1.0"
+    },
+    "name": {
+      "ru": "Минск",
+      "en": "Minsk"
+    },
+    "area": {
+      "ru": "Центр",
+      "en": "Centre"
+    },
+    "country": {
+      "ru": "Беларусь",
+      "en": "Belarus"
+    },
+    "candidate_places": 7656,
+    "routable_places": 4078,
+    "places_with_an_article": 461,
+    "territories": 115,
+    "heritage_objects": 833,
+    "places_in_the_centre_box": 709
+  },
+  "people": {
+    "about": "Sample: people of the console, by first names of the scenarios of the specification, on a reserved example domain. Not real accounts.",
+    "me": "pavel",
+    "list": [
+      {
+        "id": "pavel",
+        "name": {
+          "ru": "Павел",
+          "en": "Pavel"
+        },
+        "email": "pavel@promenade.example",
+        "roles": ["curator", "moderator", "administrator"],
+        "last_seen": "2026-11-25"
+      },
+      {
+        "id": "emma",
+        "name": {
+          "ru": "Эмма",
+          "en": "Emma"
+        },
+        "email": "emma@promenade.example",
+        "roles": ["curator"],
+        "last_seen": "2026-11-24"
+      },
+      {
+        "id": "olya",
+        "name": {
+          "ru": "Оля",
+          "en": "Olya"
+        },
+        "email": "olya@promenade.example",
+        "roles": ["curator"],
+        "last_seen": "2026-11-21"
+      },
+      {
+        "id": "dima",
+        "name": {
+          "ru": "Дима",
+          "en": "Dima"
+        },
+        "email": "dima@promenade.example",
+        "roles": ["moderator"],
+        "last_seen": "2026-11-18"
+      }
+    ]
+  },
+  "queue": {
+    "source": {
+      "file": "17-pageviews.json (top), 04-wikidata-items.json, 08-material.json (ten_places)",
+      "what": "Names are Wikidata labels; monthly_views is the mean of twelve months of page views of the Place's articles (null: the Place is outside the sample that was read); articles are the languages that have an article; heritage is the state list. sensitive_from \"material\": marked in 08-material.json; \"kind\": follows from the kind of the Place by the rule of 02-places.json (a place of worship → religion, a military object → war).",
+      "read": "2026-11-24",
+      "licence": "Wikidata, CC0 1.0; page views: Wikimedia, CC0 1.0"
+    },
+    "states": {
+      "about": "Sample: which Dossier is a draft or stale, and the count of open Corrections, are states of the product; not measured."
+    },
+    "items": [
+      {
+        "qid": "Q2024954",
+        "name": {
+          "ru": "Яма",
+          "en": "Yama"
+        },
+        "name_en_missing": false,
+        "kind": "monument",
+        "monthly_views": 929,
+        "articles": ["be", "ru", "en"],
+        "heritage": true,
+        "sensitive": "war",
+        "sensitive_from": "material",
+        "status": "draft",
+        "corrections": 0
+      },
+      {
+        "qid": "Q1742825",
+        "name": {
+          "ru": "Костёл святого Симеона и святой Елены",
+          "en": "Church of Saints Simon and Helena"
+        },
+        "name_en_missing": false,
+        "kind": "church",
+        "monthly_views": null,
+        "articles": ["be", "ru", "en"],
+        "heritage": true,
+        "sensitive": "religion",
+        "sensitive_from": "material",
+        "status": "draft",
+        "corrections": 1,
+        "stop_order": 2
+      },
+      {
+        "qid": "Q445830",
+        "name": {
+          "ru": "Ратуша (Минск)",
+          "en": "Minsk City Hall"
+        },
+        "name_en_missing": false,
+        "kind": "building",
+        "monthly_views": 670,
+        "articles": ["be", "ru"],
+        "heritage": true,
+        "sensitive": null,
+        "sensitive_from": null,
+        "status": "draft",
+        "corrections": 0
+      },
+      {
+        "qid": "Q2663664",
+        "name": {
+          "ru": "Военное кладбище",
+          "en": "Military cemetery in Minsk"
+        },
+        "name_en_missing": false,
+        "kind": "monument",
+        "monthly_views": 511,
+        "articles": ["be", "ru", "en"],
+        "heritage": true,
+        "sensitive": "war",
+        "sensitive_from": "kind",
+        "status": "draft",
+        "corrections": 0
+      },
+      {
+        "qid": "Q83944615",
+        "name": {
+          "ru": "Соборная мечеть",
+          "en": "Minsk Cathedral Mosque"
+        },
+        "name_en_missing": false,
+        "kind": "church",
+        "monthly_views": 507,
+        "articles": ["be", "ru", "en"],
+        "heritage": false,
+        "sensitive": "religion",
+        "sensitive_from": "kind",
+        "status": "draft",
+        "corrections": 0
+      },
+      {
+        "qid": "Q4156665",
+        "name": {
+          "ru": "Дед",
+          "en": "Granddad"
+        },
+        "name_en_missing": false,
+        "kind": "monument",
+        "monthly_views": 302,
+        "articles": ["ru", "en"],
+        "heritage": false,
+        "sensitive": null,
+        "sensitive_from": null,
+        "status": "draft",
+        "corrections": 0
+      },
+      {
+        "qid": "Q17611440",
+        "name": {
+          "ru": "Ворота Минска",
+          "en": "Minsk Gate"
+        },
+        "name_en_missing": false,
+        "kind": "ensemble",
+        "monthly_views": 298,
+        "articles": ["be", "ru"],
+        "heritage": false,
+        "sensitive": null,
+        "sensitive_from": null,
+        "status": "stale",
+        "corrections": 0,
+        "stop_order": 11
+      },
+      {
+        "qid": "Q3809104",
+        "name": {
+          "ru": "Александровский сквер",
+          "en": "Aliaksandraŭski Garden Square"
+        },
+        "name_en_missing": false,
+        "kind": "park",
+        "monthly_views": 242,
+        "articles": ["be", "ru", "en"],
+        "heritage": true,
+        "sensitive": null,
+        "sensitive_from": null,
+        "status": "draft",
+        "corrections": 0
+      },
+      {
+        "qid": "Q2395482",
+        "name": {
+          "ru": "Комсомольское озеро",
+          "en": "Kamsamoĺskaje Lake"
+        },
+        "name_en_missing": false,
+        "kind": "park",
+        "monthly_views": 188,
+        "articles": ["be", "ru"],
+        "heritage": false,
+        "sensitive": null,
+        "sensitive_from": null,
+        "status": "draft",
+        "corrections": 0
+      },
+      {
+        "qid": "Q18941620",
+        "name": {
+          "ru": "Главпочтамт (Минск)",
+          "en": "Main Post Office, Minsk"
+        },
+        "name_en_missing": false,
+        "kind": "building",
+        "monthly_views": 160,
+        "articles": ["be", "ru"],
+        "heritage": true,
+        "sensitive": null,
+        "sensitive_from": null,
+        "status": "draft",
+        "corrections": 0
+      },
+      {
+        "qid": "Q9349920",
+        "name": {
+          "ru": "Синагога Главная",
+          "en": "Minsk main synagogue"
+        },
+        "name_en_missing": false,
+        "kind": "church",
+        "monthly_views": 137,
+        "articles": ["be", "ru"],
+        "heritage": false,
+        "sensitive": "religion",
+        "sensitive_from": "kind",
+        "status": "draft",
+        "corrections": 0
+      },
+      {
+        "qid": "Q3916003",
+        "name": {
+          "ru": "Дом Ваньковичей",
+          "en": "House of Wańkowicz family in Minsk"
+        },
+        "name_en_missing": false,
+        "kind": "building",
+        "monthly_views": 137,
+        "articles": ["be", "ru"],
+        "heritage": true,
+        "sensitive": null,
+        "sensitive_from": null,
+        "status": "draft",
+        "corrections": 0
+      }
+    ]
+  },
+  "dossier": {
+    "about": "The Dossier the editor shows is of the second Place of the reference Outing. Its facts are the sentences of the cited passage in story.json, one fact a sentence, each with the article revision cited there. No fact is written for the mockup.",
+    "stop_order": 2,
+    "sensitive": "religion",
+    "sample": {
+      "about": "Sample: theme tags of each fact (indexes of the fixed theme list), which fact a Curator finds doubtful, the checks before verifying; not measured. The fact a Correction is attached to is the sentence of story.json → playing.",
+      "themes": {
+        "ru": [[0], [0], [1], [9, 0], [0, 9], [1, 6]],
+        "en": [[1], [0], [1], [0], [9, 0]]
+      },
+      "doubtful": {
+        "ru": 5,
+        "en": 3
+      },
+      "statements_checked": {
+        "entailment": 5,
+        "judge": 1
+      },
+      "narration_mismatches": 1
+    },
+    "no_facts": {
+      "about": "A real Place nested in the Territory below, a memorial of the war: flagged sensitive by its kind. That its Dossier holds no confirmed fact is a sample of the state of KNW-6.",
+      "osm": "node/457364556"
+    }
+  },
+  "pronunciation": {
+    "source": {
+      "file": "08-material.json (phrases)",
+      "what": "The phrases chosen for the listening comparison of ADR-0014. `stressed` is the stress shown in the lead of the Russian Wikipedia article named in lead_title; null where the lead shows none.",
+      "read": "2026-11-23",
+      "licence": "Wikipedia, CC BY-SA 4.0"
+    },
+    "states": {
+      "about": "Sample: the status of each entry, the wrong guess of the voice (`guess`), how many Narrations use a word, and the lengths of the audio; not measured. No Narration exists yet."
+    },
+    "entries": [
+      {
+        "n": 1,
+        "lang": "ru",
+        "text": "Улица Немига",
+        "word": "немига",
+        "stressed": "Неми́га",
+        "lead_title": "Немига",
+        "status": "mismatch",
+        "guess": "Не́мига",
+        "narrations": 3
+      },
+      {
+        "n": 12,
+        "lang": "ru",
+        "text": "Зыбицкая улица",
+        "word": "зыбицкая",
+        "stressed": "Зы́бицкая",
+        "lead_title": "Зыбицкая улица",
+        "status": "source"
+      },
+      {
+        "n": 2,
+        "lang": "ru",
+        "text": "Река Свислочь",
+        "word": "свислочь",
+        "stressed": "Сви́слочь",
+        "lead_title": "Свислочь (приток Березины)",
+        "status": "confirmed"
+      },
+      {
+        "n": 3,
+        "lang": "ru",
+        "text": "Троицкое предместье",
+        "word": "троицкое",
+        "stressed": "Тро́ицкое",
+        "lead_title": "Троицкое предместье",
+        "status": "confirmed"
+      },
+      {
+        "n": 7,
+        "lang": "ru",
+        "text": "Комаровский рынок, или Комаровка",
+        "word": "комаровка",
+        "stressed": "Комаро́вка",
+        "lead_title": "Комаровка (Минск)",
+        "status": "source"
+      },
+      {
+        "n": 8,
+        "lang": "ru",
+        "text": "Микрорайон Уручье",
+        "word": "уручье",
+        "stressed": "Уру́чье",
+        "lead_title": "Уручье (Минск)",
+        "status": "source"
+      },
+      {
+        "n": 9,
+        "lang": "ru",
+        "text": "Курасовщина",
+        "word": "курасовщина",
+        "stressed": "Курасо́вщина",
+        "lead_title": "Курасовщина",
+        "status": "source"
+      },
+      {
+        "n": 10,
+        "lang": "ru",
+        "text": "Серебрянка",
+        "word": "серебрянка",
+        "stressed": "Серебря́нка",
+        "lead_title": "Серебрянка (Минск)",
+        "status": "source"
+      },
+      {
+        "n": 15,
+        "lang": "ru",
+        "text": "Грушевка",
+        "word": "грушевка",
+        "stressed": "Гру́шевка",
+        "lead_title": "Грушевка (Минск)",
+        "status": "source"
+      },
+      {
+        "n": 20,
+        "lang": "ru",
+        "text": "Красный костёл основал Эдвард Войнилович.",
+        "word": "войнилович",
+        "stressed": null,
+        "lead_title": "Войнилович, Эдвард",
+        "status": "unknown"
+      },
+      {
+        "n": 4,
+        "lang": "ru",
+        "text": "Раковское предместье",
+        "word": "раковское",
+        "stressed": null,
+        "lead_title": "Раковское предместье",
+        "status": "unknown"
+      },
+      {
+        "n": 17,
+        "lang": "ru",
+        "text": "Пищаловский замок",
+        "word": "пищаловский",
+        "stressed": null,
+        "lead_title": "Пищаловский замок",
+        "status": "unknown"
+      },
+      {
+        "n": 29,
+        "lang": "en",
+        "text": "Abrampoĺski House and Unichoŭski House",
+        "word": null,
+        "stressed": null,
+        "lead_title": null,
+        "status": "listen"
+      },
+      {
+        "n": 30,
+        "lang": "en",
+        "text": "Lošyca Park, Kurasoŭščyna Park and Janka Kupala Street",
+        "word": null,
+        "stressed": null,
+        "lead_title": null,
+        "status": "listen"
+      }
+    ]
+  },
+  "territory": {
+    "source": {
+      "file": "spikes/minsk-city-data/out/minsk.duckdb (tables territory, place, place_parent, feature) and 02-places.json",
+      "what": "The boundary, the Entrances (nodes tagged barrier=entrance on the boundary), the nested Places and the tags are copied from OpenStreetMap; the Wikidata identifier and the page views from Wikidata and 17-pageviews.json. Coordinates are in the units of map.json.",
+      "openstreetmap_extract": "2026-11-22",
+      "licence": "© OpenStreetMap contributors, ODbL 1.0; identifiers and labels: Wikidata, CC0 1.0"
+    },
+    "osm": "relation/5696921",
+    "wikidata": "Q3809104",
+    "name": {
+      "ru": "Александровский сквер",
+      "en": "Aliaksandraŭski Garden Square",
+      "local": "Аляксандраўскі сквер"
+    },
+    "alt_name": {
+      "ru": "Паниковка",
+      "local": "Панікоўка"
+    },
+    "kind": "park",
+    "start_date": "1872",
+    "heritage_code": "712Г000157",
+    "hectares": 2,
+    "opening_hours": null,
+    "fee": null,
+    "monthly_views": 242,
+    "centre": [5525, 1923],
+    "boundary": [
+      [5527, 2117],
+      [5551, 2021],
+      [5472, 2001],
+      [5475, 1991],
+      [5445, 1985],
+      [5442, 1998],
+      [5433, 2041],
+      [5425, 2078],
+      [5412, 2082],
+      [5316, 1960],
+      [5339, 1940],
+      [5335, 1913],
+      [5449, 1812],
+      [5549, 1722],
+      [5561, 1738],
+      [5596, 1779],
+      [5607, 1793],
+      [5622, 1811],
+      [5722, 1932],
+      [5720, 1946],
+      [5722, 1957],
+      [5609, 2049],
+      [5580, 2074],
+      [5554, 2095]
+    ],
+    "entrances": [
+      {
+        "osm": "node/457363815",
+        "x": 5720,
+        "y": 1946
+      },
+      {
+        "osm": "node/10075215335",
+        "x": 5607,
+        "y": 1793
+      },
+      {
+        "osm": "node/10075215336",
+        "x": 5609,
+        "y": 2049
+      },
+      {
+        "osm": "node/10075215337",
+        "x": 5580,
+        "y": 2074
+      },
+      {
+        "osm": "node/10075215338",
+        "x": 5554,
+        "y": 2095
+      },
+      {
+        "osm": "node/10075215340",
+        "x": 5622,
+        "y": 1811
+      }
+    ],
+    "walkable_crossings": 18,
+    "nested": [
+      {
+        "osm": "way/38613542",
+        "subkind": "notable_building",
+        "name": {
+          "local": "Тэатральная каса",
+          "ru": "Театральная касса",
+          "en": null
+        },
+        "x": 5553,
+        "y": 2067,
+        "opening_hours": "Mo-Su 10:00-19:00",
+        "wikidata": null,
+        "kind": "building",
+        "sensitive": null
+      },
+      {
+        "osm": "node/456825266",
+        "subkind": "artwork",
+        "name": {
+          "local": "Хлопчык з лебедзем (Панікоўскаму)",
+          "ru": "Мальчик с лебедем (Паниковскому)",
+          "en": null
+        },
+        "x": 5521,
+        "y": 1942,
+        "opening_hours": null,
+        "wikidata": null,
+        "kind": "monument",
+        "sensitive": null
+      },
+      {
+        "osm": "node/457364556",
+        "subkind": "memorial",
+        "name": {
+          "local": "Месца пакарання патрыётаў у гады Другой сусветнай вайны",
+          "ru": "Место казни патриотов в годы Второй Мировой войны",
+          "en": "Place of execution of patriots during the Second World War"
+        },
+        "x": 5340,
+        "y": 1961,
+        "opening_hours": null,
+        "wikidata": "Q31031102",
+        "kind": "monument",
+        "sensitive": "war"
+      }
+    ],
+    "editor": {
+      "about": "Sample: values a Curator would set; not measured.",
+      "trigger_radius_m": 35,
+      "manual": false,
+      "visit_minutes": 15,
+      "checked": "2026-11-22"
+    },
+    "duplicate": {
+      "about": "Two objects of OpenStreetMap with the same name and the same Wikidata item, a few metres apart: a real pair for the merge of PLC-11.",
+      "wikidata": "Q3809105",
+      "label": {
+        "ru": "Нулевой километр Беларуси",
+        "local": "Нулявы кіламетр Беларусі"
+      },
+      "records": [
+        {
+          "osm": "way/849184172",
+          "subkind": "attraction",
+          "name": "Пачатак дарог Беларусі",
+          "x": 5374,
+          "y": 1772
+        },
+        {
+          "osm": "way/1149985543",
+          "subkind": "monument",
+          "name": "Пачатак дарог Беларусі",
+          "x": 5368,
+          "y": 1772
+        }
+      ]
+    }
+  },
+  "changes": {
+    "source": {
+      "file": "23-diffs.json (examples) and the two extracts it compares",
+      "what": "Objects of OpenStreetMap in the city whose tags changed between the extracts of 2026-10-01 and 2026-11-22: the old and the new value are the tags as they were in each. `day` is the day of the daily diff that carried the change.",
+      "base_extract": "2026-10-01",
+      "extract": "2026-11-22",
+      "licence": "© OpenStreetMap contributors, ODbL 1.0"
+    },
+    "rules": {
+      "about": "Which rule of ADR-0031 (point 11) a change falls under is a reading for the mockup: \"closure\" waits for a Curator in an opened area; \"curator_set\" assumes the Venue was selected and its hours set by a Curator (a sample); \"fills_empty\" is applied without a person."
+    },
+    "items": [
+      {
+        "osm": "node/5252192383",
+        "name": "OK16",
+        "kind": "theatre",
+        "subkind": "arts_centre",
+        "day": "2026-10-21",
+        "attribute": "status",
+        "old": "open",
+        "new": "closed_permanently",
+        "tag_old": "amenity=arts_centre",
+        "tag_new": "was:amenity=arts_centre",
+        "check_date": null,
+        "group": "waiting",
+        "rule": "closure",
+        "hold": true
+      },
+      {
+        "osm": "node/10824429116",
+        "name": "Гуд Фуд",
+        "kind": "cup",
+        "subkind": "fast_food",
+        "day": "2026-10-30",
+        "attribute": "status",
+        "old": "open",
+        "new": "closed_temporarily",
+        "tag_old": "amenity=fast_food",
+        "tag_new": "disused:amenity=fast_food",
+        "check_date": "2026-10-29",
+        "group": "waiting",
+        "rule": "closure",
+        "hold": true
+      },
+      {
+        "osm": "node/4400857812",
+        "name": "Место встречи",
+        "kind": "cup",
+        "subkind": "cafe",
+        "day": "2026-11-07",
+        "attribute": "opening_hours",
+        "old": "Mo-Fr 11:00-15:00",
+        "new": "Mo-Fr 11:00-15:45",
+        "tag_old": null,
+        "tag_new": null,
+        "check_date": "2026-11-06",
+        "group": "waiting",
+        "rule": "curator_set",
+        "hold": true
+      },
+      {
+        "osm": "node/1366689206",
+        "name": "Дом папочки",
+        "kind": "cup",
+        "subkind": "cafe",
+        "day": "2026-10-30",
+        "attribute": "opening_hours",
+        "old": "11:00-23:00",
+        "new": "10:00-22:00",
+        "tag_old": null,
+        "tag_new": null,
+        "check_date": "2026-10-29",
+        "group": "waiting",
+        "rule": "curator_set",
+        "hold": true
+      },
+      {
+        "osm": "node/13144909184",
+        "name": "Papa döner",
+        "kind": "cup",
+        "subkind": "fast_food",
+        "day": "2026-11-07",
+        "attribute": "opening_hours",
+        "old": null,
+        "new": "Mo-Su,PH 09:00-22:00",
+        "tag_old": null,
+        "tag_new": null,
+        "check_date": "2026-11-06",
+        "group": "applied",
+        "rule": "fills_empty",
+        "hold": false
+      },
+      {
+        "osm": "node/7155106719",
+        "name": "Just cafe",
+        "kind": "cup",
+        "subkind": "cafe",
+        "day": "2026-11-09",
+        "attribute": "opening_hours",
+        "old": null,
+        "new": "Mo-Th 09:00-21:00; Fr 09:00-23:00; Sa 11:00-23:00; Su 11:00-21:00",
+        "tag_old": null,
+        "tag_new": null,
+        "check_date": null,
+        "group": "applied",
+        "rule": "fills_empty",
+        "hold": false
+      }
+    ],
+    "history": {
+      "about": "Sample: who accepted a change and when; not measured. The creation record and the change itself are real.",
+      "accepted_by": "pavel",
+      "accepted_on": "2026-11-08",
+      "of": "node/1366689206"
+    },
+    "last_30_days": {
+      "source": "23-diffs.json → last_30_days.shown_to_a_curator, the whole country",
+      "from": "2026-10-25",
+      "to": "2026-11-23",
+      "material_changes": 324,
+      "per_week_median": 78,
+      "per_week_worst": 87
+    }
+  },
+  "matches": {
+    "source": {
+      "file": "11-wikidata-match.json (sample_medium, settings)",
+      "what": "Pairs of a Wikidata item without a link from the map and an object of OpenStreetMap, proposed by the matcher at its medium setting. Names are as the sources have them, in Belarusian.",
+      "read": "2026-11-24",
+      "licence": "Wikidata, CC0 1.0; © OpenStreetMap contributors, ODbL 1.0"
+    },
+    "unlinked_items": 1316,
+    "matched_strict": 85,
+    "no_counterpart": 833,
+    "items": [
+      {
+        "qid": "Q3919511",
+        "wikidata_name": "Палац Сапегаў",
+        "wikidata_class": "building",
+        "osm": "node/3862667450",
+        "osm_name": "Палац",
+        "osm_what": "cafe",
+        "distance_m": 53,
+        "by": "name",
+        "score": 0.75,
+        "address": null
+      },
+      {
+        "qid": "Q140420732",
+        "wikidata_name": "Будынак",
+        "wikidata_class": "building",
+        "osm": "node/8361191118",
+        "osm_name": "Раковский Бровар",
+        "osm_what": "restaurant",
+        "distance_m": 3,
+        "by": "address",
+        "score": null,
+        "address": "Віцебская вуліца, 10"
+      },
+      {
+        "qid": "Q86113500",
+        "wikidata_name": "Будынак былой Мінскай партыйнай школы",
+        "wikidata_class": "building",
+        "osm": "node/9812258818",
+        "osm_name": "Будынак былой Мінскай партыйнай школы 1957 г.",
+        "osm_what": "memorial_plaque",
+        "distance_m": 36,
+        "by": "name",
+        "score": 0.88,
+        "address": null
+      },
+      {
+        "qid": "Q141526529",
+        "wikidata_name": "Мазаіка «Кастрычнік»",
+        "wikidata_class": "sculpture",
+        "osm": "node/5758770832",
+        "osm_name": "Мазаіка «Кастрычнік», 1970-1980я гг.",
+        "osm_what": "artwork",
+        "distance_m": 46,
+        "by": "name",
+        "score": 0.7,
+        "address": null
+      },
+      {
+        "qid": "Q141526520",
+        "wikidata_name": "Музей-майстэрня мастака З.І. Азгура (будынак, агароджа, дворык)",
+        "wikidata_class": "building",
+        "osm": "node/9757997017",
+        "osm_name": "Музей-майстэрня З.І. Азгура",
+        "osm_what": "artwork",
+        "distance_m": 16,
+        "by": "name",
+        "score": 0.9,
+        "address": null
+      },
+      {
+        "qid": "Q141531489",
+        "wikidata_name": "Будынак Нацыянальнага мастацкага музея",
+        "wikidata_class": "building",
+        "osm": "way/25327627",
+        "osm_name": "Нацыянальны мастацкі музей",
+        "osm_what": "museum",
+        "distance_m": 0,
+        "by": "name",
+        "score": 1.0,
+        "address": null
+      },
+      {
+        "qid": "Q141931634",
+        "wikidata_name": "Памятник. Джумаш Асаналиев",
+        "wikidata_class": "monument",
+        "osm": "node/5411675448",
+        "osm_name": "Джумашу Асаналіеву",
+        "osm_what": "memorial",
+        "distance_m": 18,
+        "by": "name",
+        "score": 1.0,
+        "address": null
+      }
+    ]
+  },
+  "sources": {
+    "source": {
+      "file": "22-freshness.json, 11-wikidata-match.json, 12-heritage.json, 17-pageviews.json, 02-places.json",
+      "what": "Counts and dates of what the research spike read from each Source."
+    },
+    "runs": {
+      "about": "Sample: failed or throttled requests of the last run; not measured."
+    },
+    "items": [
+      {
+        "id": "osm",
+        "licence": "ODbL 1.0",
+        "last_run": "2026-11-22",
+        "records": 44641,
+        "records_of": "country",
+        "matched": null,
+        "errors": 0
+      },
+      {
+        "id": "wikidata",
+        "licence": "CC0 1.0",
+        "last_run": "2026-11-24",
+        "records": 2514,
+        "records_of": "city",
+        "linked": 615,
+        "matched": 48,
+        "errors": 0
+      },
+      {
+        "id": "wikipedia",
+        "licence": "CC BY-SA 4.0",
+        "last_run": "2026-11-23",
+        "records": 461,
+        "records_of": "city",
+        "matched": 100,
+        "errors": 0
+      },
+      {
+        "id": "heritage",
+        "licence": null,
+        "last_run": "2026-11-24",
+        "records": 833,
+        "records_of": "city",
+        "matched": 66,
+        "errors": 0
+      },
+      {
+        "id": "pageviews",
+        "licence": "CC0 1.0",
+        "last_run": "2026-11-24",
+        "records": 461,
+        "records_of": "city",
+        "matched": 100,
+        "errors": 0
+      },
+      {
+        "id": "websites",
+        "licence": null,
+        "last_run": "2026-11-24",
+        "records": 3999,
+        "records_of": "country",
+        "matched": null,
+        "reachable": "62.9 %",
+        "errors": 2
+      }
+    ]
+  },
+  "freshness_checks": {
+    "about": "The table of ADR-0031, point 15: what is checked and how often. last_run is the date the research spike read the Source; next_run is that date plus the interval. The switch is a sample.",
+    "items": [
+      {
+        "id": "osm",
+        "every": "week",
+        "last_run": "2026-11-22",
+        "next_run": "2026-11-29",
+        "on": true,
+        "found": 324,
+        "found_what": "changes_30_days"
+      },
+      {
+        "id": "wikidata",
+        "every": "week",
+        "last_run": "2026-11-24",
+        "next_run": "2026-12-01",
+        "on": true,
+        "found": null
+      },
+      {
+        "id": "pageviews",
+        "every": "month",
+        "last_run": "2026-11-24",
+        "next_run": "2026-12-24",
+        "on": true,
+        "found": null
+      },
+      {
+        "id": "heritage",
+        "every": "quarter",
+        "last_run": "2026-11-24",
+        "next_run": "2027-02-24",
+        "on": true,
+        "found": null
+      },
+      {
+        "id": "websites",
+        "every": "quarter",
+        "last_run": "2026-11-24",
+        "next_run": "2027-02-24",
+        "on": false,
+        "found": null
+      }
+    ],
+    "by_kind": {
+      "source": {
+        "file": "22-freshness.json (age_of_last_edit_years, check_dates), 23-diffs.json (shown_to_a_curator)",
+        "what": "The whole country, by kind: objects on the map, how many were edited within a year, how many carry a check date and how many of those within a year, and the material changes of thirty days.",
+        "licence": "© OpenStreetMap contributors, ODbL 1.0"
+      },
+      "items": [
+        {
+          "kind": "sights",
+          "objects": 26879,
+          "edited_in_the_last_year": 4485,
+          "not_edited_for_5_years": 2789,
+          "median_years": 2,
+          "with_a_check_date": 361,
+          "check_date_within_a_year": 86,
+          "material_changes_30_days": 184
+        },
+        {
+          "kind": "eating",
+          "objects": 8260,
+          "edited_in_the_last_year": 1738,
+          "not_edited_for_5_years": 948,
+          "median_years": 1.8,
+          "with_a_check_date": 1204,
+          "check_date_within_a_year": 406,
+          "material_changes_30_days": 78
+        },
+        {
+          "kind": "lodging",
+          "objects": 4025,
+          "edited_in_the_last_year": 523,
+          "not_edited_for_5_years": 454,
+          "median_years": 2,
+          "with_a_check_date": 77,
+          "check_date_within_a_year": 13,
+          "material_changes_30_days": 24
+        },
+        {
+          "kind": "nature",
+          "objects": 4360,
+          "edited_in_the_last_year": 462,
+          "not_edited_for_5_years": 1706,
+          "median_years": 3.8,
+          "with_a_check_date": 4,
+          "check_date_within_a_year": 0,
+          "material_changes_30_days": 29
+        },
+        {
+          "kind": "entertainment",
+          "objects": 1117,
+          "edited_in_the_last_year": 140,
+          "not_edited_for_5_years": 110,
+          "median_years": 2,
+          "with_a_check_date": 80,
+          "check_date_within_a_year": 19,
+          "material_changes_30_days": 9
+        }
+      ]
+    },
+    "websites": {
+      "source": "24-websites.json → weighted_estimates_for_all_website_tags",
+      "reachable": "62.9 %",
+      "dead": "21.1 %",
+      "hours_in_markup": "8.5 %",
+      "hours_in_text": "40.1 %"
+    }
+  },
+  "venues": {
+    "source": {
+      "file": "minsk.duckdb (table place, kind venue)",
+      "what": "Venues within 215 m of the sixth Place of the reference Outing, as a straight line: names, kinds, opening hours and check dates as OpenStreetMap has them. Coordinates are in the units of map.json. The three marked selected are those of venues.json; the selection itself is a Curator's and is a sample.",
+      "openstreetmap_extract": "2026-11-22",
+      "near_stop_order": 6,
+      "licence": "© OpenStreetMap contributors, ODbL 1.0"
+    },
+    "city": {
+      "source": "03-hours.json",
+      "venues": {
+        "places": 1955,
+        "with_hours": 1335,
+        "share": "68.1 %"
+      },
+      "selected": 3
+    },
+    "items": [
+      {
+        "osm": "node/5700047222",
+        "subkind": "cafe",
+        "name": {
+          "local": "Чебуречная",
+          "ru": null,
+          "en": null
+        },
+        "x": 4030,
+        "y": 2827,
+        "straight_m": 22,
+        "opening_hours": "Mo-Su 10:00-23:00",
+        "cuisine": null,
+        "has_website": false,
+        "check_date": "2025-01-27",
+        "selected": false,
+        "shown": true
+      },
+      {
+        "osm": "node/5104008725",
+        "subkind": "bar",
+        "name": {
+          "local": "Beershow",
+          "ru": null,
+          "en": null
+        },
+        "x": 3968,
+        "y": 2739,
+        "straight_m": 33,
+        "opening_hours": null,
+        "cuisine": null,
+        "has_website": false,
+        "check_date": null,
+        "selected": false,
+        "shown": true
+      },
+      {
+        "osm": "node/12469222401",
+        "subkind": "cafe",
+        "name": {
+          "local": "Панский драник",
+          "ru": null,
+          "en": null
+        },
+        "x": 3917,
+        "y": 2776,
+        "straight_m": 49,
+        "opening_hours": "Mo-Su 10:00-00:00",
+        "cuisine": "local",
+        "has_website": false,
+        "check_date": null,
+        "selected": false,
+        "shown": true
+      },
+      {
+        "osm": "node/6508253585",
+        "subkind": "cafe",
+        "name": {
+          "local": "Bubble_Cofee.by",
+          "ru": null,
+          "en": null
+        },
+        "x": 4114,
+        "y": 2811,
+        "straight_m": 51,
+        "opening_hours": null,
+        "cuisine": "bubble_tea",
+        "has_website": false,
+        "check_date": "2026-08-05",
+        "selected": false,
+        "shown": true
+      },
+      {
+        "osm": "node/7766874134",
+        "subkind": "fast_food",
+        "name": {
+          "local": "Nravizza pizza",
+          "ru": null,
+          "en": null
+        },
+        "x": 3939,
+        "y": 2939,
+        "straight_m": 85,
+        "opening_hours": "Mo-Su 10:30-21:30",
+        "cuisine": null,
+        "has_website": true,
+        "check_date": null,
+        "selected": false,
+        "shown": true
+      },
+      {
+        "osm": "node/3270433157",
+        "subkind": "restaurant",
+        "name": {
+          "local": "Минск",
+          "ru": "Минск",
+          "en": "Minsk"
+        },
+        "x": 3928,
+        "y": 2954,
+        "straight_m": 94,
+        "opening_hours": null,
+        "cuisine": "regional",
+        "has_website": false,
+        "check_date": "2024-05-07",
+        "selected": false,
+        "shown": true
+      },
+      {
+        "osm": "node/5552063880",
+        "subkind": "restaurant",
+        "name": {
+          "local": "ODI",
+          "ru": null,
+          "en": null
+        },
+        "x": 4148,
+        "y": 2922,
+        "straight_m": 95,
+        "opening_hours": "Su-Th 10:00-22:00, Sa,Su 10:00-23:00",
+        "cuisine": "italian",
+        "has_website": false,
+        "check_date": null,
+        "selected": false,
+        "shown": true
+      },
+      {
+        "osm": "node/8749178050",
+        "subkind": "restaurant",
+        "name": {
+          "local": "Барашек, беги!",
+          "ru": null,
+          "en": null
+        },
+        "x": 4116,
+        "y": 2954,
+        "straight_m": 98,
+        "opening_hours": "11:00-23:00",
+        "cuisine": "asian",
+        "has_website": false,
+        "check_date": "2026-08-05",
+        "selected": false,
+        "shown": true
+      },
+      {
+        "osm": "node/6018415854",
+        "subkind": "fast_food",
+        "name": {
+          "local": "Сталовая Мінсувязі",
+          "ru": "Столовая Минсвязи",
+          "en": null
+        },
+        "x": 4099,
+        "y": 3016,
+        "straight_m": 122,
+        "opening_hours": "Mo-Fr 11:00-15:00",
+        "cuisine": null,
+        "has_website": false,
+        "check_date": null,
+        "selected": false,
+        "shown": true
+      },
+      {
+        "osm": "node/286094055",
+        "subkind": "restaurant",
+        "name": {
+          "local": "7-е Небо",
+          "ru": "7-е Небо",
+          "en": "Seventh Heaven"
+        },
+        "x": 3764,
+        "y": 2914,
+        "straight_m": 140,
+        "opening_hours": "Mo-Su 12:00-00:00",
+        "cuisine": null,
+        "has_website": false,
+        "check_date": null,
+        "selected": false,
+        "shown": true
+      },
+      {
+        "osm": "node/9035735317",
+        "subkind": "cafe",
+        "name": {
+          "local": "Маркс",
+          "ru": "Маркс",
+          "en": "Marks"
+        },
+        "x": 4271,
+        "y": 2896,
+        "straight_m": 140,
+        "opening_hours": "Mo-Su 10:00-22:00",
+        "cuisine": "coffee_shop",
+        "has_website": true,
+        "check_date": null,
+        "selected": true,
+        "shown": true
+      },
+      {
+        "osm": "node/5397922746",
+        "subkind": "restaurant",
+        "name": {
+          "local": "Ресторан-караоке Троица",
+          "ru": "Дрожжи юнайтед",
+          "en": "Drožži united"
+        },
+        "x": 3718,
+        "y": 2839,
+        "straight_m": 151,
+        "opening_hours": "Mo-Th, Su 12:00-00:00; Fr, Sa 12:00-05:00",
+        "cuisine": "barbecue;burger;chicken;coffee_shop;crepe",
+        "has_website": true,
+        "check_date": null,
+        "selected": false,
+        "shown": false
+      },
+      {
+        "osm": "node/4978648121",
+        "subkind": "cafe",
+        "name": {
+          "local": "Кафе-бар Ла-Манш",
+          "ru": "Кафе-бар Ла-Манш",
+          "en": "Cafe-bar \"La Manche\""
+        },
+        "x": 4147,
+        "y": 3079,
+        "straight_m": 161,
+        "opening_hours": "Mo-Fr 11:00-02:00; Sa-Su 12:00-02:00",
+        "cuisine": "breakfast;international;mediterranean;coffee_shop;local;italian;russian;chicken",
+        "has_website": true,
+        "check_date": null,
+        "selected": false,
+        "shown": false
+      },
+      {
+        "osm": "node/305682813",
+        "subkind": "cafe",
+        "name": {
+          "local": "Стары Менск",
+          "ru": "Старый Менск",
+          "en": "Stary Miensk"
+        },
+        "x": 4348,
+        "y": 2774,
+        "straight_m": 167,
+        "opening_hours": "Su-Th 10:00-00:00; Fr-Sa 10:00-02:00",
+        "cuisine": "cafe/diner",
+        "has_website": true,
+        "check_date": null,
+        "selected": true,
+        "shown": true
+      },
+      {
+        "osm": "node/2620799692",
+        "subkind": "cafe",
+        "name": {
+          "local": "dipndip",
+          "ru": null,
+          "en": null
+        },
+        "x": 4216,
+        "y": 3079,
+        "straight_m": 177,
+        "opening_hours": "Mo-Su 10:00-23:00",
+        "cuisine": null,
+        "has_website": false,
+        "check_date": "2026-08-05",
+        "selected": false,
+        "shown": false
+      },
+      {
+        "osm": "node/6567501685",
+        "subkind": "bar",
+        "name": {
+          "local": "Drink n Roll",
+          "ru": null,
+          "en": null
+        },
+        "x": 4339,
+        "y": 2931,
+        "straight_m": 178,
+        "opening_hours": "Tu-Sa 18:00-02:00",
+        "cuisine": null,
+        "has_website": false,
+        "check_date": null,
+        "selected": false,
+        "shown": false
+      },
+      {
+        "osm": "node/3166691971",
+        "subkind": "cafe",
+        "name": {
+          "local": "Кофейня М",
+          "ru": "Кофейня М",
+          "en": null
+        },
+        "x": 4327,
+        "y": 2994,
+        "straight_m": 188,
+        "opening_hours": "10:00-22:00",
+        "cuisine": "breakfast;cake;coffee_shop;sandwich;tea",
+        "has_website": true,
+        "check_date": "2026-08-05",
+        "selected": false,
+        "shown": false
+      },
+      {
+        "osm": "node/8741480865",
+        "subkind": "cafe",
+        "name": {
+          "local": "Madame Koko",
+          "ru": null,
+          "en": null
+        },
+        "x": 4360,
+        "y": 2969,
+        "straight_m": 195,
+        "opening_hours": "Mo-Fr 09:00-23:00; Sa-Su 10:00-23:00",
+        "cuisine": null,
+        "has_website": true,
+        "check_date": null,
+        "selected": false,
+        "shown": false
+      },
+      {
+        "osm": "node/3270484293",
+        "subkind": "cafe",
+        "name": {
+          "local": "Milano",
+          "ru": null,
+          "en": null
+        },
+        "x": 4246,
+        "y": 3119,
+        "straight_m": 203,
+        "opening_hours": "Mo-Fr 08:00-23:00; Sa,Su 09:00-23:00",
+        "cuisine": "italian",
+        "has_website": false,
+        "check_date": "2026-08-05",
+        "selected": false,
+        "shown": false
+      },
+      {
+        "osm": "node/6480795784",
+        "subkind": "restaurant",
+        "name": {
+          "local": "Michele",
+          "ru": null,
+          "en": null
+        },
+        "x": 4285,
+        "y": 3099,
+        "straight_m": 207,
+        "opening_hours": "Mo-Su 09:00-23:00",
+        "cuisine": null,
+        "has_website": false,
+        "check_date": null,
+        "selected": false,
+        "shown": false
+      },
+      {
+        "osm": "node/8860471117",
+        "subkind": "cafe",
+        "name": {
+          "local": "Paragraph",
+          "ru": "Параграф",
+          "en": "Paragraph"
+        },
+        "x": 4316,
+        "y": 3074,
+        "straight_m": 209,
+        "opening_hours": "Mo-Fr 08:30-23:00; Sa,Su 10:00-23:00",
+        "cuisine": "coffee_shop",
+        "has_website": true,
+        "check_date": "2025-01-27",
+        "selected": true,
+        "shown": true
+      }
+    ]
+  },
+  "coverage": {
+    "source": {
+      "file": "03-hours.json (groups)",
+      "what": "The share of objects with opening hours on the map, by group, in the city.",
+      "licence": "© OpenStreetMap contributors, ODbL 1.0"
+    },
+    "hours": {
+      "venues": {
+        "places": 1955,
+        "with_hours": 1335,
+        "share": "68.1 %"
+      },
+      "museums": {
+        "places": 75,
+        "with_hours": 48,
+        "share": "64.0 %"
+      },
+      "theatres": {
+        "places": 58,
+        "with_hours": 10,
+        "share": "15.5 %"
+      },
+      "worship": {
+        "places": 160,
+        "with_hours": 14,
+        "share": "8.8 %"
+      },
+      "parks": {
+        "places": 288,
+        "with_hours": 12,
+        "share": "4.2 %"
+      },
+      "all": {
+        "places": 7656,
+        "with_hours": 2043,
+        "share": "26.6 %"
+      }
+    },
+    "key_places": {
+      "about": "Sample: the number of Key Places and how many of their Dossiers are verified; not measured. No Dossier exists yet.",
+      "total": 120,
+      "verified": 38,
+      "draft": 61,
+      "none": 21
+    }
+  },
+  "preparation": {
+    "about": "Sample: a run of Preparation, its progress, failures and cost; not measured. No Preparation has run. The Places are those of the reference Outing; money is in US dollars and of the order the owner's budget allows.",
+    "area": {
+      "about": "Real: the box of the Route Pack of the reference Outing (outing.json → route_pack_area_bbox), in the units of map.json, and the number of candidate Places inside it (08-material.json).",
+      "boundary": [
+        [1872, 834],
+        [6528, 834],
+        [6528, 5166],
+        [1872, 5166]
+      ],
+      "candidate_places": 709
+    },
+    "run": {
+      "number": 12,
+      "started": "13:42",
+      "by": "pavel",
+      "scope": "area",
+      "places_total": 120,
+      "already_prepared": 38,
+      "to_prepare": 82,
+      "done": 51,
+      "running": 4,
+      "waiting": 25,
+      "failed": 2,
+      "steps": [
+        {
+          "id": "gather",
+          "done": 82
+        },
+        {
+          "id": "facts",
+          "done": 76
+        },
+        {
+          "id": "stories",
+          "done": 64
+        },
+        {
+          "id": "verify",
+          "done": 58
+        },
+        {
+          "id": "narration",
+          "done": 53
+        },
+        {
+          "id": "transcribe",
+          "done": 51
+        }
+      ],
+      "cost": {
+        "spent": 1.86,
+        "estimate": 3.1,
+        "budget": 6.0,
+        "per_place": 0.036,
+        "per_place_budget": 0.05,
+        "components": {
+          "model": 0.94,
+          "search": 0.12,
+          "speech": 0.71,
+          "review": 0.09
+        }
+      },
+      "rows": [
+        {
+          "stop_order": 2,
+          "step": "transcribe",
+          "state": "done",
+          "parts": [0.019, 0.002, 0.018, 0.002]
+        },
+        {
+          "stop_order": 8,
+          "step": "transcribe",
+          "state": "done",
+          "parts": [0.022, 0.003, 0.02, 0.002]
+        },
+        {
+          "stop_order": 11,
+          "step": "narration",
+          "state": "running",
+          "parts": [0.02, 0.002, 0.009, 0],
+          "final": [0.02, 0.002, 0.017, 0.002]
+        },
+        {
+          "stop_order": 5,
+          "step": "verify",
+          "state": "running",
+          "parts": [0.02, 0.002, 0, 0],
+          "final": [0.021, 0.002, 0.016, 0.002]
+        },
+        {
+          "stop_order": 1,
+          "step": "facts",
+          "state": "failed",
+          "reason": "source",
+          "parts": [0.002, 0.002, 0, 0]
+        },
+        {
+          "stop_order": 7,
+          "step": "narration",
+          "state": "failed",
+          "reason": "speech",
+          "parts": [0.017, 0.002, 0, 0]
+        },
+        {
+          "stop_order": 3,
+          "step": "stories",
+          "state": "running",
+          "parts": [0.01, 0.002, 0, 0],
+          "final": [0.018, 0.002, 0.015, 0.002]
+        },
+        {
+          "stop_order": 4,
+          "step": "gather",
+          "state": "waiting",
+          "parts": [0, 0, 0, 0],
+          "final": [0.017, 0.002, 0.014, 0.002]
+        },
+        {
+          "stop_order": 6,
+          "step": "gather",
+          "state": "waiting",
+          "parts": [0, 0, 0, 0],
+          "final": [0.019, 0.002, 0.016, 0.002]
+        }
+      ],
+      "parts_order": ["model", "search", "speech", "review"]
+    }
+  },
+  "dashboards": {
+    "about": "Sample: cost, ratings, trigger reliability and failures; not measured. Nothing of it exists before the product runs.",
+    "cost": {
+      "per_place": 0.036,
+      "budget": 0.05,
+      "components": {
+        "model": 0.018,
+        "search": 0.002,
+        "speech": 0.014,
+        "review": 0.002
+      },
+      "month_spent": 4.12,
+      "month_budget": 20.0,
+      "weeks": [0.62, 0.88, 1.31, 1.31]
+    },
+    "ratings": {
+      "outings": 46,
+      "mean": 4.4,
+      "by_star": [1, 2, 4, 13, 26],
+      "stories_liked": 212,
+      "stories_disliked": 19
+    },
+    "triggers": {
+      "auto": 0.91,
+      "prompt": 0.06,
+      "manual": 0.03,
+      "worst": [
+        {
+          "stop_order": 6,
+          "auto": 0.58
+        },
+        {
+          "stop_order": 3,
+          "auto": 0.71
+        },
+        {
+          "stop_order": 10,
+          "auto": 0.8
+        }
+      ]
+    },
+    "failures": {
+      "last_30_days": 7,
+      "by_step": {
+        "gather": 1,
+        "facts": 2,
+        "stories": 0,
+        "verify": 1,
+        "narration": 3,
+        "transcribe": 0
+      }
+    },
+    "corrections": {
+      "open": 1,
+      "accepted": 4,
+      "declined": 2
+    }
+  },
+  "admin": {
+    "about": "Sample: limits, what each Plan grants, budgets and audit entries; not measured. The capabilities are the four of ENT-2.",
+    "open_access": true,
+    "plans": {
+      "free": {
+        "narration": false,
+        "packs": false,
+        "ask": false,
+        "preparation": false,
+        "narrations_a_day": 5,
+        "preparation_quota": 0
+      },
+      "plus": {
+        "narration": true,
+        "packs": true,
+        "ask": true,
+        "preparation": true,
+        "narrations_a_day": null,
+        "preparation_quota": 20
+      }
+    },
+    "limits": {
+      "places_a_run": 150,
+      "runs_at_once": 1,
+      "per_place_budget": 0.05,
+      "user_quota": 3
+    },
+    "budgets": [
+      {
+        "id": "model",
+        "unit": "tokens_m",
+        "spent": 3.4,
+        "budget": 8,
+        "money": 2.05,
+        "money_budget": 8.0
+      },
+      {
+        "id": "speech",
+        "unit": "characters_k",
+        "spent": 412,
+        "budget": 1000,
+        "money": 1.65,
+        "money_budget": 8.0
+      },
+      {
+        "id": "search",
+        "unit": "requests",
+        "spent": 310,
+        "budget": 2000,
+        "money": 0.42,
+        "money_budget": 4.0
+      }
+    ],
+    "audit": [
+      {
+        "at": "14:26",
+        "who": "pavel",
+        "role": "curator",
+        "action": "verified",
+        "on": "dossier",
+        "stop_order": 2
+      },
+      {
+        "at": "14:19",
+        "who": "pavel",
+        "role": "curator",
+        "action": "stress",
+        "on": "word",
+        "word": "Неми́га"
+      },
+      {
+        "at": "14:11",
+        "who": "pavel",
+        "role": "curator",
+        "action": "fact_removed",
+        "on": "dossier",
+        "stop_order": 2
+      },
+      {
+        "at": "13:42",
+        "who": "pavel",
+        "role": "curator",
+        "action": "preparation",
+        "on": "area"
+      },
+      {
+        "at": "13:40",
+        "who": "pavel",
+        "role": "administrator",
+        "action": "budget",
+        "on": "speech"
+      },
+      {
+        "at": "12:58",
+        "who": "emma",
+        "role": "curator",
+        "action": "correction",
+        "on": "dossier",
+        "stop_order": 2
+      },
+      {
+        "at": "12:31",
+        "who": "emma",
+        "role": "curator",
+        "action": "venue",
+        "on": "venue",
+        "venue": "node/9035735317"
+      },
+      {
+        "at": "11:07",
+        "who": "dima",
+        "role": "moderator",
+        "action": "signed_in",
+        "on": "console"
+      },
+      {
+        "at": "10:52",
+        "who": "pavel",
+        "role": "administrator",
+        "action": "role",
+        "on": "person",
+        "person": "olya"
+      }
+    ]
+  },
+  "corrections": {
+    "about": "Sample: the Corrections of the inbox. The statement each is attached to is a sentence of the cited passage in story.json; the first is the one sent in SC-6 (story.json → playing). The claim is only its kind: no historical claim is written for a mockup. Place-data Corrections name Venues and changes that are real (see changes); that a person reported them is a sample.",
+    "items": [
+      {
+        "id": "C-0412",
+        "about_what": "statement",
+        "sentence": "playing",
+        "kind": 0,
+        "sent": "2026-11-25",
+        "at": "14:31",
+        "from": "user",
+        "status": "new"
+      },
+      {
+        "id": "C-0409",
+        "about_what": "place",
+        "osm": "node/10824429116",
+        "kind": "closed",
+        "sent": "2026-11-24",
+        "at": "18:02",
+        "from": "guest",
+        "status": "new"
+      },
+      {
+        "id": "C-0406",
+        "about_what": "statement",
+        "sentence": {
+          "ru": 2,
+          "en": 0
+        },
+        "kind": 0,
+        "sent": "2026-11-25",
+        "at": "09:14",
+        "from": "user",
+        "status": "in_work"
+      },
+      {
+        "id": "C-0398",
+        "about_what": "place",
+        "osm": "node/4400857812",
+        "kind": "hours",
+        "sent": "2026-11-23",
+        "at": "12:40",
+        "from": "user",
+        "status": "in_work"
+      },
+      {
+        "id": "C-0391",
+        "about_what": "statement",
+        "sentence": {
+          "ru": 4,
+          "en": 1
+        },
+        "kind": 0,
+        "sent": "2026-11-25",
+        "at": "08:03",
+        "from": "user",
+        "status": "accepted"
+      },
+      {
+        "id": "C-0377",
+        "about_what": "statement",
+        "sentence": {
+          "ru": 5,
+          "en": 2
+        },
+        "kind": 1,
+        "sent": "2026-11-24",
+        "at": "16:20",
+        "from": "guest",
+        "status": "declined"
+      }
+    ]
+  }
+}
