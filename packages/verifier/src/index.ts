@@ -7,7 +7,7 @@
  *   depends only on the shared description of the constraints in `contracts`;
  * - integer arithmetic only, as in the planner.
  *
- * PLACEHOLDER: `verifyRoute` checks the few constraints the placeholder
- * request has.
+ * PLACEHOLDER: `verifyRoute` recomputes the schedule and checks the time
+ * budget; the other hard constraints of the problem are still to be checked.
  */
 export { verifyRoute } from './verify-route.ts';

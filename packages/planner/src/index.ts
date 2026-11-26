@@ -7,7 +7,8 @@
  *   `Math` function outside a short integer-safe list (`promenade/no-floating-point`);
  * - no clock, no randomness that is not seeded, explicit tie-breaking.
  *
- * PLACEHOLDER: `planRoute` is a stub, not the iterated local search. It exists
- * so that the package, its rules and its tests have something to hold on to.
+ * PLACEHOLDER: `planRoute` is a stub, not the iterated local search. It is
+ * written against the real description of a planning problem in `contracts`,
+ * so the suites and the pipeline around it are already the real ones.
  */
 export { planRoute } from './plan-route.ts';

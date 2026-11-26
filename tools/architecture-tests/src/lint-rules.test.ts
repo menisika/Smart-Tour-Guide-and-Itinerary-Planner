@@ -60,6 +60,18 @@ describe('floating-point code fails in planner, verifier and routing (ADR-0006)'
     expect(ruleIds).toEqual([FLOAT_RULE]);
   });
 
+  it.each(['planning.ts', 'planning-rules.ts', 'planning-wire.ts'])(
+    'catches a float in the description of a planning problem, contracts/src/%s',
+    async (file) => {
+      const ruleIds = await ruleIdsFor(
+        `packages/contracts/src/${file}`,
+        'export const scale = 0.001;\n',
+      );
+
+      expect(ruleIds).toEqual([FLOAT_RULE]);
+    },
+  );
+
   it('cannot be switched off with a comment inside the file', async () => {
     const ruleIds = await ruleIdsFor(
       'packages/planner/src/violation.ts',
@@ -73,6 +85,15 @@ describe('floating-point code fails in planner, verifier and routing (ADR-0006)'
     const ruleIds = await ruleIdsFor(
       'packages/planner/src/violation.ts',
       'export const half = (seconds: number): number => Math.trunc(seconds / 2);\n',
+    );
+
+    expect(ruleIds).toEqual([]);
+  });
+
+  it('does not apply to the rest of the contracts', async () => {
+    const ruleIds = await ruleIdsFor(
+      'packages/contracts/src/violation.ts',
+      'export const share = 0.5;\n',
     );
 
     expect(ruleIds).toEqual([]);
