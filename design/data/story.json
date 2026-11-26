@@ -1,0 +1,55 @@
+{
+  "about": "The text shown while a Story plays. It is not a Story of the product: it is a passage copied word for word from an open source and cited, standing in for one, so that no history is invented for a mockup. A real Story is generated from the Dossier and runs to about 90 seconds; these passages are shorter.",
+  "stop_order": 2,
+  "passages": {
+    "ru": {
+      "sentences": [
+        "Строительство храма началось в 1905 году.",
+        "Строительством руководил минский дворянин Эдвард Войнилович, он же пожертвовал крупную сумму на строительство храма.",
+        "Автором проекта стал польский архитектор Томаш Пайздерский.",
+        "Костёл получил имена святых Симеона и Елены в память двух рано умерших детей Войниловича.",
+        "Осенью 1908 года были завершены основные строительные работы, в 1909 году на башню подняты колокола, а 20 сентября 1910 года архиепископ Ключинский освятил храм.",
+        "Храм был целиком построен из красного кирпича, что принесло ему народное прозвище «Красный костёл»."
+      ],
+      "source": {
+        "work": "Википедия",
+        "article": "Костёл Святого Симеона и Святой Елены (Минск)",
+        "url": "https://ru.wikipedia.org/w/index.php?oldid=156199395",
+        "revision": 156199395,
+        "revision_date": "2026-11-14",
+        "licence": "CC BY-SA 4.0",
+        "retrieved": "2026-11-25"
+      }
+    },
+    "en": {
+      "sentences": [
+        "This neo-Romanesque church was designed by Polish architects Tomasz Pajzderski and Władysław Marconi.",
+        "The cornerstone was laid in 1905 and the church was completed in 1910.",
+        "The bricks for its walls were sourced from Częstochowa, while the roof tiles came from Włocławek.",
+        "Its construction was financed by Edward Woyniłłowicz (1847–1928), a prominent Belarusian-Polish landowner, businessman and civic activist.",
+        "The church was named and consecrated in memory of Woyniłłowicz's two deceased children, Szymon and Helena."
+      ],
+      "source": {
+        "work": "Wikipedia",
+        "article": "Church of Saints Simon and Helena",
+        "url": "https://en.wikipedia.org/w/index.php?oldid=1382070047",
+        "revision": 1382070047,
+        "revision_date": "2026-10-26",
+        "licence": "CC BY-SA 4.0",
+        "retrieved": "2026-11-25"
+      }
+    }
+  },
+  "playing": {
+    "about": "Where the mockup stops the playback: the sentence being spoken, counted from zero.",
+    "sentence": {
+      "ru": 3,
+      "en": 2
+    }
+  },
+  "speech_rate_chars_per_second": {
+    "about": "Used only to give the mock player a believable length; no Narration of these passages exists.",
+    "ru": 15,
+    "en": 16
+  }
+}

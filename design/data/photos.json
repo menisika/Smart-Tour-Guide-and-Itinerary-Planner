@@ -1,0 +1,126 @@
+{
+  "about": "The photographs of the Places of the reference Outing: the image each Place has in Wikidata (property P18), fetched from Wikimedia Commons on 25 November 2026, scaled to at most 960 pixels wide and saved again without metadata. Each stays under its own licence; author and licence are shown wherever a photograph is.",
+  "photos": [
+    {
+      "order": 1,
+      "file": "assets/photos/01.jpg",
+      "title": "Мінск. Плошча Мяснікова. Дом Ляховіча.jpg",
+      "author": "Валацуга (https://fgb.by/viewtopic.php?p=60985#60985)",
+      "licence": "CC BY-SA 3.0",
+      "licence_url": "https://creativecommons.org/licenses/by-sa/3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:%D0%9C%D1%96%D0%BD%D1%81%D0%BA._%D0%9F%D0%BB%D0%BE%D1%88%D1%87%D0%B0_%D0%9C%D1%8F%D1%81%D0%BD%D1%96%D0%BA%D0%BE%D0%B2%D0%B0._%D0%94%D0%BE%D0%BC_%D0%9B%D1%8F%D1%85%D0%BE%D0%B2%D1%96%D1%87%D0%B0.jpg",
+      "width": 608,
+      "height": 561
+    },
+    {
+      "order": 2,
+      "file": "assets/photos/02.jpg",
+      "title": "Church of Saints Simon and Helena (Aug 2019).jpg",
+      "author": "KpokeJlJla",
+      "licence": "CC BY-SA 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by-sa/4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Church_of_Saints_Simon_and_Helena_(Aug_2019).jpg",
+      "width": 960,
+      "height": 671
+    },
+    {
+      "order": 3,
+      "file": "assets/photos/03.jpg",
+      "title": "Belarus-Minsk-Abrampolski Building-17.jpg",
+      "author": "Eugene Zelenko",
+      "licence": "CC BY-SA 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by-sa/4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Belarus-Minsk-Abrampolski_Building-17.jpg",
+      "width": 960,
+      "height": 640
+    },
+    {
+      "order": 4,
+      "file": "assets/photos/04.jpg",
+      "title": "Savieckaja, 19 building.jpg",
+      "author": "Renessaince",
+      "licence": "CC BY 3.0",
+      "licence_url": "https://creativecommons.org/licenses/by/3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Savieckaja,_19_building.jpg",
+      "width": 960,
+      "height": 704
+    },
+    {
+      "order": 5,
+      "file": "assets/photos/05.jpg",
+      "title": "Мінск. Рускі тэатр 03.jpg",
+      "author": "Чаховіч Уладзіслаў",
+      "licence": "CC BY-SA 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by-sa/4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:%D0%9C%D1%96%D0%BD%D1%81%D0%BA._%D0%A0%D1%83%D1%81%D0%BA%D1%96_%D1%82%D1%8D%D0%B0%D1%82%D1%80_03.jpg",
+      "width": 960,
+      "height": 540
+    },
+    {
+      "order": 6,
+      "file": "assets/photos/06.jpg",
+      "title": "Вул. Валадарскага, 9.JPG",
+      "author": "Anna Chervonets",
+      "licence": "CC BY-SA 3.0",
+      "licence_url": "https://creativecommons.org/licenses/by-sa/3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:%D0%92%D1%83%D0%BB._%D0%92%D0%B0%D0%BB%D0%B0%D0%B4%D0%B0%D1%80%D1%81%D0%BA%D0%B0%D0%B3%D0%B0,_9.JPG",
+      "width": 960,
+      "height": 640
+    },
+    {
+      "order": 7,
+      "file": "assets/photos/07.jpg",
+      "title": "Former Ecclesiastical Archaeological Museum, 26, Independence Avenue, Minsk - the capital of Republic of Belarus.JPG",
+      "author": "Horakvlado",
+      "licence": "CC BY-SA 3.0",
+      "licence_url": "https://creativecommons.org/licenses/by-sa/3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Former_Ecclesiastical_Archaeological_Museum,_26,_Independence_Avenue,_Minsk_-_the_capital_of_Republic_of_Belarus.JPG",
+      "width": 960,
+      "height": 639
+    },
+    {
+      "order": 8,
+      "file": "assets/photos/08.jpg",
+      "title": "Nacyjanalny akademičny teatar imia Janki Kupały.JPG",
+      "author": "Liashko",
+      "licence": "CC BY-SA 3.0",
+      "licence_url": "https://creativecommons.org/licenses/by-sa/3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Nacyjanalny_akademi%C4%8Dny_teatar_imia_Janki_Kupa%C5%82y.JPG",
+      "width": 960,
+      "height": 720
+    },
+    {
+      "order": 9,
+      "file": "assets/photos/09.jpg",
+      "title": "Вул. К. Маркса 5 -3.JPG",
+      "author": "Anna Chervonets",
+      "licence": "CC BY-SA 3.0",
+      "licence_url": "https://creativecommons.org/licenses/by-sa/3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:%D0%92%D1%83%D0%BB._%D0%9A._%D0%9C%D0%B0%D1%80%D0%BA%D1%81%D0%B0_5_-3.JPG",
+      "width": 960,
+      "height": 640
+    },
+    {
+      "order": 10,
+      "file": "assets/photos/10.jpg",
+      "title": "Вул. Кірава, 11 - 1.JPG",
+      "author": "Anna Chervonets",
+      "licence": "CC BY-SA 3.0",
+      "licence_url": "https://creativecommons.org/licenses/by-sa/3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:%D0%92%D1%83%D0%BB._%D0%9A%D1%96%D1%80%D0%B0%D0%B2%D0%B0,_11_-_1.JPG",
+      "width": 960,
+      "height": 640
+    },
+    {
+      "order": 11,
+      "file": "assets/photos/11.jpg",
+      "title": "Babrujskaja, Minsk.jpg",
+      "author": "Viktar Palstsiuk",
+      "licence": "CC BY-SA 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by-sa/4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Babrujskaja,_Minsk.jpg",
+      "width": 960,
+      "height": 720
+    }
+  ]
+}

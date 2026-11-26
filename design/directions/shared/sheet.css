@@ -1,0 +1,333 @@
+/*
+ * The sheet of one direction. Like the rest of the table it is plain: the
+ * direction speaks through its own screens, specimens and maps.
+ */
+
+.sheet {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 8px clamp(16px, 3vw, 40px) 80px;
+}
+
+.sheet h2:not(.screen *) {
+  margin: 0;
+  font-size: clamp(30px, 5vw, 44px);
+  line-height: 1.05;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.sheet h2 small:not(.screen *) {
+  font-size: 0.5em;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--table-ink-2);
+  margin-left: 0.3em;
+}
+
+.sheet h3:not(.screen *) {
+  margin: 0 0 10px;
+  font-size: 20px;
+  line-height: 1.25;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.sheet h4:not(.screen *) {
+  margin: 22px 0 8px;
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--table-ink-2);
+}
+
+.sheet p:not(.screen *) {
+  margin: 0 0 12px;
+  max-width: 74ch;
+}
+
+.sheet figure:not(.screen *) {
+  margin: 0;
+}
+
+.sheet figcaption:not(.screen *) {
+  margin-top: 10px;
+  font-size: 12.5px;
+  color: var(--table-ink-2);
+  text-align: center;
+}
+
+.sheet-lead {
+  padding: 28px 0 8px;
+}
+
+.sheet-kicker {
+  font-size: 13px;
+  color: var(--table-ink-2);
+}
+
+.sheet-idea {
+  margin-top: 14px !important;
+  font-size: 18px;
+  line-height: 1.45;
+  max-width: 62ch !important;
+}
+
+.sheet-pair {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(12px, 3vw, 40px);
+  padding: 24px 0 8px;
+}
+
+.sheet-text {
+  padding: 34px 0 0;
+  margin-top: 34px;
+  border-top: 1px solid var(--table-line);
+}
+
+.sheet-roots,
+.sheet-moves {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-width: 82ch;
+}
+
+.sheet-roots li,
+.sheet-moves li {
+  padding: 9px 0;
+  border-top: 1px solid var(--table-line);
+}
+
+.sheet-roots li:first-child,
+.sheet-moves li:first-child {
+  border-top: 0;
+}
+
+.sheet-roots b,
+.sheet-moves b {
+  font-weight: 650;
+}
+
+.sheet-roots a {
+  color: var(--table-ink-2);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.sheet-small {
+  font-size: 13px;
+  color: var(--table-ink-2);
+}
+
+/* Specimens are shown in the direction's own colours. */
+.sheet-specimen.screen {
+  height: auto;
+  margin-top: 18px;
+  padding: 6px 28px 22px;
+  border-radius: 6px;
+  overflow: visible;
+}
+
+.sheet-face {
+  padding: 18px 0 4px;
+  border-top: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+}
+
+.sheet-face:first-child {
+  border-top: 0;
+}
+
+.sheet-face p {
+  max-width: none;
+  margin: 0 0 6px;
+  overflow-wrap: anywhere;
+}
+
+.sheet-face .sheet-face-role {
+  margin-bottom: 10px;
+  font: 12.5px/1.4 var(--ui);
+  opacity: 0.72;
+}
+
+.sheet-palettes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px;
+  margin-top: 6px;
+}
+
+.sheet-swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sheet-swatches i {
+  display: block;
+  height: 54px;
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 1px rgb(128 128 128 / 0.35);
+}
+
+.sheet-swatches b {
+  display: block;
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.sheet-swatches code {
+  font:
+    12px/1.3 ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Consolas,
+    monospace;
+  color: var(--table-ink-2);
+}
+
+.sheet-pairs {
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sheet-pairs li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 70px minmax(0, 1.1fr);
+  align-items: center;
+  gap: 12px;
+  padding: 5px 0;
+  font-size: 13px;
+}
+
+.sheet-pairs span {
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-weight: 600;
+  box-shadow: inset 0 0 0 1px rgb(128 128 128 / 0.3);
+}
+
+.sheet-pairs b {
+  font-variant-numeric: tabular-nums;
+  font-weight: 650;
+  text-align: right;
+}
+
+.sheet-pairs small {
+  color: var(--table-ink-2);
+  font-size: 12.5px;
+}
+
+.sheet-maps {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 16px;
+}
+
+.sheet-map.screen {
+  height: auto;
+  aspect-ratio: 560 / 380;
+  border-radius: 6px;
+  box-shadow: 0 0 0 1px rgb(128 128 128 / 0.4);
+}
+
+.sheet-motion {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 420px);
+  gap: clamp(20px, 4vw, 56px);
+  align-items: start;
+}
+
+.sheet-button {
+  font: 600 14px/1 var(--ui);
+  padding: 11px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--table-accent);
+  background: var(--table-accent);
+  color: var(--table);
+  cursor: pointer;
+}
+
+.sheet-button[aria-pressed='true'] {
+  background: none;
+  color: var(--table-accent);
+}
+
+.sheet-board {
+  margin-top: 40px;
+  padding-top: 34px;
+  border-top: 1px solid var(--table-line);
+}
+
+.board-row {
+  margin-top: 30px;
+}
+
+.board-cells {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(8px, 2vw, 28px);
+}
+
+.board-row[data-os='web'] .board-cells {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* A place is held for a device before it is drawn. */
+.board-cell .device-slot:empty {
+  aspect-ratio: 393 / 852;
+  border-radius: 24px;
+  background: color-mix(in srgb, var(--table-ink) 6%, transparent);
+}
+
+.board-row[data-os='web'] .device-slot:empty {
+  aspect-ratio: 1280 / 800;
+  border-radius: 8px;
+}
+
+@media (max-width: 860px) {
+  .sheet-pair {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 440px;
+    margin: 0 auto;
+  }
+
+  .sheet-palettes,
+  .sheet-maps,
+  .sheet-motion {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .board-cells {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .board-row[data-os='web'] .board-cells {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sheet-pairs li {
+    grid-template-columns: minmax(0, 1fr) 64px;
+  }
+
+  .sheet-pairs small {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen *,
+  .screen *::before,
+  .screen *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
