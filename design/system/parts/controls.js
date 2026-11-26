@@ -108,3 +108,46 @@ export const options = (name, items, chosen) =>
         `<button class="tt-option" role="radio" aria-checked="${i === chosen}"><span class="tt-option-name">${item.label}${item.note ? `<small>${item.note}</small>` : ''}</span><span class="tt-option-mark">${icons.check}</span></button>`,
     )
     .join('')}</div>`;
+
+/**
+ * A theme of the Profile: liked, neutral or disliked (PRF-2). A tap goes to
+ * the next of the three; each has its own sign, so that none is told by
+ * colour alone: a tick, nothing, a stroke through the word.
+ * @param {string} label @param {'like' | 'neutral' | 'dislike'} is
+ * @param {{ like: string, neutral: string, dislike: string }} say what a screen reader says of each
+ */
+export const taste = (label, is, say) =>
+  `<button class="tt-chip tt-taste is-${is}" aria-label="${label}: ${say[is]}"><span>${is === 'like' ? icons.check : is === 'dislike' ? icons.minus : ''}${label}</span></button>`;
+
+/** @param {[string, 'like' | 'neutral' | 'dislike'][]} items @param {Parameters<typeof taste>[2]} say */
+export const tastes = (items, say) =>
+  `<div class="tt-chips">${items.map(([label, is]) => taste(label, is, say)).join('')}</div>`;
+
+/**
+ * A rating of one to five (FBK-1). Each key says its own number; the chosen
+ * one and those before it are filled.
+ * @param {string} name @param {number} value 0 for "not yet" @param {(n: number) => string} say
+ */
+export const rate = (name, value, say) =>
+  `<div class="tt-rate" role="radiogroup" aria-label="${name}">${[1, 2, 3, 4, 5]
+    .map(
+      (n) =>
+        `<button role="radio" aria-checked="${n === value}" aria-label="${say(n)}"${n <= value ? ' class="is-on"' : ''}>${icons.star}</button>`,
+    )
+    .join('')}</div>`;
+
+/**
+ * "Liked" or "did not like", for a Story (FBK-2): two keys with words, never
+ * required.
+ * @param {string} name @param {'like' | 'dislike' | ''} value @param {{ like: string, dislike: string }} labels
+ */
+export const liked = (name, value, labels) =>
+  `<div class="tt-liked" role="group" aria-label="${name}"><button aria-pressed="${value === 'like'}">${icons.like}<span>${labels.like}</span></button><button aria-pressed="${value === 'dislike'}">${icons.dislike}<span>${labels.dislike}</span></button></div>`;
+
+/**
+ * A one-time code, a cell to a digit (ACC-3). It is one field for a screen
+ * reader and for the keyboard.
+ * @param {string} name @param {string} digits those entered so far @param {number} [length]
+ */
+export const code = (name, digits, length = 6) =>
+  `<div class="tt-code" role="textbox" tabindex="0" aria-label="${name}">${Array.from({ length }, (_, i) => `<i${i === digits.length ? ' class="is-next"' : ''}>${digits[i] ?? ''}</i>`).join('')}</div>`;

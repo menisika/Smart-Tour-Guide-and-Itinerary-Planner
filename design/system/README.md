@@ -36,7 +36,7 @@ map/style.*.json     generated: the MapLibre style of the map, one per theme
 mark/                generated: the sign, the application's icon, the wordmark — and outline.json, the letters of the name as outlines
 icons.js             the product's own icons, with the name of each in both languages
 strings.js           every word the components say, in Russian and English
-parts/               the components: functions that return markup — map, route, story, controls, sheets, lists, states, platform
+parts/               the components: functions that return markup — map, route, story, controls, sheets, lists, states, platform, layout
 css/                 their style sheets, one per kind, written from the tokens alone
 system.css           all of the above as one style sheet: what a page of screens links
 specimens.js         every component as a specimen: a piece of a screen with real content; the one list behind the page and the check
@@ -118,7 +118,7 @@ Question 8 of the brief — whether the plainer Android is acceptable — stays 
 ## Not done here, on purpose
 
 - No check on a real phone and no independent visual review: both are `D-05`.
-- No screens beyond the two of `D-01`: the solo Outing is `D-03`, the web and the console `D-04`, the Party and the Catalog `D-09`.
+- No screens beyond the two of `D-01`: the solo Outing is `D-03`, the web and the console `D-04`, the Party and the Catalog `D-09`. Each adds to the system the components its screens need, with a specimen: the [screens](../screens/README.md) say which.
 - No component in the code of the applications: that is `F-12`.
 - No measurement of the battery, and no trial of the sun theme outdoors.
 - The destinations of the bar at the bottom are placeholders; which there are is settled with the screens.

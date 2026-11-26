@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="../system/mark/app-icon-dark.svg" />
+    <title>Promenade — check of the screens</title>
+    <link rel="stylesheet" href="../system/system.css" />
+    <link rel="stylesheet" href="page.css" />
+  </head>
+  <body>
+    <main class="pg">
+      <h1>Check of the screens</h1>
+      <p class="pg-lead">
+        Draws every screen of <a href="./">the index</a> in every state, for each system it is made
+        for, in the three themes and both languages, and measures what a person scanning hundreds of
+        drawings would miss: a control smaller than its platform’s target, a control without a name
+        for a screen reader, a control cut by its pane or covered by another, a line of text that is
+        cut, a pane that leaves its screen. It does not judge how a screen looks: that is done by
+        eye.
+      </p>
+      <pre id="report" class="pg-report">Drawing…</pre>
+    </main>
+    <script type="module" src="check.js"></script>
+  </body>
+</html>

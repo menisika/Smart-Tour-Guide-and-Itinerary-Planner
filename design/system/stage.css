@@ -61,10 +61,6 @@
   height: var(--space-16);
 }
 
-.tt-fill {
-  flex: 1;
-}
-
 .stage .tt-top-stage,
 .screen[data-os='android'].stage .tt-top-stage {
   top: 14px;
@@ -91,15 +87,6 @@
 .stage .tt-player,
 .stage .tt-mini {
   bottom: 14px;
-}
-
-.tt-chart-window {
-  position: relative;
-  overflow: hidden;
-}
-
-.tt-chart-window .tt-chart {
-  margin-top: 0;
 }
 
 /* The materials, side by side. */

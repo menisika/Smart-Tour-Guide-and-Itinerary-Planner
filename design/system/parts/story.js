@@ -49,9 +49,11 @@ export function voice(story) {
  * The page of the guide: the photograph of the Place with its author, the
  * name, the Story as prose, its source in a footnote. A solid page: it is read.
  * @param {any} data @param {Lang} lang
- * @param {{ from?: number, full?: boolean, photo?: boolean, theme?: Theme, width?: number, story?: any }} [options]
+ * @param {{ from?: number, full?: boolean, photo?: boolean, theme?: Theme, width?: number, story?: any, picked?: number, after?: string }} [options]
  *   `photo: false` draws the Place as one that has no free photograph;
- *   `story` is the Story at another moment: with `current: -1` nothing is being spoken yet
+ *   `story` is the Story at another moment: with `current: -1` nothing is being spoken yet;
+ *   `picked` is a sentence chosen by a tap: the page shows it marked, and nothing as spoken;
+ *   `after` stands at the foot of the page, under the source
  */
 export function guide(data, lang, options = {}) {
   const { full = false, photo = true, theme = 'light', width = 393 } = options;
@@ -76,11 +78,12 @@ export function guide(data, lang, options = {}) {
       <p class="tt-guide-kind">${kindIcon(now.stop.kind)}${now.stop.built[lang]} · ${t.seenOutside}</p>
       <h1 class="tt-guide-name">${now.stop.name[lang]}</h1>
       <div class="tt-reading">
-        <p class="tt-text">${storyText(story, full ? 0 : from)}</p>
+        <p class="tt-text">${options.picked === undefined ? storyText(story, full ? 0 : from) : pickedText(story, options.picked)}</p>
         <i class="tt-rule" aria-hidden="true"></i>
       </div>
       <p class="tt-footnote"><sup>1</sup> ${t.source(story.source, date)}</p>
       <p class="tt-made">${icons.shield}${t.made}</p>
+      ${options.after ?? ''}
     </div>
   </article>`;
 }
@@ -204,4 +207,67 @@ export function follow(root, story, index, share = 0.5) {
   const old = root.querySelector('.tt-voice');
   if (old) old.outerHTML = voice(moved);
   settle(root);
+}
+
+/**
+ * The page of a Place before the Outing: its photograph, its name, why it is
+ * on the Route in the guide's own italic (RTE-9), and what is known of it.
+ * @param {any} data @param {any} stop @param {Lang} lang
+ * @param {{ theme?: Theme, width?: number, facts?: string[], actions?: string, warning?: string }} [options]
+ */
+export function placePage(data, stop, lang, options = {}) {
+  const { theme = 'light', width = 393, facts = [], actions = '', warning = '' } = options;
+  const t = T[lang];
+  const head = stop.photo
+    ? `<img src="${stop.photo.src}" alt="" />
+      <figcaption>${t.photo}: ${stop.photo.author} · ${stop.photo.licence}</figcaption>`
+    : `${plate(data, stop, { lang, theme, width: width - 32, height: 172 })}
+      <figcaption>${t.noPhoto}</figcaption>`;
+  return `<article class="tt-guide is-full is-place">
+    <figure class="tt-guide-photo">
+      ${head}
+      <span class="tt-guide-chip lg"><i>${stop.order}</i><b>${stop.arrive}</b>${t.stay(stop.leave)}</span>
+      <button class="tt-guide-fold lg" aria-label="${t.say.close}">${icons.chevronDown}</button>
+    </figure>
+    <div class="tt-guide-body">
+      <p class="tt-guide-kind">${kindIcon(stop.kind)}${stop.built[lang]}${stop.built[lang] ? ' · ' : ''}${t.seenOutside}</p>
+      <h1 class="tt-guide-name">${stop.name[lang]}</h1>
+      <p class="tt-guide-why">${stop.why[lang]}</p>
+      ${facts.length ? `<ul class="tt-guide-facts">${facts.map((f) => `<li>${f}</li>`).join('')}</ul>` : ''}
+      ${warning}
+      ${actions ? `<div class="tt-guide-actions">${actions}</div>` : ''}
+    </div>
+  </article>`;
+}
+
+/**
+ * The text of a Story with one sentence chosen by a tap (KNW-16, FBK-3):
+ * nothing is being spoken; the chosen sentence is marked.
+ * @param {any} story @param {number} index
+ */
+export const pickedText = (story, index) =>
+  story.sentences
+    .map(
+      (/** @type {any} */ s, /** @type {number} */ i) =>
+        `<span class="tt-sentence${i === index ? ' is-picked' : ''}">${s.text}${i === index ? '<sup>1</sup>' : ''}</span>`,
+    )
+    .join(' ');
+
+/**
+ * Where a sentence of a Story comes from, one tap away (KNW-16): the
+ * sentence itself, the work, the article, its revision and its licence — and
+ * the way to say that it is wrong (FBK-3).
+ * @param {Lang} lang @param {{ quote: string, source: any, actions?: string }} options
+ */
+export function source(lang, { quote, source: from, actions = '' }) {
+  const t = T[lang];
+  return `<div class="tt-source">
+    <blockquote>${quote}</blockquote>
+    <dl>
+      <div><dt>${t.sourceWork}</dt><dd>${from.work}, ${lang === 'ru' ? `«${from.article}»` : `“${from.article}”`}</dd></div>
+      <div><dt>${t.sourceRevision}</dt><dd>${format.date(from.revision_date, lang)} · № ${from.revision}</dd></div>
+      <div><dt>${t.sourceLicence}</dt><dd>${from.licence}</dd></div>
+    </dl>
+    ${actions ? `<div class="tt-source-actions">${actions}</div>` : ''}
+  </div>`;
 }

@@ -583,3 +583,114 @@
     inset 0 0 0 5.5px var(--surface),
     inset 0 0 0 11px var(--accent-ink);
 }
+
+/* ── A theme of the Profile: liked, neutral, disliked ──────────────────── */
+
+.tt-taste.is-like > span {
+  background: var(--ink);
+  color: var(--surface);
+}
+
+.screen[data-os='android'] .tt-taste.is-like > span {
+  box-shadow: none;
+}
+
+/* Disliked is struck through and outlined: avoided, not forbidden. */
+.tt-taste.is-dislike > span {
+  background: none;
+  box-shadow: inset 0 0 0 1.5px var(--ink-3);
+  color: var(--ink-2);
+  text-decoration: line-through;
+}
+
+/* ── A rating of one to five ───────────────────────────────────────────── */
+
+.tt-rate {
+  display: flex;
+  justify-content: space-between;
+  max-width: 300px;
+}
+
+.screen .tt-rate button {
+  display: grid;
+  place-items: center;
+  width: var(--size-key);
+  height: var(--size-key);
+  border-radius: var(--radius-full);
+  color: var(--ink-3);
+}
+
+.tt-rate .icon {
+  width: 30px;
+  height: 30px;
+}
+
+.tt-rate .is-on {
+  color: var(--accent-ink);
+}
+
+.tt-rate .is-on .icon {
+  fill: currentColor;
+}
+
+/* ── Liked, or not ─────────────────────────────────────────────────────── */
+
+.tt-liked {
+  display: flex;
+  gap: var(--space-8);
+}
+
+.screen .tt-liked button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-8);
+  min-height: var(--size-control);
+  padding: var(--space-6) var(--space-12);
+  border-radius: var(--radius-action);
+  background: var(--surface-2);
+  font: var(--type-label-strong);
+}
+
+.tt-liked .icon {
+  width: 20px;
+  height: 20px;
+}
+
+.tt-liked button[aria-pressed='true'] {
+  background: var(--ink);
+  color: var(--surface);
+}
+
+.screen[data-theme='sun'] .tt-liked button {
+  box-shadow: inset 0 0 0 1.5px var(--ink);
+}
+
+/* ── A one-time code ───────────────────────────────────────────────────── */
+
+.tt-code {
+  display: flex;
+  gap: var(--space-8);
+  border-radius: var(--radius-s);
+}
+
+.tt-code i {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  height: var(--size-action);
+  border-radius: var(--radius-s);
+  background: var(--surface-2);
+  font: var(--type-clock-m);
+  letter-spacing: var(--type-clock-m-tracking);
+  font-style: normal;
+}
+
+.tt-code .is-next {
+  box-shadow: inset 0 0 0 2px var(--accent-ink);
+}
+
+.screen[data-theme='sun'] .tt-code i {
+  box-shadow: inset 0 0 0 1.5px var(--ink);
+}

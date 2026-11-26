@@ -71,3 +71,16 @@ export function pack(lang, { megabytes, state: is, done = 0 }) {
     ${bar}
   </section>`;
 }
+
+/**
+ * What has to be in place before something can begin: each line is either
+ * there or missing, in words, and what is missing has its way out beside it.
+ * @param {{ label: string, note: string, ok: boolean, action?: string }[]} items
+ */
+export const checks = (items) =>
+  `<ul class="tt-checks">${items
+    .map(
+      (c) =>
+        `<li class="${c.ok ? 'is-ok' : 'is-missing'}"><i>${c.ok ? icons.check : icons.alert}</i><span><b>${c.label}</b><small>${c.note}</small></span>${c.action ? `<button>${c.action}</button>` : ''}</li>`,
+    )
+    .join('')}</ul>`;

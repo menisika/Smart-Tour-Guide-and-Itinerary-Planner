@@ -1,0 +1,31 @@
+{
+  "about": "Venues near the sixth Place of the reference Outing, for the screen of a Break (OUT-11). Names, opening hours and positions are copied from OpenStreetMap; the distance is the straight line from that Place, not a walked one. Which Venues the product offers is a Curator's selection (PLC-6): these three stand in for it.",
+  "source": {
+    "openstreetmap_extract": "2026-11-22",
+    "licence": "© OpenStreetMap contributors, ODbL 1.0",
+    "near_stop_order": 6
+  },
+  "venues": [
+    {
+      "osm": "node/9035735317",
+      "name": { "ru": "Маркс", "en": "Marks" },
+      "opening_hours": "Mo-Su 10:00-22:00",
+      "closes_today": "22:00",
+      "straight_m": 140
+    },
+    {
+      "osm": "node/305682813",
+      "name": { "ru": "Старый Менск", "en": "Stary Miensk" },
+      "opening_hours": "Su-Th 10:00-00:00; Fr-Sa 10:00-02:00",
+      "closes_today": "00:00",
+      "straight_m": 167
+    },
+    {
+      "osm": "node/8860471117",
+      "name": { "ru": "Параграф", "en": "Paragraph" },
+      "opening_hours": "Mo-Fr 08:30-23:00; Sa,Su 10:00-23:00",
+      "closes_today": "23:00",
+      "straight_m": 209
+    }
+  ]
+}

@@ -51,3 +51,11 @@ export const menu = (name, items) =>
  */
 export const toast = ({ icon = icons.check, lead, rest = '', undo, style = '' }) =>
   `<p class="tt-toast lg" role="status"${style ? ` style="${style}"` : ''}>${icon}<span><b>${lead}</b>${rest}</span>${undo ? action(undo, { kind: 'plain' }) : ''}</p>`;
+
+/**
+ * A question that does not wait: it stands over the content and can be left
+ * unanswered — "did you like the Story?" (FBK-2).
+ * @param {string} text @param {string} inner the keys that answer it
+ */
+export const ask = (text, inner) =>
+  `<section class="tt-ask lg" role="group" aria-label="${text}"><p>${text}</p>${inner}</section>`;

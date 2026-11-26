@@ -41,7 +41,7 @@ flowchart LR
   classDef todo fill:#f1f3f5,stroke:#868e96,color:#000
   classDef outside fill:#ffffff,stroke:#868e96,stroke-dasharray:4 3,color:#000
   subgraph ZERO["Stage zero — the design, approved by the owner"]
-    D["<b>D</b> · Design, stage zero<br/>2 of 9 done"]:::progress
+    D["<b>D</b> · Design, stage zero<br/>3 of 9 done"]:::progress
   end
   subgraph ONE["Stage S1 — a solo Outing on foot"]
     direction TB
@@ -72,13 +72,13 @@ Generated from the packages; change a status in its package, never here.
 
 <!-- generated:board -->
 <!-- prettier-ignore-start -->
-182 work packages: 178 todo · 1 in progress · 0 blocked · 3 done · 0 dropped.
+182 work packages: 177 todo · 1 in progress · 0 blocked · 4 done · 0 dropped.
 
 | Package | Title | Status | Depends on |
 |---|---|---|---|
 | D-01 | Design brief and three directions | **done** | F-01 |
 | D-02 | Design system | **done** | D-01 |
-| D-03 | Screens of the solo Outing on iOS and Android | todo | D-02 |
+| D-03 | Screens of the solo Outing on iOS and Android | **done** | D-02 |
 | D-04 | Screens of the web and of the console | todo | D-02 |
 | D-09 | Key screens of the Party and of the Catalog | todo | D-02 |
 | D-05 | Walk-through and the owner's approval | todo | D-03, D-04, D-09 |
@@ -278,7 +278,7 @@ flowchart LR
   classDef outside fill:#ffffff,stroke:#868e96,stroke-dasharray:4 3,color:#000
   D_01["<b>D-01</b><br/>Design brief and three directions"]:::done
   D_02["<b>D-02</b><br/>Design system"]:::done
-  D_03["<b>D-03</b><br/>Screens of the solo Outing on iOS and Android"]:::todo
+  D_03["<b>D-03</b><br/>Screens of the solo Outing on iOS and Android"]:::done
   D_04["<b>D-04</b><br/>Screens of the web and of the console"]:::todo
   D_09["<b>D-09</b><br/>Key screens of the Party and of the Catalog"]:::todo
   D_05["<b>D-05</b><br/>Walk-through and the owner's approval"]:::todo
@@ -357,7 +357,7 @@ flowchart LR
 
 ### D-03 · Screens of the solo Outing on iOS and Android
 
-- **Status:** todo
+- **Status:** done
 - **Depends on:** D-02
 - **Requirements:** —
 - **Decisions:** ADR-0005, ADR-0008, ADR-0016, ADR-0017
@@ -366,10 +366,10 @@ flowchart LR
 
 **Tasks**
 
-- [ ] Stage S1, the solo Outing: first launch and the one-minute set-up of the Profile; the Route request with its Wish; "how I understood your request"; the Route options; the Route as a map and a list with "why it is here"; editing with violations listed; the answer when nothing fits, with its one-tap relaxations; the versions of a Route; the download of the Route Pack with its size and the Wi-Fi-only choice; the Outing in Guided and in Quiet Mode; the Story with its text following the audio and its sources one tap away; the lock screen; "Are you at…?"; straying from the Route; skip, shorten, extend and a Break; the battery warning; the end of the Outing with ratings; a Correction on a sentence; saved Routes and past Outings; sign-in, what a Guest keeps and the question about merging; "my Corrections" with their outcomes; the list of notifications; deleting the account; "update required"; settings.
-- [ ] The same screens with no network: what needs one is shown as unavailable, never hidden.
-- [ ] Use the names, times and distances of a real Outing in Russian and in English. Story text is taken from a cited passage of an open source, or marked as sample text.
-- [ ] Note on every screen the requirement IDs it shows, so that a remark of the owner leads back to the specification.
+- [x] Stage S1, the solo Outing: first launch and the one-minute set-up of the Profile; the Route request with its Wish; "how I understood your request"; the Route options; the Route as a map and a list with "why it is here"; editing with violations listed; the answer when nothing fits, with its one-tap relaxations; the versions of a Route; the download of the Route Pack with its size and the Wi-Fi-only choice; the Outing in Guided and in Quiet Mode; the Story with its text following the audio and its sources one tap away; the lock screen; "Are you at…?"; straying from the Route; skip, shorten, extend and a Break; the battery warning; the end of the Outing with ratings; a Correction on a sentence; saved Routes and past Outings; sign-in, what a Guest keeps and the question about merging; "my Corrections" with their outcomes; the list of notifications; deleting the account; "update required"; settings.
+- [x] The same screens with no network: what needs one is shown as unavailable, never hidden.
+- [x] Use the names, times and distances of a real Outing in Russian and in English. Story text is taken from a cited passage of an open source, or marked as sample text.
+- [x] Note on every screen the requirement IDs it shows, so that a remark of the owner leads back to the specification.
 
 **Done when**
 
@@ -5881,20 +5881,25 @@ A stage is closed by the rule of [specification §7.4](PRODUCT-SPEC.md#74-when-a
 
 What was made better than a package asked for. One line each; the pull request holds the detail.
 
-| Package | Improvement                                                                                                                                                                                                        | Pull request             |
-| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------ |
-| D-01    | The map of the mockups is real: OpenStreetMap geometry and the walked line of the reference Outing, built by `design/tools/build-map.mjs`, so that a map treatment is judged on true streets                       | the pull request of D-01 |
-| D-01    | Every drawing opens alone at its real size and fits a phone held in the hand (`one.html`, `pnpm design --lan`); `check.html` looks through all of them for a control or a text that leaves its screen              | the pull request of D-01 |
-| D-01    | The sheet of each direction computes the contrast of its colour pairs from its own style sheet and plays the text following the voice                                                                              | the pull request of D-01 |
-| D-01    | The brief lists the screens of scenarios SC-8 and SC-9 beside SC-1…SC-7, and the letters a typeface must carry                                                                                                     | the pull request of D-01 |
-| D-01    | A second round at the owner's request: Liquid Glass on iOS and the web, a map seen at an angle on the way, a photograph of every Place with its author and licence, icons of the kinds of Place                    | the pull request of D-01 |
-| D-01    | A third round at the owner's request joins the two remaining directions into one: Timetable as the base, the guide's page from Guidebook                                                                           | the pull request of D-01 |
-| D-02    | The style of the map is proven where it will run: MapLibre draws the generated style from a tile archive of the Outing's area, from above and at the walking angle with buildings standing, on the system's page   | the pull request of D-02 |
-| D-02    | The two screens of `D-01` are assembled from the system's components, and a check page measures every control of 30 components in 848 drawings: target size, a name for screen readers, cut text, reach of a thumb | the pull request of D-02 |
-| D-02    | A third theme for bright sunlight with text held to 7 : 1, and a saver mode of the map; text on glass is measured over every area the map can put under a pane                                                     | the pull request of D-02 |
-| D-02    | The two sounds of the plan's "room to improve" are designed with the motion and described in the tokens as tones; each motion study can be slowed and shows what remains with "reduce motion"                      | the pull request of D-02 |
-| D-02    | The Route recalculated is measured, not drawn: the way round a skipped Place comes from the same pedestrian graph, and the map builder's output is now the same on every run                                       | the pull request of D-02 |
-| D-02    | The style sheet of the tokens, the map styles and the files of the mark are generated from one file, and `pnpm lint` fails when one is stale or a colour pair falls under level AA                                 | the pull request of D-02 |
+| Package | Improvement                                                                                                                                                                                                                         | Pull request             |
+| ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
+| D-01    | The map of the mockups is real: OpenStreetMap geometry and the walked line of the reference Outing, built by `design/tools/build-map.mjs`, so that a map treatment is judged on true streets                                        | the pull request of D-01 |
+| D-01    | Every drawing opens alone at its real size and fits a phone held in the hand (`one.html`, `pnpm design --lan`); `check.html` looks through all of them for a control or a text that leaves its screen                               | the pull request of D-01 |
+| D-01    | The sheet of each direction computes the contrast of its colour pairs from its own style sheet and plays the text following the voice                                                                                               | the pull request of D-01 |
+| D-01    | The brief lists the screens of scenarios SC-8 and SC-9 beside SC-1…SC-7, and the letters a typeface must carry                                                                                                                      | the pull request of D-01 |
+| D-01    | A second round at the owner's request: Liquid Glass on iOS and the web, a map seen at an angle on the way, a photograph of every Place with its author and licence, icons of the kinds of Place                                     | the pull request of D-01 |
+| D-01    | A third round at the owner's request joins the two remaining directions into one: Timetable as the base, the guide's page from Guidebook                                                                                            | the pull request of D-01 |
+| D-02    | The style of the map is proven where it will run: MapLibre draws the generated style from a tile archive of the Outing's area, from above and at the walking angle with buildings standing, on the system's page                    | the pull request of D-02 |
+| D-02    | The two screens of `D-01` are assembled from the system's components, and a check page measures every control of 30 components in 848 drawings: target size, a name for screen readers, cut text, reach of a thumb                  | the pull request of D-02 |
+| D-02    | A third theme for bright sunlight with text held to 7 : 1, and a saver mode of the map; text on glass is measured over every area the map can put under a pane                                                                      | the pull request of D-02 |
+| D-02    | The two sounds of the plan's "room to improve" are designed with the motion and described in the tokens as tones; each motion study can be slowed and shows what remains with "reduce motion"                                       | the pull request of D-02 |
+| D-02    | The Route recalculated is measured, not drawn: the way round a skipped Place comes from the same pedestrian graph, and the map builder's output is now the same on every run                                                        | the pull request of D-02 |
+| D-02    | The style sheet of the tokens, the map styles and the files of the mark are generated from one file, and `pnpm lint` fails when one is stale or a colour pair falls under level AA                                                  | the pull request of D-02 |
+| D-03    | One registry holds every screen with its requirements, its states and the reason for each state it cannot be in; the index, the page of one screen and the check are all drawn from it                                              | the pull request of D-03 |
+| D-03    | The scenarios SC-1, SC-4 and SC-6 run through the screens as walks that can be followed step by step, at real size, on a phone                                                                                                      | the pull request of D-03 |
+| D-03    | The check of the screens also finds a control cut by its pane or covered by another, and an action whose words take two lines: 1 008 drawings of 35 screens                                                                         | the pull request of D-03 |
+| D-03    | What the reference Outing lacks is real where it could be: the Route without one Place is measured, the street off the Route is a real one, the Venues of a Break are from OpenStreetMap; the rest is in one file of marked samples | the pull request of D-03 |
+| D-03    | Each place where a screen had to decide how to read the specification is written down for the owner (`design/screens/README.md`)                                                                                                    | the pull request of D-03 |
 
 ## Plan change log
 
