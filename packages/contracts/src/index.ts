@@ -7,6 +7,7 @@
  */
 export * from './errors.ts';
 export * from './health.ts';
+export * from './locale.ts';
 export * from './planning-rules.ts';
 export * from './planning-wire.ts';
 export * from './planning.ts';

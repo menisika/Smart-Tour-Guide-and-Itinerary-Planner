@@ -60,6 +60,28 @@ const checks = [
     },
   },
   {
+    name: 'Public web: every section of the shell is rendered on the server',
+    async run() {
+      // The address of a section and the words of its first-level heading.
+      const sections = [
+        ['/', 'Маршруты'],
+        ['/outing', 'Прогулка'],
+        ['/profile', 'Профиль'],
+        ['/settings', 'Настройки'],
+      ];
+      for (const [path, heading] of sections) {
+        const response = await fetch(`${api}${path}`);
+        const html = await response.text();
+        expect(response.status === 200, `${path}: status ${response.status}`);
+        expect(
+          new RegExp(`<h1[^>]*>${heading}</h1>`).test(html),
+          `${path}: no first-level heading "${heading}" in the HTML`,
+        );
+      }
+      return `${sections.length} pages, each with its heading`;
+    },
+  },
+  {
     name: 'Firebase Authentication emulator: an anonymous user (a Guest) can be created',
     async run() {
       const response = await fetch(
