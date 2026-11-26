@@ -16,6 +16,7 @@ How the repository is put together and how to work in it. The decisions behind i
 - [The container image](#the-container-image)
 - [The local environment](#the-local-environment)
 - [Running parts from sources](#running-parts-from-sources)
+- [The application on a phone](#the-application-on-a-phone)
 
 ## Layout
 
@@ -308,4 +309,47 @@ The public web with Expo's development server (it reads the shared packages from
 pnpm dev:mobile
 ```
 
-Native builds for Android and iOS need their toolchains, which this repository does not install.
+## The application on a phone
+
+The application runs on a phone as a **development build**: the native shell with `expo-dev-client`, which loads the JavaScript from the development server (`pnpm dev:mobile`). Expo Go is not enough — the application carries native modules of its own choosing. The native projects `apps/mobile/android` and `apps/mobile/ios` are generated from [`app.json`](../apps/mobile/app.json) by `expo prebuild`; they are ignored by git and never edited by hand.
+
+**The Expo SDK is pinned exactly** (`"expo": "58.0.26"` in `apps/mobile/package.json`, no range), because the location interface the Outing relies on is still Beta (ADR-0005, point 4). The packages of the SDK follow it: add or upgrade one with `pnpm --filter @promenade/mobile exec expo install <package>`, which picks the version that belongs to the pinned SDK. Moving to another SDK is a change of its own, with the device check repeated.
+
+### Android, on Linux
+
+Needs JDK 17 and the Android SDK, with `ANDROID_HOME` pointing at it; Gradle downloads the rest. One command generates the native project and builds the debug variant, which is the development build:
+
+```bash
+pnpm --filter @promenade/mobile build:android:dev
+```
+
+The result is `apps/mobile/android/app/build/outputs/apk/debug/app-debug.apk`. Install it on a phone connected with USB debugging switched on, then start the development server:
+
+```bash
+adb install -r apps/mobile/android/app/build/outputs/apk/debug/app-debug.apk
+```
+
+The same command runs in the pipeline, in the workflow **Android development build** ([`.github/workflows/android-dev-build.yml`](../.github/workflows/android-dev-build.yml)): on a pull request that changes the native configuration of the application, and by hand from the Actions page. It keeps the package for fourteen days as the artifact `promenade-android-development-build`, so a phone can be given a build without a toolchain on the desk.
+
+### iOS, on the owner's Mac
+
+Needs Xcode and CocoaPods, and the iPhone connected and trusted. In a clone of the repository on the Mac, after `pnpm install` and `pnpm build`:
+
+```bash
+pnpm --filter @promenade/mobile build:ios:dev
+```
+
+It generates the Xcode project, signs the build with the Apple account chosen in Xcode — a free personal team is enough for one's own iPhone (ADR-0005, consequences) —, installs it and starts the development server. The first time, Xcode asks for the team: open `apps/mobile/ios/Promenade.xcworkspace`, choose it under _Signing & Capabilities_, and run the command again. A build signed by a free team stops opening after seven days and is installed again the same way.
+
+### The data on the device
+
+Outing state and the offline journal live in SQLite on the device (ADR-0005, point 5); `apps/mobile/src/storage/` holds the beginning of it.
+
+- **Migrations are forward only.** [`migrations.ts`](../apps/mobile/src/storage/migrations.ts) is an ordered list; the version of a database is `PRAGMA user_version`. A step that has shipped is never edited, reordered or removed — phones have applied it; a mistake is corrected by the next step. Each step runs in one transaction with the change of the version. An application older than the data it finds refuses to open it.
+- **To add a step**, append `{ version: <next>, name, sql }` to the list. The test `migrate.test.ts` applies the whole list twice to a real SQLite file and compares the schema.
+- **Screens read through the layer**, not through `expo-sqlite`: `useDeviceDatabase()` gives the state of the database (`opening`, `ready`, `failed`, `absent`), and the functions beside it (`device-settings.ts` is the first) take the `SqlDatabase` it holds. That interface is the part of `expo-sqlite` we use, which is why the tests can run the same SQL on the SQLite built into Node.js.
+- **The browser has no device database** (`absent`): an Outing runs in the application only (ADR-0007, point 1). `DeviceDatabaseProvider.web.tsx` keeps `expo-sqlite` out of the web bundle.
+
+### Languages
+
+The interface texts are in `packages/i18n`; a screen takes them through `useTranslator()` and never names a language. The list of languages the interface has (`supportedLocales`) is content of that package. Everywhere else — in the schemas of `packages/contracts` (`localeCodeSchema`, `localizedTextSchema`), in the device database — the code of a language is an open string, so that adding a language changes no data structure (`I18N-3`).

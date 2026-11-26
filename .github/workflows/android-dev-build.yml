@@ -1,0 +1,55 @@
+# Builds the Android development build of the application on Linux, by the one
+# command of docs/development.md (work package S1-OUT-01).
+#
+# It is not one of the required checks: it runs when the native configuration
+# of the application changes, or by hand, and keeps the package as an artifact
+# so that a phone can be given a build without a toolchain on the desk.
+#
+# Actions are pinned to a commit; the comment names the release it belongs to.
+
+name: Android development build
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - apps/mobile/app.json
+      - apps/mobile/package.json
+      - .github/workflows/android-dev-build.yml
+
+permissions:
+  contents: read
+
+env:
+  HUSKY: 0
+
+concurrency:
+  group: android-dev-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Android development build
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
+        with:
+          distribution: temurin
+          java-version: 17
+      - run: pnpm install --frozen-lockfile
+      # The runner's image carries the Android SDK and sets ANDROID_HOME.
+      - name: Generate the native project and build the debug variant
+        run: pnpm --filter @promenade/mobile build:android:dev
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: promenade-android-development-build
+          path: apps/mobile/android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14

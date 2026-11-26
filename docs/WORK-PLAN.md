@@ -51,7 +51,7 @@ flowchart LR
     S1_KNW["<b>S1-KNW</b> · Knowledge: Preparation, Dossier, Story, Narration<br/>0 of 22 done"]:::todo
     S1_CUR["<b>S1-CUR</b> · The internal console for stage S1<br/>0 of 14 done"]:::todo
     S1_RTE["<b>S1-RTE</b> · From a request to a Route a person can keep<br/>1 of 17 done"]:::progress
-    S1_OUT["<b>S1-OUT</b> · The Outing on the device<br/>1 of 22 done"]:::progress
+    S1_OUT["<b>S1-OUT</b> · The Outing on the device<br/>2 of 22 done"]:::progress
     S1_ACC["<b>S1-ACC</b> · Accounts and access in S1<br/>0 of 11 done"]:::todo
     S1_FBK["<b>S1-FBK</b> · Feedback, notifications and measurement in S1<br/>0 of 7 done"]:::todo
     S1_OPS["<b>S1-OPS</b> · Operating S1<br/>0 of 12 done"]:::todo
@@ -72,7 +72,7 @@ Generated from the packages; change a status in its package, never here.
 
 <!-- generated:board -->
 <!-- prettier-ignore-start -->
-182 work packages: 171 todo · 0 in progress · 0 blocked · 11 done · 0 dropped.
+182 work packages: 170 todo · 0 in progress · 0 blocked · 12 done · 0 dropped.
 
 | Package | Title | Status | Depends on |
 |---|---|---|---|
@@ -176,7 +176,7 @@ Generated from the packages; change a status in its package, never here.
 | S1-RTE-15 | Editing screens | todo | S1-RTE-11, S1-RTE-12, S1-RTE-14, D-05, F-12 |
 | S1-RTE-16 | The Route Page on the web | todo | S1-RTE-11, S1-OUT-02, D-05, S1-KNW-15, F-12 |
 | S1-RTE-17 | Yardsticks of route quality and walking times | todo | S1-RTE-08, S1-RTE-09, S1-PLC-19 |
-| S1-OUT-01 | Application shell and languages | todo | — |
+| S1-OUT-01 | Application shell and languages | **done** | — |
 | S1-OUT-02 | Map from a local file | todo | S1-OUT-01 |
 | S1-OUT-03 | Arrival trigger rules | **done** | — |
 | S1-OUT-04 | Queueing, passing, straying and the Visit rule | todo | S1-OUT-03 |
@@ -3258,7 +3258,7 @@ flowchart LR
   classDef blocked fill:#ffe3e3,stroke:#c92a2a,color:#000
   classDef todo fill:#f1f3f5,stroke:#868e96,color:#000
   classDef outside fill:#ffffff,stroke:#868e96,stroke-dasharray:4 3,color:#000
-  S1_OUT_01["<b>S1-OUT-01</b><br/>Application shell and languages"]:::todo
+  S1_OUT_01["<b>S1-OUT-01</b><br/>Application shell and languages"]:::done
   S1_OUT_02["<b>S1-OUT-02</b><br/>Map from a local file"]:::todo
   S1_OUT_03["<b>S1-OUT-03</b><br/>Arrival trigger rules"]:::done
   S1_OUT_04["<b>S1-OUT-04</b><br/>Queueing, passing, straying and the Visit rule"]:::todo
@@ -3387,7 +3387,7 @@ flowchart LR
 
 ### S1-OUT-01 · Application shell and languages
 
-- **Status:** todo
+- **Status:** done
 - **Depends on:** —
 - **Requirements:** `I18N-1`, `I18N-3`, `PRF-7`
 - **Decisions:** ADR-0005 (points 1, 2, 4), ADR-0007 (point 1)
@@ -3396,11 +3396,11 @@ flowchart LR
 
 **Tasks**
 
-- [ ] Set up the navigation of the app and the web with Expo Router: Routes, Outing, Profile and settings, as unstyled placeholder screens. Replace the PLACEHOLDER home screen.
-- [ ] Keep locale codes as open strings in data schemas, so that adding a language changes no data structure (`I18N-3`). Extend `packages/i18n` with the shell's texts in Russian and English; choosing the language is wired by `S1-ACC-10`.
-- [ ] Add `expo-sqlite` with forward-only migrations on the device, and a small data-access layer the screens read from.
-- [ ] Give every placeholder control an accessibility label and role, so that the designed components inherit the habit.
-- [ ] Add a development-build configuration (`expo-dev-client`), with the Expo SDK pinned exactly. Document the Android build on Linux and the iOS build on the owner's Mac.
+- [x] Set up the navigation of the app and the web with Expo Router: Routes, Outing, Profile and settings, as unstyled placeholder screens. Replace the PLACEHOLDER home screen.
+- [x] Keep locale codes as open strings in data schemas, so that adding a language changes no data structure (`I18N-3`). Extend `packages/i18n` with the shell's texts in Russian and English; choosing the language is wired by `S1-ACC-10`.
+- [x] Add `expo-sqlite` with forward-only migrations on the device, and a small data-access layer the screens read from.
+- [x] Give every placeholder control an accessibility label and role, so that the designed components inherit the habit.
+- [x] Add a development-build configuration (`expo-dev-client`), with the Expo SDK pinned exactly. Document the Android build on Linux and the iOS build on the owner's Mac.
 
 **Done when**
 
@@ -5922,6 +5922,10 @@ What was made better than a package asked for. One line each; the pull request h
 | S1-OUT-03 | The state of the rules is plain data that survives JSON, so an Outing resumes after a restart with the same events (`OUT-13`), and a "yes" to "are you at …?" is a second pure function, `confirmArrival`                                                                                      | #13          |
 | S1-OUT-03 | Where the radii of two scenes overlap at poor accuracy, a fix speaks for the nearer scene only, and leaving is registered only on a fix that can be trusted: one position never arrives at two scenes, and a thrown fix never ends a presence                                                  | #13          |
 | S1-OUT-03 | The tests were run against nine deliberately broken variants of the rules, and a fixture was added for the one that survived                                                                                                                                                                   | #13          |
+| S1-OUT-01 | The Android development build is made in the pipeline by the documented command — on a change of the native configuration, or by hand — and kept as an artifact, so a phone can be given a build without a toolchain on the desk                                                               | #9           |
+| S1-OUT-01 | The migrations of the device are tested on a real SQLite file, closed and reopened between the two runs; a step is proven to apply wholly or not at all, and an application older than its data refuses to open it                                                                             | #9           |
+| S1-OUT-01 | The smoke test asks the public web, inside the API's container, for every section of the shell and its heading                                                                                                                                                                                 | #9           |
+| S1-OUT-01 | A text held once per language is a shared schema keyed by an open language code, and a device's preferred languages are matched to those the interface has                                                                                                                                     | #9           |
 
 ## Plan change log
 
