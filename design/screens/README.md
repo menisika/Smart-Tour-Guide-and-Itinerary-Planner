@@ -1,12 +1,13 @@
 # The screens
 
-Every screen of the mockups, assembled from the components of the [design system](../system/README.md). The phone's screens of the solo Outing are work package `D-03` of the [work plan](../../docs/WORK-PLAN.md#d-03--screens-of-the-solo-outing-on-ios-and-android); the public web and the internal console are `D-04`.
+Every screen of the mockups, assembled from the components of the [design system](../system/README.md). The phone's screens of the solo Outing are work package `D-03` of the [work plan](../../docs/WORK-PLAN.md#d-03--screens-of-the-solo-outing-on-ios-and-android); the public web and the internal console are `D-04`; the key screens of the Party and of the Catalog are `D-09`.
 
 - [Open it](#open-it)
 - [What is here](#what-is-here)
 - [How a screen is made](#how-a-screen-is-made)
 - [The public web](#the-public-web)
 - [The console](#the-console)
+- [The Party and the Catalog](#the-party-and-the-catalog)
 - [Adding a screen](#adding-a-screen)
 - [What is checked](#what-is-checked)
 - [What is real and what is a sample](#what-is-real-and-what-is-a-sample)
@@ -42,6 +43,7 @@ web/
   pages.js       the public web at two widths: the Route Page, the Invitation, the request, editing, a Story by hand, signing in, deleting the account; what a messenger shows of a link
   words.js       the words the web adds
 console/         the internal console: its screens, its words, and the two scenarios it carries
+later/           the key screens of the Party (stage S2) and of the Catalog (stage S3), their words, and SC-2 and SC-7 as walks
 index.html, .js  the index
 one.html, .js    one screen alone
 sheet.html, .js  many drawings side by side
@@ -91,6 +93,30 @@ Scenario SC-5 runs through them from starting Preparation to a verified Dossier,
 
 **What is real in the console.** The queue (Places, monthly page views, the languages of their articles, the heritage mark), the phrases and stresses of the pronunciation editor, a real Territory with its boundary, Entrances and nested Places, a real pair of duplicates, the Proposed Changes with their old and new values, the doubtful matches, the counts and dates of the Sources, the schedule of Freshness Checks, the Venues with their hours: all copied from the city-data research (`docs/research/06-minsk-city-data.md`) into `data/console.json`, each block with its file and licence. The facts of the Dossier are the sentences of the cited passage. **What is a sample**, and marked so in the data and in each screen's note: people, which Dossier is a draft, the run of Preparation and every sum of money, the dashboards' cost, ratings and trigger reliability, everything in Administration, the Corrections. The claim of a Correction is shown as its kind and a dash: no claim about history is written for a mockup.
 
+## The Party and the Catalog
+
+`D-09` shows where the product goes after the solo Outing: the main screens of stages S2 and S3, in the same system, before anything of them is built. They are the key screens, not the full sets — those come with `D-06` and `D-07` — so each is drawn in the states that carry its idea, and the registry says so for the rest.
+
+| Screen          | What it is                                                                                                              |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `party-create`  | Creating an Outing with an Invitation: the day and the time first, then the link (`PTY-2`)                              |
+| `party-answer`  | The Invitation answered in the application, filled in from the Profile (`PTY-4`); in a browser it is `web-invitation`   |
+| `party-options` | The Routes offered to the Party, each with one line on what is in it for whom and a tag per member (`PTY-8`)            |
+| `party-vote`    | "For" and "against" on each option, and the Organizer's choice (`PTY-10`)                                               |
+| `party-chat`    | The Chat, with what the system says in it; unavailable without a network, in its place (`PTY-13`, `OUT-15`)             |
+| `party-meeting` | The Meeting Point and each member's status; sharing a position, off until turned on (`PTY-14`, `PTY-15`)                |
+| `party-outing`  | The shared Outing: Visits ticking off, each member in their own language (`PTY-16`, `I18N-4`)                           |
+| `catalog`       | The Catalog with its filters (`CAT-2`, `CAT-3`)                                                                         |
+| `catalog-route` | A published Route with its rating, the number of Outings and its Reviews; a Complaint about a Review (`CAT-6`, `FBK-4`) |
+| `recap`         | The Recap: one card to save or to post (`OUT-21`)                                                                       |
+| `visits`        | The personal map of Visits (`ACC-10`)                                                                                   |
+
+Options, voting, the Chat, the Catalog and a published Route are drawn for both phones and for the web at both widths: each is one function, a sheet over the map on a phone and a page of the web in a browser. The rest is of the application.
+
+Scenarios SC-2 and SC-7 run through their main steps; SC-2 passes through the preview of the Invitation and the Invitation page of `D-04`.
+
+The Party is that of SC-2, with the first names of the specification's scenarios. The Routes shown to it and in the Catalog are the three offered in `D-03` — two measured, one a sample — so every Place, time and distance is still that of the reference Outing. Lines on what is in a Route for whom, votes, messages, titles, Authors, ratings and Reviews are samples (`data/samples.json`), and no Review says anything about history.
+
 ## Adding a screen
 
 1. Write the function in the file of its part of the product; take words from `words.js` and data from `design/data/`.
@@ -107,7 +133,7 @@ Scenario SC-5 runs through them from starting Preparation to a verified Dossier,
 - a pane, a heading or a control that leaves its screen;
 - a line of text that is cut or clipped; a prominent action whose words take two lines.
 
-What stands in a part that scrolls may lie below its edge: it is reached by scrolling. What is behind a pane that waits for an answer is covered on purpose. At the close of `D-03` it reported 1 008 drawings of 35 screens and 7 128 controls measured, with nothing to look at; the system's own check reported 1 184 drawings of 45 components. At the close of `D-04`: 1 398 drawings of 55 screens and 15 840 controls; the system's check, 1 294 drawings of 61 components.
+What stands in a part that scrolls may lie below its edge: it is reached by scrolling. What is behind a pane that waits for an answer is covered on purpose. At the close of `D-03` it reported 1 008 drawings of 35 screens and 7 128 controls measured, with nothing to look at; the system's own check reported 1 184 drawings of 45 components. At the close of `D-04`: 1 398 drawings of 55 screens and 15 840 controls; the system's check, 1 294 drawings of 61 components. At the close of `D-09`: 1 842 drawings of 66 screens and 18 864 controls; the system's check, 1 394 drawings of 66 components.
 
 It does not judge how a screen looks. That is done by eye, here and in `D-05`.
 
@@ -155,10 +181,20 @@ A mockup is a claim about what the specification means. These are the places whe
 22. **Budgets of Preparation are monthly and per provider; a step beyond one is not started** ([ADR-0012](../../docs/adr/0012-preparation-pipeline-durable-workflows-on-postgres.md), point 6).
 23. **Opening hours are shown as the map has them**, with "known" or "unknown" beside them, not as a week's grid.
 
+24. **The line of an option says who gets least.** `PTY-8` asks for one line on what is in a Route for whom and forbids "suits everyone". The Routes of the mockup have no park, so the line says that Olya, who likes parks, gets least — honestly, as the edge case of §4.8 asks. A Party in which every member finds an option that leans their way needs Routes the reference Outing does not hold.
+25. **The Organizer sees the options first and offers them to the Party** ("Offer to the party"), and an answer that arrives later offers a recalculation that discards the votes (`PTY-11`).
+26. **Sharing a position is one switch on the screen of the Meeting Point**, off by default, with its limits said under it (`PTY-15`). How long it lasts is not asked: it ends by itself when the Outing starts.
+27. **The Catalog is drawn as a page with a way back.** Where it stands among the destinations of the application — a fourth destination, or a part of "Routes" — is left to `D-07`.
+28. **A Complaint is offered on a Review, from its own control, and says that one signal hides nothing** (`CAT-9`, §4.9, rules).
+29. **The Recap has no award and no streak** (§1.4): the walked line, what was asked for, and three measures.
+30. **The map of Visits is made of Visits, not of a track** (`OUT-8`, `NFR-14`): the Places of an Outing, marked.
+
 ## The owner's acceptance
 
 **`D-03` — accepted on 25 November 2026.** The owner accepted the screens of the solo Outing on iOS and Android as they were shown, without asking for another round.
 
 **`D-04` — accepted on 25 November 2026.** The owner accepted the pages of the public web and the screens of the console as they were shown, without asking for another round.
+
+**`D-09` — accepted on 25 November 2026.** The owner accepted the key screens of the Party and of the Catalog as they were shown, without asking for another round.
 
 The readings of the specification listed above were shown to the owner together with the screens; the owner accepted the screens without changing any of them. What was left to `D-05` stays there: the click-through walks, the review against the brief, the independent review, and the check on real phones.

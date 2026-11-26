@@ -59,6 +59,7 @@ import { banner, checks, pack, skeleton, state, steps } from './parts/states.js'
 import { guide, mini, placePage, player, source } from './parts/story.js';
 import { linkPicture, linkPreview, messenger, panel, webCard, webNav } from './parts/web.js';
 import { consoleSpecimens } from './specimens/console.js';
+import { partySpecimens } from './specimens/party.js';
 import { T } from './strings.js';
 
 /**
@@ -1049,6 +1050,7 @@ export const specimens = [
       });
     },
   },
+  ...partySpecimens,
   ...consoleSpecimens,
 ];
 

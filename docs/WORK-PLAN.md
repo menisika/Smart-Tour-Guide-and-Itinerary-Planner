@@ -41,7 +41,7 @@ flowchart LR
   classDef todo fill:#f1f3f5,stroke:#868e96,color:#000
   classDef outside fill:#ffffff,stroke:#868e96,stroke-dasharray:4 3,color:#000
   subgraph ZERO["Stage zero — the design, approved by the owner"]
-    D["<b>D</b> · Design, stage zero<br/>4 of 9 done"]:::progress
+    D["<b>D</b> · Design, stage zero<br/>5 of 9 done"]:::progress
   end
   subgraph ONE["Stage S1 — a solo Outing on foot"]
     direction TB
@@ -72,7 +72,7 @@ Generated from the packages; change a status in its package, never here.
 
 <!-- generated:board -->
 <!-- prettier-ignore-start -->
-182 work packages: 176 todo · 1 in progress · 0 blocked · 5 done · 0 dropped.
+182 work packages: 175 todo · 1 in progress · 0 blocked · 6 done · 0 dropped.
 
 | Package | Title | Status | Depends on |
 |---|---|---|---|
@@ -80,7 +80,7 @@ Generated from the packages; change a status in its package, never here.
 | D-02 | Design system | **done** | D-01 |
 | D-03 | Screens of the solo Outing on iOS and Android | **done** | D-02 |
 | D-04 | Screens of the web and of the console | **done** | D-02 |
-| D-09 | Key screens of the Party and of the Catalog | todo | D-02 |
+| D-09 | Key screens of the Party and of the Catalog | **done** | D-02 |
 | D-05 | Walk-through and the owner's approval | todo | D-03, D-04, D-09 |
 | D-06 | Screens of the Party in full | todo | D-05 |
 | D-07 | Screens of the Catalog in full | todo | D-05 |
@@ -280,7 +280,7 @@ flowchart LR
   D_02["<b>D-02</b><br/>Design system"]:::done
   D_03["<b>D-03</b><br/>Screens of the solo Outing on iOS and Android"]:::done
   D_04["<b>D-04</b><br/>Screens of the web and of the console"]:::done
-  D_09["<b>D-09</b><br/>Key screens of the Party and of the Catalog"]:::todo
+  D_09["<b>D-09</b><br/>Key screens of the Party and of the Catalog"]:::done
   D_05["<b>D-05</b><br/>Walk-through and the owner's approval"]:::todo
   D_06["<b>D-06</b><br/>Screens of the Party in full"]:::todo
   D_07["<b>D-07</b><br/>Screens of the Catalog in full"]:::todo
@@ -401,7 +401,7 @@ flowchart LR
 
 ### D-09 · Key screens of the Party and of the Catalog
 
-- **Status:** todo
+- **Status:** done
 - **Depends on:** D-02
 - **Requirements:** —
 - **Decisions:** ADR-0007, ADR-0018, ADR-0022
@@ -410,10 +410,10 @@ flowchart LR
 
 **Tasks**
 
-- [ ] Stage S2, the Party: creating an Outing with an Invitation; the Invitation page and its answer; the options with what is in each for whom; voting; the Chat; the Meeting Point and who is on the way.
-- [ ] Stage S3, the Catalog: the Catalog with its filters; a published Route with its Reviews; the Recap; the personal map of Visits.
-- [ ] Draw each for the phone on both systems and, where the web has it, for the web.
-- [ ] Note on every screen the requirement IDs it shows.
+- [x] Stage S2, the Party: creating an Outing with an Invitation; the Invitation page and its answer; the options with what is in each for whom; voting; the Chat; the Meeting Point and who is on the way.
+- [x] Stage S3, the Catalog: the Catalog with its filters; a published Route with its Reviews; the Recap; the personal map of Visits.
+- [x] Draw each for the phone on both systems and, where the web has it, for the web.
+- [x] Note on every screen the requirement IDs it shows.
 
 **Done when**
 
@@ -5904,6 +5904,9 @@ What was made better than a package asked for. One line each; the pull request h
 | D-04    | The console has measures of its own among the tokens, held by `pnpm lint:design`, and its components stand on the system's page and under its check at the width of a desk                                                                                                         | the pull request of D-04 |
 | D-04    | Every page of the public web is one function drawn at two widths, and the picture a link carries into a messenger is composed as the real one is, at half of 1200 × 630                                                                                                            | the pull request of D-04 |
 | D-04    | Two walks of the public web beside the scenarios: a Route opened from a messenger, and an Invitation answered in a minute                                                                                                                                                          | the pull request of D-04 |
+| D-09    | A screen that the web has too is one function: a sheet over the map on a phone, a page in a browser — options, voting, the Chat, the Catalog and a published Route are drawn for both phones and at both widths of the web                                                         | the pull request of D-09 |
+| D-09    | The shared Outing with Visits ticking off is drawn too, so that SC-2 runs to its last step, through the Invitation pages of `D-04`                                                                                                                                                 | the pull request of D-09 |
+| D-09    | The Party's Routes are those of the reference Outing, so the line on what is in a Route for whom is written from what is really there — and says who gets least                                                                                                                    | the pull request of D-09 |
 
 ## Plan change log
 
