@@ -29,6 +29,11 @@ spikes/*/data/
 spikes/*/out/
 spikes/*/node_modules/
 
+# Worktrees of Claude sessions: whole copies of the repository on other
+# branches, inside the checkout. Prettier reads this file, so `pnpm lint`
+# stays out of them as well.
+.claude/worktrees/
+
 # Editors and operating systems
 .DS_Store
 .idea/
